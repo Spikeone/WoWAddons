@@ -1,0 +1,7 @@
+## Interface: 20400
+## Title : SpellWatch
+## Notes: Watches some summon spells and resists on other spells
+## Author: Spikeone @ B2B-WoW
+## SavedVariables: SW_SETTINGS
+spellwatch.xml
+spellwatch_config.xml
