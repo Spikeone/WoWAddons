@@ -1,0 +1,585 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+  <Script file="SpikesCharLink.lua"/>
+  <Button name="SCL_InspectPaperDollItemSlotButtonTemplate" inherits="ItemButtonTemplate" virtual="true">
+    <Scripts>
+      <OnLoad>
+        SCL_ItemSlotButton_OnLoad();
+      </OnLoad>
+      <OnUpdate>
+        CursorOnUpdate();
+        if ( GameTooltip:IsOwned(this) ) then
+        SCL_ItemSlotButton_OnEnter();
+        end
+      </OnUpdate>
+      <OnEnter>
+        SCL_ItemSlotButton_OnEnter()
+      </OnEnter>
+      <OnLeave>
+        GameTooltip:Hide();
+        ResetCursor();
+      </OnLeave>
+    </Scripts>
+    <NormalTexture file="Interface\Buttons\UI-Quickslot2">
+      <Size>
+        <AbsDimension x="64" y="64"/>
+      </Size>
+      <Anchors>
+        <Anchor point="CENTER">
+          <Offset>
+            <AbsDimension x="0" y="-1"/>
+          </Offset>
+        </Anchor>
+      </Anchors>
+    </NormalTexture>
+  </Button>
+  <Frame name="SCL_InspectFrame" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="UIParent">
+    <Size>
+      <AbsDimension x="384" y="512"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOPLEFT">
+        <Offset>
+          <AbsDimension x="0" y="-104"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    <HitRectInsets>
+      <AbsInset left="0" right="30" top="0" bottom="45"/>
+    </HitRectInsets>
+    <Layers>
+      <Layer level="ARTWORK">
+        <Texture name="SCL_InspectFramePortrait">
+          <Size>
+            <AbsDimension x="60" y="60"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="7" y="-6"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="BACKGROUND">
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-CharacterTab-L1">
+          <Size>
+            <AbsDimension x="256" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-CharacterTab-R1">
+          <Size>
+            <AbsDimension x="128" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="256" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-CharacterTab-BottomLeft">
+          <Size>
+            <AbsDimension x="256" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="0" y="-256"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\PaperDollInfoFrame\UI-Character-CharacterTab-BottomRight">
+          <Size>
+            <AbsDimension x="128" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="256" y="-256"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Frame name="SCL_InspectNameFrame">
+        <Size>
+          <AbsDimension x="109" y="12"/>
+        </Size>
+        <Anchors>
+          <Anchor point="CENTER">
+            <Offset>
+              <AbsDimension x="6" y="232"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="SCL_InspectNameText" inherits="GameFontNormal" text="NAME">
+              <Size>
+                <AbsDimension x="109" y="16"/>
+              </Size>
+              <Anchors>
+                <Anchor point="CENTER"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+            <FontString name="SCL_InspectLevelText" inherits="GameFontNormalSmall" text="Level level race class">
+              <Anchors>
+                <Anchor point="TOP" relativeTo="SCL_InspectNameText" relativePoint="BOTTOM">
+                  <Offset>
+                    <AbsDimension x="0" y="-6"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectTitleText" inherits="GameFontNormalSmall" text="title of the player">
+              <Anchors>
+                <Anchor point="TOP" relativeTo="SCL_InspectLevelText" relativePoint="BOTTOM">
+                  <Offset>
+                    <AbsDimension x="0" y="-1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectGuildText" inherits="GameFontNormalSmall" text="title of guild" hidden="true">
+              <Anchors>
+                <Anchor point="TOP" relativeTo="SCL_InspectLevelText" relativePoint="BOTTOM">
+                  <Offset>
+                    <AbsDimension x="0" y="-1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+            this:SetFrameLevel(this:GetFrameLevel() + 1);
+          </OnLoad>
+        </Scripts>
+      </Frame>
+      <Button name="SCL_InspectFrameCloseButton" inherits="UIPanelCloseButton">
+        <Anchors>
+          <Anchor point="CENTER" relativeTo="SCL_InspectFrame" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-44" y="-25"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            this:SetFrameLevel(this:GetFrameLevel() + 1);
+          </OnLoad>
+        </Scripts>
+      </Button>
+
+      <Statusbar name="SCL_PlayerHealth" value="100">
+        <BarTexture name="$parenttex" file="Interface\TargetingFrame\UI-StatusBar"/>
+        <Size>
+          <AbsDimension x="108" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="70" y="-124"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level ="OVERLAY">
+            <FontString name="SCL_PlayerHealthText" inherits="GameFontNormalSmall" text="01234">
+              <Anchors>
+                <Anchor point="TOP" relativeTo="SCL_PlayerHealth" relativePoint="TOP">
+                  <Offset>
+                    <AbsDimension x="0" y="-2"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnClick>
+          </OnClick>
+        </Scripts>
+        <BarColor r="0" g="1" b="0"/>
+      </Statusbar>
+
+      <Statusbar name="SCL_PlayerMana" value="100">
+        <BarTexture name="$parenttex" file="Interface\TargetingFrame\UI-StatusBar"/>
+        <Size>
+          <AbsDimension x="108" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="186" y="-124"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level ="OVERLAY">
+            <FontString name="SCL_PlayerManaText" inherits="GameFontNormalSmall" text="01234">
+              <Anchors>
+                <Anchor point="TOP" relativeTo="SCL_PlayerMana" relativePoint="TOP">
+                  <Offset>
+                    <AbsDimension x="0" y="-2"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+          <OnClick>
+          </OnClick>
+        </Scripts>
+        <BarColor r="0" g="0" b="1"/>
+      </Statusbar>
+      
+      
+      <Button name="CharLinkInvitePlayer">
+        <Size>
+          <AbsDimension x="32" y="32"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="70" y="-88"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            this:RegisterForClicks("LeftButtonUp");
+          </OnLoad>
+          <OnClick>
+            SCL_InvitePlayer()
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Icons\INV_Misc_GroupNeedMore"/>
+        <PushedTexture file="Interface\Icons\INV_Misc_GroupNeedMore"/>
+        <HighlightTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+      </Button>
+
+      <Button name="CharLinkRejectPlayerEquipment">
+        <Size>
+          <AbsDimension x="32" y="32"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="CharLinkInvitePlayer" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="16" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            this:RegisterForClicks("LeftButtonUp");
+          </OnLoad>
+          <OnClick>
+            SCL_RejectPlayer("EQUIPMENT")
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Icons\INV_Chest_Chain"/>
+        <PushedTexture file="Interface\Icons\INV_Chest_Chain"/>
+        <HighlightTexture file="Interface\Buttons\UI-GroupLoot-Pass-Up"/>
+      </Button>
+      
+      <Button name="CharLinkRejectPlayerEnchant">
+        <Size>
+          <AbsDimension x="32" y="32"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="CharLinkRejectPlayerEquipment" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            this:RegisterForClicks("LeftButtonUp");
+          </OnLoad>
+          <OnClick>
+            SCL_RejectPlayer("ENCHANT")
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Icons\Trade_Engraving"/>
+        <PushedTexture file="Interface\Icons\Trade_Engraving"/>
+        <HighlightTexture file="Interface\Buttons\UI-GroupLoot-Pass-Up"/>
+      </Button>
+
+      <Button name="CharLinkRejectPlayerGems">
+        <Size>
+          <AbsDimension x="32" y="32"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="CharLinkRejectPlayerEnchant" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            this:RegisterForClicks("LeftButtonUp");
+          </OnLoad>
+          <OnClick>
+            SCL_RejectPlayer("GEMS")
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+        <PushedTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+        <HighlightTexture file="Interface\Buttons\UI-GroupLoot-Pass-Up"/>
+      </Button>
+
+      <Button name="CharLinkRejectPlayerClass">
+        <Size>
+          <AbsDimension x="32" y="32"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="CharLinkRejectPlayerGems" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            this:RegisterForClicks("LeftButtonUp");
+          </OnLoad>
+          <OnClick>
+            SCL_RejectPlayer("CLASS")
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Addons\SpikesCharLink\Media\Warrior"/>
+        <PushedTexture file="Interface\Addons\SpikesCharLink\Media\Warrior"/>
+        <HighlightTexture file="Interface\Buttons\UI-GroupLoot-Pass-Up"/>
+      </Button>
+
+      <Button name="CharLinkRejectPlayerPlayer">
+        <Size>
+          <AbsDimension x="32" y="32"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="CharLinkRejectPlayerClass" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="4" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            this:RegisterForClicks("LeftButtonUp");
+          </OnLoad>
+          <OnClick>
+            SCL_RejectPlayer("PLAYER")
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\Icons\Spell_BrokenHeart"/>
+        <PushedTexture file="Interface\Icons\Spell_BrokenHeart"/>
+        <HighlightTexture file="Interface\Buttons\UI-GroupLoot-Pass-Up"/>
+      </Button>
+
+      <Button name="SCL_InspectHeadSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="21" y="-74"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectNeckSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectHeadSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectShoulderSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectNeckSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectBackSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectShoulderSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectChestSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectBackSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectShirtSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectChestSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectTabardSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectShirtSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectWristSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectTabardSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectHandsSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="305" y="-74"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectWaistSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectHandsSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectLegsSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectWaistSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectFeetSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectLegsSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectFinger0Slot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectFeetSlot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectFinger1Slot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectFinger0Slot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectTrinket0Slot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectFinger1Slot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectTrinket1Slot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectTrinket0Slot" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-4"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectMainHandSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="122" y="127"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectSecondaryHandSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectMainHandSlot" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="5" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SCL_InspectRangedSlot" inherits="SCL_InspectPaperDollItemSlotButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectSecondaryHandSlot" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="5" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        SCL_OnLoad();
+      </OnLoad>
+      <OnEvent>
+        SCL_OnEvent(self, event, ...);
+      </OnEvent>
+      <OnShow>
+        SCL_OnShow();
+      </OnShow>
+      <OnHide>
+        SCL_OnHide();
+      </OnHide>
+    </Scripts>
+  </Frame>
+</Ui>

@@ -1,0 +1,7 @@
+## Interface: 20400
+## Title : SpikesCharLink
+## Notes: Enables you to link your character to anybody. The other player needs this addon as well.
+## Author: Spikeone @ B2B-WoW
+## SavedVariables: SCL_SETTINGS
+SpikesCharLink.xml
+CharFrameButton.xml
