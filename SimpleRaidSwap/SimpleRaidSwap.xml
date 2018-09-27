@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+<Script file="SimpleRaidSwap.lua"/> 
+<Frame name="Foo_Frame">
+  <Scripts>
+     <OnLoad> SRS_OnLoad(); </OnLoad>
+     <OnEvent> SRS_OnEvent(self, event, ...); </OnEvent>
+  </Scripts>
+</Frame>
+</Ui>

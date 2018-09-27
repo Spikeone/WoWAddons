@@ -1,0 +1,6 @@
+## Interface: 20400
+## Title : SimpleRaidSawp
+## Notes: Wer das liest ist doof.
+## Author: Spikeone @ b2b-wow
+## SavedVariablesPerCharacter: srs_vars
+SimpleRaidSwap.xml
