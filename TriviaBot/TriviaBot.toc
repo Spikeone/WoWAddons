@@ -1,0 +1,12 @@
+## Interface: 20400
+## Title: TriviaBot 2.5
+## Author: 
+## Version: 2.5
+## Notes: In-game trivia!
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## X-Website: 
+## SavedVariables: TRIVIABOT_CONFIG
+## SavedVariablesPerCharacter: TRIVIABOT_PERCHAR
+TriviaBot.lua
+TriviaBot.xml
