@@ -1,0 +1,6 @@
+## Interface: 20400
+## Title : SpikesAuraWatch
+## Notes: Watches some aure spells like shadow form, righteous fury etc.
+## Author: Spikeone @ B2B-WoW
+## SavedVariables: SAW_SETTINGS
+SpikesAuraWatch.xml
