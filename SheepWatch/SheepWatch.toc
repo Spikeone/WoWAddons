@@ -1,0 +1,13 @@
+## Interface: 20400
+## Title: |cff00ffffSheepWatch
+## Author: Version 23000+ FanDjango AnSyNova, Spikeone
+## Version: 24008
+## Notes: Displays a progress bar for Mage's Polymorph Spell OR Priest's Shackle Spell
+## eMail: 
+## URL:
+## OptionalDeps: myAddOns
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariablesPerCharacter: SheepWatch_Settings,SheepWatch_Log
+SheepWatch.xml
+SheepWatchConfig.xml
