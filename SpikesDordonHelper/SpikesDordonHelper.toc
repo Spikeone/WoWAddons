@@ -1,0 +1,5 @@
+## Interface: 20400
+## Title : SpikesDordonHelper
+## Notes: Sende Lootdaten ueber einen Addonchannel
+## Author: Spikeone @ b2b-wow
+SpikesDordonHelper.xml

@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+<Script file="SpikesDordonHelper.lua"/> 
+<Frame name="Foo_Frame">
+  <Scripts>
+     <OnLoad> SDH_OnLoad(); </OnLoad>
+     <OnEvent> SDH_OnEvent(self, event, ...); </OnEvent>
+     <OnUpdate> MyAddon_OnUpdate(self, elapsed); </OnUpdate>  
+  </Scripts>
+</Frame>
+</Ui>
