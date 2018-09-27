@@ -1,0 +1,5 @@
+## Interface: 20400
+## Title : RaidStats
+## Notes: Gathers information about the raid and posts them periodically
+## Author: Spikeone
+raidstats.xml
