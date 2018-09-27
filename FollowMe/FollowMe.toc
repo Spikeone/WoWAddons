@@ -1,0 +1,6 @@
+## Interface: 20400
+## Title : FollowMe
+## Notes: Wer das liest ist doof.
+## Author: Spikeone @ b2b-wow
+## SavedVariablesPerCharacter: fm_vars
+FollowMe.xml
