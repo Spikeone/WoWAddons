@@ -110,6 +110,693 @@
       </Layer>
     </Layers>
     <Frames>
+      <Frame name ="SCL_InspectStatMelee">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="70" y="-200"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectStatMeleeT" inherits="GameFontNormalSmall" text="Nahkampf">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectStatHaste" relativeTo="SCL_InspectStatMelee">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectStatMelee" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectStatHasteL" inherits="GameFontNormalSmall" text="Tempowertung:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectStatHasteR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectStatAttackpower" relativeTo="SCL_InspectStatHaste">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectStatHaste" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectStatAttackpowerL" inherits="GameFontNormalSmall" text="Kraft:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectStatAttackpowerR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectMeleeHit" relativeTo="SCL_InspectStatAttackpower">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectStatAttackpower" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectMeleeHitL" inherits="GameFontNormalSmall" text="Trefferwertung:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectMeleeHitR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectMeleeCrit" relativeTo="SCL_InspectMeleeHit">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectMeleeHit" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectMeleeCritL" inherits="GameFontNormalSmall" text="Kritisch:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectMeleeCritR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectExpertise" relativeTo="SCL_InspectMeleeCrit">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectMeleeCrit" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectExpertiseL" inherits="GameFontNormalSmall" text="Waffenkunde:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectExpertiseR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+
+      <Frame name ="SCL_InspectMeleeAmorpen" relativeTo="SCL_InspectExpertise">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectExpertise" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectMeleeAmorpenL" inherits="GameFontNormalSmall" text="Amorpen:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectMeleeAmorpenR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      
+      
+      <Frame name ="SCL_InspectStatRanged" relativeTo="SCL_InspectStatMelee">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_InspectStatMelee" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="10" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectStatRangedL" inherits="GameFontNormalSmall" text="Distanzkampf">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectRangedHaste" relativeTo="SCL_InspectStatRanged">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectStatRanged" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectRangedHasteL" inherits="GameFontNormalSmall" text="Tempo:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectRangedHasteR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectRangedAttackpower" relativeTo="SCL_InspectRangedHaste">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectRangedHaste" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectRangedAttackpowerL" inherits="GameFontNormalSmall" text="Kraft:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectRangedAttackpowerR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectRangedHit" relativeTo="SCL_InspectRangedAttackpower">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectRangedAttackpower" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectRangedHitL" inherits="GameFontNormalSmall" text="Trefferwertung:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectRangedHitR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectRangedCrit" relativeTo="SCL_InspectRangedHit">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectRangedHit" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectRangedCritL" inherits="GameFontNormalSmall" text="Kritisch:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectRangedCritR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectRangedAmorpen" relativeTo="SCL_InspectRangedCrit">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectRangedCrit" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectRangedAmorpenL" inherits="GameFontNormalSmall" text="Amorpen:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectRangedAmorpenR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectStatSpell" relativeTo="SCL_InspectMeleeAmorpen">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectMeleeAmorpen" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectStatSpellL" inherits="GameFontNormalSmall" text="Zauber">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectSpellDamage" relativeTo="SCL_InspectStatSpell">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectStatSpell" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectSpellDamageL" inherits="GameFontNormalSmall" text="Schadensboni:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectSpellDamageR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectSpellHeal" relativeTo="SCL_InspectSpellDamage">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectSpellDamage" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectSpellHealL" inherits="GameFontNormalSmall" text="Heilungsboni:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectSpellHealR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectSpellHit" relativeTo="SCL_InspectSpellHeal">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectSpellHeal" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectSpellHitL" inherits="GameFontNormalSmall" text="Trefferwertung:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectSpellHitR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectSpellCrit" relativeTo="SCL_InspectSpellHit">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectSpellHit" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectSpellCritL" inherits="GameFontNormalSmall" text="Kritisch:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectSpellCritR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectSpellHaste" relativeTo="SCL_InspectSpellCrit">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectSpellCrit" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectSpellHasteL" inherits="GameFontNormalSmall" text="Tempowertung:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectSpellHasteR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+
+      <Frame name ="SCL_InspectStatDefense" relativeTo="SCL_InspectRangedAmorpen">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectRangedAmorpen" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectStatHasteL" inherits="GameFontNormalSmall" text="Verteidigung">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectArmor" relativeTo="SCL_InspectStatDefense">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectStatDefense" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectArmorL" inherits="GameFontNormalSmall" text="Rüstung:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectArmorR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectDefense" relativeTo="SCL_InspectArmor">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectArmor" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectDefenseL" inherits="GameFontNormalSmall" text="Verteidigung:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectDefenseR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectDdodge" relativeTo="SCL_InspectDefense">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectDefense" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectDdodgeL" inherits="GameFontNormalSmall" text="Ausweichen:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectDdodgeR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectParry" relativeTo="SCL_InspectDdodge">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectDdodge" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectParryL" inherits="GameFontNormalSmall" text="Parrieren:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectParryR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectBlock" relativeTo="SCL_InspectParry">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectParry" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectBlockL" inherits="GameFontNormalSmall" text="Blocken:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectBlockR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Frame name ="SCL_InspectResilence" relativeTo="SCL_InspectBlock">
+        <Size>
+          <AbsDimension x="104" y="13"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP" relativeTo="SCL_InspectBlock" relativePoint="BOTTOM">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <FontString name="SCL_InspectResilenceL" inherits="GameFontNormalSmall" text="Abhärtung:">
+              <Anchors>
+                <Anchor point="LEFT"/>
+              </Anchors>
+            </FontString>
+            <FontString name="SCL_InspectResilenceR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+              <Anchors>
+                <Anchor point="RIGHT"/>
+              </Anchors>
+              <Color r="1.0" g="1.0" b="1.0"/>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+
       <Frame name="SCL_InspectNameFrame">
         <Size>
           <AbsDimension x="109" y="12"/>
@@ -249,8 +936,528 @@
         </Scripts>
         <BarColor r="0" g="0" b="1"/>
       </Statusbar>
-      
-      
+
+      <Button name="SCL_BUFF1">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_PlayerHealth" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-2"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF2">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF1" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF3">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF2" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF4">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF3" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF5">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF4" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF6">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF5" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF7">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF6" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF8">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF7" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF9">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF8" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF10">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF9" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF11">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF10" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF12">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF11" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF13">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF12" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF14">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF13" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF15">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF1" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF16">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF15" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF17">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF16" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF18">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF17" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF19">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF18" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF20">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF19" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF21">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF20" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF22">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF21" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF23">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF22" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF24">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF23" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF25">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF24" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF26">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF25" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF27">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF26" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF28">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF27" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF29">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF15" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF30">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF29" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF31">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF30" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF32">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF31" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF33">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF32" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF34">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF33" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF35">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF34" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF36">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF35" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF37">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF36" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF38">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF37" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF39">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF38" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+      <Button name="SCL_BUFF40">
+        <Size>
+          <AbsDimension x="16" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_BUFF39" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
+      </Button>
+
       <Button name="CharLinkInvitePlayer">
         <Size>
           <AbsDimension x="32" y="32"/>
@@ -269,6 +1476,13 @@
           <OnClick>
             SCL_InvitePlayer()
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+            GameTooltip:SetText("Invite Player", 1.0,1.0,1.0 );
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
         </Scripts>
         <NormalTexture file="Interface\Icons\INV_Misc_GroupNeedMore"/>
         <PushedTexture file="Interface\Icons\INV_Misc_GroupNeedMore"/>
@@ -293,6 +1507,13 @@
           <OnClick>
             SCL_RejectPlayer("EQUIPMENT")
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+            GameTooltip:SetText("Ablehnen: Equiment", 1.0,1.0,1.0 );
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
         </Scripts>
         <NormalTexture file="Interface\Icons\INV_Chest_Chain"/>
         <PushedTexture file="Interface\Icons\INV_Chest_Chain"/>
@@ -317,6 +1538,13 @@
           <OnClick>
             SCL_RejectPlayer("ENCHANT")
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+            GameTooltip:SetText("Ablehnen: Verzauberungen", 1.0,1.0,1.0 );
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
         </Scripts>
         <NormalTexture file="Interface\Icons\Trade_Engraving"/>
         <PushedTexture file="Interface\Icons\Trade_Engraving"/>
@@ -341,6 +1569,13 @@
           <OnClick>
             SCL_RejectPlayer("GEMS")
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+            GameTooltip:SetText("Ablehnen: Sockelungen", 1.0,1.0,1.0 );
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
         </Scripts>
         <NormalTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
         <PushedTexture file="Interface\Icons\INV_Misc_Gem_Variety_01"/>
@@ -365,6 +1600,13 @@
           <OnClick>
             SCL_RejectPlayer("CLASS")
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+            GameTooltip:SetText("Ablehnen: Klasse", 1.0,1.0,1.0 );
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
         </Scripts>
         <NormalTexture file="Interface\Addons\SpikesCharLink\Media\Warrior"/>
         <PushedTexture file="Interface\Addons\SpikesCharLink\Media\Warrior"/>
@@ -389,6 +1631,13 @@
           <OnClick>
             SCL_RejectPlayer("PLAYER")
           </OnClick>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+            GameTooltip:SetText("Ablehnen: Spieler", 1.0,1.0,1.0 );
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
         </Scripts>
         <NormalTexture file="Interface\Icons\Spell_BrokenHeart"/>
         <PushedTexture file="Interface\Icons\Spell_BrokenHeart"/>

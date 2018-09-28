@@ -403,6 +403,35 @@ function SCL_Round(v, bracket)
     return math.floor(v/bracket + SCL_Sign(v) * 0.5) * bracket
 end
 
+function SCL_SerializeBuffs()
+    local strReturnString = ""
+
+    for i = 1, 40 do
+        name, rank, icon, count, duration, expirationTime, _, _, _, _, _ = UnitBuff("player", i)
+
+        --DEFAULT_CHAT_FRAME:AddMessage("name: " ..name.. " test: " ..icon)
+
+        if(icon ~= "" and icon ~= nil) then
+            --DEFAULT_CHAT_FRAME:AddMessage("name: " ..name.. " spellid: " ..spellId)
+            --DEFAULT_CHAT_FRAME:AddMessage("name: " ..name.. " test: " ..icon)
+
+            local buffIcon = {string.split("\\", icon)}
+
+            --for i = 1, table.getn(statStrings) do
+            --    SCL_GetStats(statStrings[i], i, strPlayer)
+            --end
+
+            if(strReturnString =="") then
+                strReturnString = buffIcon[3]
+            else
+                strReturnString = strReturnString .. "," .. buffIcon[3]
+            end
+        end
+    end
+
+    return strReturnString
+end
+
 function SCL_SerializePlayerStats()
     base, strength, posBuff, negBuff = UnitStat("player", 1);
     base, agility, posBuff, negBuff = UnitStat("player", 2);
@@ -419,40 +448,73 @@ end
 
 function SCL_SerializePlayerStatsMelee()
 
-    baseAttackpower, posBuff, negBuff = UnitAttackPower("player");
-    DEFAULT_CHAT_FRAME:AddMessage("baseAttackpower: " .. (baseAttackpower + posBuff))
+    local strReturnString = ""
 
-    armorPen = GetArmorPenetration()
-    DEFAULT_CHAT_FRAME:AddMessage("armorPen: " .. armorPen)
+    meleeHaste = GetCombatRating(18)
+    --DEFAULT_CHAT_FRAME:AddMessage("meleHaste: " .. meleHaste)
+    strReturnString = meleeHaste
+
+
+    baseAttackpower, posBuff, negBuff = UnitAttackPower("player");
+    --DEFAULT_CHAT_FRAME:AddMessage("baseAttackpower: " .. (baseAttackpower + posBuff))
+    strReturnString = strReturnString .. "," .. (baseAttackpower + posBuff)
 
     meleeHit = GetCombatRating(6)
-    DEFAULT_CHAT_FRAME:AddMessage("meleeHit: " .. meleeHit)
+    --DEFAULT_CHAT_FRAME:AddMessage("meleeHit: " .. meleeHit)
+    strReturnString = strReturnString .. "," .. meleeHit
 
     meleeCrit = GetCritChance()
-    DEFAULT_CHAT_FRAME:AddMessage("meleeCrit: " .. SCL_Round(meleeCrit, 0.01))
+    --DEFAULT_CHAT_FRAME:AddMessage("meleeCrit: " .. SCL_Round(meleeCrit, 0.01))
+    strReturnString = strReturnString .. "," .. SCL_Round(meleeCrit, 0.01)
 
     expertise, offhandExpertise = GetExpertise();
-    DEFAULT_CHAT_FRAME:AddMessage("expertise: " .. expertise .. " offhandExpertise: " ..offhandExpertise)
+    --DEFAULT_CHAT_FRAME:AddMessage("expertise: " .. expertise .. " offhandExpertise: " ..offhandExpertise)
+
+    if(offhandExpertise == 0 or offhandExpertise == nil) then
+        strReturnString = strReturnString .. "," .. expertise
+    else
+        strReturnString = strReturnString .. "," .. expertise .. "/" .. offhandExpertise
+    end
+
+    armorPen = GetArmorPenetration()
+    --DEFAULT_CHAT_FRAME:AddMessage("armorPen: " .. armorPen)
+    strReturnString = strReturnString .. "," .. armorPen
+
+    return strReturnString
 end
 
 function SCL_SerializePlayerStatsRange()
 
+    local strReturnString
+
     speed, lowDmg, hiDmg, posBuff, negBuff, percent = UnitRangedDamage("player");
-    DEFAULT_CHAT_FRAME:AddMessage("speed: " .. speed)
+    --DEFAULT_CHAT_FRAME:AddMessage("speed: " .. SCL_Round(speed, 0.01))
+    strReturnString = speed
 
     rangedbase, posBuff, negBuff = UnitRangedAttackPower("player");
-    DEFAULT_CHAT_FRAME:AddMessage("rangedbase: " .. rangedbase)
+    --DEFAULT_CHAT_FRAME:AddMessage("rangedbase: " .. (rangedbase + posBuff))
+    strReturnString = strReturnString .. "," .. (rangedbase + posBuff)
+
+    armorPen = GetArmorPenetration()
+    --DEFAULT_CHAT_FRAME:AddMessage("armorPen: " .. armorPen)
+    strReturnString = strReturnString .. "," .. armorPen
 
     rangedHit = GetCombatRating(7)
-    DEFAULT_CHAT_FRAME:AddMessage("rangedHit: " .. rangedHit)
+    --DEFAULT_CHAT_FRAME:AddMessage("rangedHit: " .. rangedHit)
+    strReturnString = strReturnString .. "," .. rangedHit
 
     rangedCrit = GetRangedCritChance() 
-    DEFAULT_CHAT_FRAME:AddMessage("rangedCrit: " .. SCL_Round(rangedCrit, 0.01))
+    --DEFAULT_CHAT_FRAME:AddMessage("rangedCrit: " .. SCL_Round(rangedCrit, 0.01))
+    strReturnString = strReturnString .. "," .. SCL_Round(rangedCrit, 0.01)
+
+    return strReturnString
 end
 
 function SCL_SerializePlayerStatsSpell()
 
-    spell = 0
+    local strReturnString = ""
+
+    local spell = 0
 
     for i = 1, 7 do
         spellDmg = GetSpellBonusDamage(i);
@@ -462,9 +524,11 @@ function SCL_SerializePlayerStatsSpell()
         end
         --DEFAULT_CHAT_FRAME:AddMessage("spellDmg(" .. i .. "): " .. spellDmg)
     end
-    DEFAULT_CHAT_FRAME:AddMessage("spell: " .. spell)
+    --DEFAULT_CHAT_FRAME:AddMessage("spell: " .. spell)
 
-    spellcrit = 0
+    strReturnString = spell
+
+    local spellcrit = 0
 
     for i = 1, 7 do
         theCritChance = GetSpellCritChance(i)
@@ -473,46 +537,54 @@ function SCL_SerializePlayerStatsSpell()
         end
         --DEFAULT_CHAT_FRAME:AddMessage("theCritChance(" .. i .. "): " .. theCritChance)
     end
-    DEFAULT_CHAT_FRAME:AddMessage("spellcrit: " .. SCL_Round(spellcrit, 0.01))
+    --DEFAULT_CHAT_FRAME:AddMessage("spellcrit: " .. SCL_Round(spellcrit, 0.01))
+    strReturnString = strReturnString .. "," .. SCL_Round(spellcrit, 0.01)
 
     bonusHeal = GetSpellBonusHealing()
-    DEFAULT_CHAT_FRAME:AddMessage("bonusHeal: " .. bonusHeal)
+    --DEFAULT_CHAT_FRAME:AddMessage("bonusHeal: " .. bonusHeal)
+    strReturnString = strReturnString .. "," .. bonusHeal
 
     hitSpell = GetCombatRating(8)
-    DEFAULT_CHAT_FRAME:AddMessage("hitSpell: " .. hitSpell)
+    --DEFAULT_CHAT_FRAME:AddMessage("hitSpell: " .. hitSpell)
+    strReturnString = strReturnString .. "," .. hitSpell
 
     --critSpell = GetCombatRating(11)
     --DEFAULT_CHAT_FRAME:AddMessage("critSpell: " .. critSpell)
 
     hasteSpell = GetCombatRating(20)
-    DEFAULT_CHAT_FRAME:AddMessage("hasteSpell: " .. hasteSpell)
+    --DEFAULT_CHAT_FRAME:AddMessage("hasteSpell: " .. hasteSpell)
+    strReturnString = strReturnString .. "," .. hasteSpell
 
+    return strReturnString
 end
 
 function SCL_SerializePlayerStatsDefense()
+    local strReturnString = ""
     base, effectiveArmor, armor, posBuff, negBuff = UnitArmor("player");
-    DEFAULT_CHAT_FRAME:AddMessage("Base: " .. base .. " effectiveArmor: " ..  effectiveArmor .. " armor: " .. armor.. " posbuff: " .. posBuff .. " negBuff: " .. negBuff)
+    --DEFAULT_CHAT_FRAME:AddMessage("effectiveArmor: " ..  effectiveArmor)
+    strReturnString = effectiveArmor
 
     baseDefense, armorDefense = UnitDefense("player");
-    DEFAULT_CHAT_FRAME:AddMessage("baseDefense: " .. baseDefense .. " armorDefense: " ..armorDefense)
+    --DEFAULT_CHAT_FRAME:AddMessage("baseDefense: " .. baseDefense .. " armorDefense: " ..armorDefense)
+    strReturnString = strReturnString .. "," .. (baseDefense + armorDefense)
 
     chanceDodge = GetDodgeChance()
-    DEFAULT_CHAT_FRAME:AddMessage("chanceDodge: " .. SCL_Round(chanceDodge, 0.01))
-
-    chanceBlock = GetBlockChance()
-    DEFAULT_CHAT_FRAME:AddMessage("chanceBlock: " .. SCL_Round(chanceBlock, 0.01))
+    --DEFAULT_CHAT_FRAME:AddMessage("chanceDodge: " .. SCL_Round(chanceDodge, 0.01))
+    strReturnString = strReturnString .. "," ..  SCL_Round(chanceDodge, 0.01)
 
     chanceParry = GetParryChance()
-    DEFAULT_CHAT_FRAME:AddMessage("chanceParry: " .. SCL_Round(chanceParry, 0.01))
+    --DEFAULT_CHAT_FRAME:AddMessage("chanceParry: " .. SCL_Round(chanceParry, 0.01))
+    strReturnString = strReturnString .. "," ..  SCL_Round(chanceParry, 0.01)
+
+    chanceBlock = GetBlockChance()
+    --DEFAULT_CHAT_FRAME:AddMessage("chanceBlock: " .. SCL_Round(chanceBlock, 0.01))
+    strReturnString = strReturnString .. "," ..  SCL_Round(chanceBlock, 0.01)
 
     baseResilence = GetCombatRating(15)
-    DEFAULT_CHAT_FRAME:AddMessage("baseResilence: " .. baseResilence)
+    --DEFAULT_CHAT_FRAME:AddMessage("baseResilence: " .. baseResilence)
+    strReturnString = strReturnString .. "," ..  baseResilence
 
-    --for i = 1, 24 do
-    --    rating = GetCombatRating(i)
-    --    DEFAULT_CHAT_FRAME:AddMessage("rating(" ..i.. "): " .. rating)
-    --end
-
+    return strReturnString
 end
 
 
@@ -606,7 +678,7 @@ function SCL_GetNumTalentPoints(iTab)
         numTalentCount = numTalentCount + currentRank
     end
 
-    DEFAULT_CHAT_FRAME:AddMessage("Tab: " ..iTab.. " Talents: " ..numTalentCount)
+    --DEFAULT_CHAT_FRAME:AddMessage("Tab: " ..iTab.. " Talents: " ..numTalentCount)
 
     return numTalentCount;
 end
@@ -616,12 +688,257 @@ function SCL_OnEvent(self, event, ...)
     if (event == 'CHAT_MSG_ADDON') then
         if(arg1 == 'SCLRI') then
             SendAddonMessage("SCLII", SCL_SerializePlayer(), "WHISPER", arg4);
+            SendAddonMessage("SCLIS", SCL_SerializePlayerStats(), "WHISPER", arg4);
+            SendAddonMessage("SCLIB", SCL_SerializeBuffs(), "WHISPER", arg4);
         elseif(arg1 == "SCLII") then
             SCL_DeserializePlayerItemsStringShort(arg2, arg4)
             SCL_ShowCharacterFrame(arg4)
+        elseif(arg1 == "SCLIS") then
+            SCL_DeserializePlayerStats(arg2, arg4)
+        elseif(arg1 == "SCLIB") then
+            SCL_DeserializePlayerBuffs(arg2, arg4)
+        end
+    end
+end
+
+function SCL_DeserializePlayerBuffs(strDataString, strPlayer)
+    local buffStrings = {string.split(",", strDataString)}
+
+    if not (SCL_PLAYER[strPlayer]) then
+        SCL_PLAYER[strPlayer] = {}
+    end
+    
+    for i = 1, table.getn(buffStrings) do
+        --SCL_GetStats(statStrings[i], i, strPlayer)
+        SCL_PLAYER[strPlayer][("BUFF" .. i)] = buffStrings[i]
+    end
+
+    if(SCL_InspectNameText:GetText() == strPlayer) then
+        SCL_SetBuffIconsInFrame(strPlayer)
+    end
+end
+
+    
+
+function SCL_SetBuffIconsInFrame(strPlayer)
+    for i = 1, 40 do
+        if(SCL_PLAYER[strPlayer][("BUFF" .. i)] == nil) then
+            getglobal("SCL_BUFF"..i):Hide()
+        else
+            getglobal("SCL_BUFF"..i):SetNormalTexture("Interface\\Icons\\" .. SCL_PLAYER[strPlayer][("BUFF" .. i)])
+            getglobal("SCL_BUFF"..i):Show()
+        end
+
+        --DEFAULT_CHAT_FRAME:AddMessage(SCL_PLAYER[strPlayer][("BUFF" .. i)])
+    end
+end
+
+
+function SCL_DeserializePlayerStats(strStatsString, strPlayer)
+    local statStrings = {string.split(":", strStatsString)}
+
+    if not (SCL_PLAYER[strPlayer]) then
+        SCL_PLAYER[strPlayer] = {}
+    end
+
+    for i = 1, table.getn(statStrings) do
+        SCL_GetStats(statStrings[i], i, strPlayer)
+    end
+end
+
+function SCL_GetStats(strStatString, iIndex, strPlayer)
+    if not (SCL_PLAYER[strPlayer]) then
+        SCL_PLAYER[strPlayer] = {}
+    end
+
+    local statInfoStrings = {string.split(",", strStatString)}
+
+    if(iIndex==1) then
+        --DEFAULT_CHAT_FRAME:AddMessage("Value1: " .. statInfoStrings[1])
+
+        if(statInfoStrings[1] == nil or statInfoStrings[1] == "") then
+            SCL_PLAYER[strPlayer]["M_HASTE"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["M_HASTE"] = statInfoStrings[1]
+        end
+
+        if(statInfoStrings[2] == nil or statInfoStrings[2] == "") then
+            SCL_PLAYER[strPlayer]["M_AP"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["M_AP"] = statInfoStrings[2]
+        end
+
+        if(statInfoStrings[3] == nil or statInfoStrings[3] == "") then
+            SCL_PLAYER[strPlayer]["M_HIT"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["M_HIT"] = statInfoStrings[3]
+        end
+
+        if(statInfoStrings[4] == nil or statInfoStrings[4] == "") then
+            SCL_PLAYER[strPlayer]["M_CRIT"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["M_CRIT"] = statInfoStrings[4]
+        end
+
+        if(statInfoStrings[5] == nil or statInfoStrings[5] == "") then
+            SCL_PLAYER[strPlayer]["M_EXP"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["M_EXP"] = statInfoStrings[5]
+        end
+
+        if(statInfoStrings[6] == nil or statInfoStrings[6] == "") then
+            SCL_PLAYER[strPlayer]["M_ARP"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["M_ARP"] = statInfoStrings[6]
+        end
+    elseif(iIndex==2) then
+        if(statInfoStrings[1] == nil or statInfoStrings[1] == "") then
+            SCL_PLAYER[strPlayer]["S_DMG"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["S_DMG"] = statInfoStrings[1]
+        end
+
+        if(statInfoStrings[2] == nil or statInfoStrings[2] == "") then
+            SCL_PLAYER[strPlayer]["S_CRIT"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["S_CRIT"] = statInfoStrings[2]
+        end
+
+        if(statInfoStrings[3] == nil or statInfoStrings[3] == "") then
+            SCL_PLAYER[strPlayer]["S_HEAL"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["S_HEAL"] = statInfoStrings[3]
+        end
+
+        if(statInfoStrings[4] == nil or statInfoStrings[4] == "") then
+            SCL_PLAYER[strPlayer]["S_HIT"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["S_HIT"] = statInfoStrings[4]
+        end
+
+        if(statInfoStrings[5] == nil or statInfoStrings[5] == "") then
+            SCL_PLAYER[strPlayer]["S_HASTE"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["S_HASTE"] = statInfoStrings[5]
+        end
+
+    elseif(iIndex==3) then
+        if(statInfoStrings[1] == nil or statInfoStrings[1] == "") then
+            SCL_PLAYER[strPlayer]["R_HASTE"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["R_HASTE"] = statInfoStrings[1]
+        end
+
+        if(statInfoStrings[2] == nil or statInfoStrings[2] == "") then
+            SCL_PLAYER[strPlayer]["R_AP"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["R_AP"] = statInfoStrings[2]
+        end
+
+        if(statInfoStrings[3] == nil or statInfoStrings[3] == "") then
+            SCL_PLAYER[strPlayer]["R_HIT"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["R_HIT"] = statInfoStrings[3]
+        end
+
+        if(statInfoStrings[4] == nil or statInfoStrings[4] == "") then
+            SCL_PLAYER[strPlayer]["R_CRIT"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["R_CRIT"] = statInfoStrings[4]
+        end
+
+        if(statInfoStrings[5] == nil or statInfoStrings[5] == "") then
+            SCL_PLAYER[strPlayer]["R_ARP"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["R_ARP"] = statInfoStrings[5]
+        end
+
+    elseif(iIndex==4) then
+        if(statInfoStrings[1] == nil or statInfoStrings[1] == "") then
+            SCL_PLAYER[strPlayer]["D_AMOR"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["D_AMOR"] = statInfoStrings[1]
+        end
+
+        if(statInfoStrings[2] == nil or statInfoStrings[2] == "") then
+            SCL_PLAYER[strPlayer]["D_DEFF"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["D_DEFF"] = statInfoStrings[2]
+        end
+
+        if(statInfoStrings[3] == nil or statInfoStrings[3] == "") then
+            SCL_PLAYER[strPlayer]["D_DODGE"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["D_DODGE"] = statInfoStrings[3]
+        end
+
+        if(statInfoStrings[4] == nil or statInfoStrings[4] == "") then
+            SCL_PLAYER[strPlayer]["D_PARRY"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["D_PARRY"] = statInfoStrings[4]
+        end
+
+        if(statInfoStrings[5] == nil or statInfoStrings[5] == "") then
+            SCL_PLAYER[strPlayer]["D_BLOCK"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["D_BLOCK"] = statInfoStrings[5]
+        end
+
+        if(statInfoStrings[6] == nil or statInfoStrings[6] == "") then
+            SCL_PLAYER[strPlayer]["D_RES"] = "0"
+        else
+            SCL_PLAYER[strPlayer]["D_RES"] = statInfoStrings[6]
         end
     end
 
+    if(SCL_InspectNameText:GetText() == strPlayer) then
+        SCL_SetStatsInFrame(strPlayer)
+    end
+
+end
+
+function SCL_SetStatsInFrame(name)
+    --DEFAULT_CHAT_FRAME:AddMessage("Haste: " .. SCL_PLAYER[name]["M_HASTE"])
+    
+    SCL_InspectStatHasteR:SetText(SCL_PLAYER[name]["M_HASTE"])
+    SCL_InspectStatAttackpowerR:SetText(SCL_PLAYER[name]["M_AP"])
+    SCL_InspectMeleeHitR:SetText(SCL_PLAYER[name]["M_HIT"])
+    SCL_InspectMeleeCritR:SetText(SCL_PLAYER[name]["M_CRIT"])
+    SCL_InspectExpertiseR:SetText(SCL_PLAYER[name]["M_EXP"])
+    SCL_InspectMeleeAmorpenR:SetText(SCL_PLAYER[name]["M_ARP"])
+
+    SCL_InspectRangedHasteR:SetText(SCL_PLAYER[name]["R_HASTE"])
+    SCL_InspectRangedAttackpowerR:SetText(SCL_PLAYER[name]["R_AP"])
+    SCL_InspectRangedHitR:SetText(SCL_PLAYER[name]["R_HIT"])
+    SCL_InspectRangedCritR:SetText(SCL_PLAYER[name]["R_CRIT"])
+    SCL_InspectRangedAmorpenR:SetText(SCL_PLAYER[name]["R_ARP"])
+
+    SCL_InspectSpellDamageR:SetText(SCL_PLAYER[name]["S_DMG"])
+    SCL_InspectSpellHealR:SetText(SCL_PLAYER[name]["S_HEAL"])
+    SCL_InspectSpellHitR:SetText(SCL_PLAYER[name]["S_HIT"])
+    SCL_InspectSpellCritR:SetText(SCL_PLAYER[name]["S_CRIT"])
+    SCL_InspectSpellHasteR:SetText(SCL_PLAYER[name]["S_HASTE"])
+
+    SCL_InspectArmorR:SetText(SCL_PLAYER[name]["D_AMOR"])
+    SCL_InspectDefenseR:SetText(SCL_PLAYER[name]["D_DEFF"])
+    SCL_InspectDdodgeR:SetText(SCL_PLAYER[name]["D_DODGE"])
+    SCL_InspectParryR:SetText(SCL_PLAYER[name]["D_PARRY"])
+    SCL_InspectBlockR:SetText(SCL_PLAYER[name]["D_BLOCK"])
+    SCL_InspectResilenceR:SetText(SCL_PLAYER[name]["D_RES"])
+end
+
+function SCL_SerializePlayerStats()
+    local strReturnString = ""
+
+    strReturnString = SCL_SerializePlayerStatsMelee()
+    strReturnString = strReturnString .. ":"
+    strReturnString = strReturnString .. SCL_SerializePlayerStatsSpell()
+    strReturnString = strReturnString .. ":"
+    strReturnString = strReturnString .. SCL_SerializePlayerStatsRange()
+    strReturnString = strReturnString .. ":"
+    strReturnString = strReturnString .. SCL_SerializePlayerStatsDefense()
+
+    return strReturnString
 end
 
 function SCL_DeserializePlayerItemsStringShort(strItemsString, strPlayer)
