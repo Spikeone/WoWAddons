@@ -1,0 +1,735 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
+  <Script file="SpikesProfessionLink.lua"/>
+  <Button name="SPL_CraftButtonTemplate" inherits="ClassTrainerSkillButtonTemplate" hidden="false" virtual="true">
+    <Layers>
+      <Layer level="BACKGROUND">
+        <FontString name="$parentCost" inherits="GameFontNormal">
+          <Anchors>
+            <Anchor point="RIGHT">
+              <Offset>
+                <AbsDimension x="-15" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+    <Scripts>
+      <OnClick>
+        SPL_CraftButton_OnClick(arg1);
+      </OnClick>
+      <OnLeave>
+        <!--if ( GetCraftSelectionIndex() ~= this:GetID() ) then
+					getglobal(this:GetName().."SubText"):SetTextColor(this.r, this.g, this.b);
+				end-->
+      </OnLeave>
+    </Scripts>
+  </Button>
+  <Button name="SPL_CraftItemTemplate" inherits="QuestItemTemplate" virtual="true">
+    <Scripts>
+      <OnLoad>
+        this.hasItem = 1;
+        this:SetFrameLevel( this:GetFrameLevel() + 3 );
+      </OnLoad>
+      <OnEnter>
+        <!--GameTooltip:SetOwner(this, "ANCHOR_TOPLEFT");
+				GameTooltip:SetCraftItem(GetCraftSelectionIndex(), this:GetID());-->
+        CursorUpdate();
+      </OnEnter>
+      <OnLeave>
+        <!--GameTooltip:Hide();-->
+        ResetCursor();
+      </OnLeave>
+      <OnUpdate>
+        CursorOnUpdate();
+      </OnUpdate>
+      <OnClick>
+        <!--if ( IsControlKeyDown() ) then
+					DressUpItemLink(GetCraftReagentItemLink(GetCraftSelectionIndex(), this:GetID()));
+				elseif ( IsShiftKeyDown() ) then
+					if ( ChatFrameEditBox:IsVisible() ) then
+						ChatFrameEditBox:Insert(GetCraftReagentItemLink(GetCraftSelectionIndex(), this:GetID()));
+					end
+				end-->
+      </OnClick>
+    </Scripts>
+  </Button>
+  <Frame name="SPL_CraftFrame" toplevel="true" movable="true" parent="UIParent" enableMouse="true" hidden="true">
+    <Size>
+      <AbsDimension x="384" y="512"/>
+    </Size>
+    <Anchors>
+      <Anchor point="TOPLEFT">
+        <Offset>
+          <AbsDimension x="0" y="-104"/>
+        </Offset>
+      </Anchor>
+    </Anchors>
+    <HitRectInsets>
+      <AbsInset left="0" right="34" top="0" bottom="75"/>
+    </HitRectInsets>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture name="SPL_CraftFramePortrait">
+          <Size>
+            <AbsDimension x="60" y="60"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="7" y="-6"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </Texture>
+      </Layer>
+      <Layer level="BORDER">
+        <Texture file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopLeft">
+          <Size>
+            <AbsDimension x="256" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT"/>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\ClassTrainerFrame\UI-ClassTrainer-TopRight">
+          <Size>
+            <AbsDimension x="128" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPRIGHT"/>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\ClassTrainerFrame\UI-ClassTrainer-BotLeft">
+          <Size>
+            <AbsDimension x="256" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="BOTTOMLEFT"/>
+          </Anchors>
+        </Texture>
+        <Texture file="Interface\ClassTrainerFrame\UI-ClassTrainer-BotRight">
+          <Size>
+            <AbsDimension x="128" y="256"/>
+          </Size>
+          <Anchors>
+            <Anchor point="BOTTOMRIGHT"/>
+          </Anchors>
+        </Texture>
+        <FontString name="SPL_CraftFrameTitleText" inherits="GameFontNormal">
+          <Anchors>
+            <Anchor point="TOP" relativeTo="SPL_CraftFrame" relativePoint="TOP">
+              <Offset>
+                <AbsDimension x="0" y="-16"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+        </FontString>
+      </Layer>
+      <Layer level="ARTWORK">
+        <Texture name="SPL_CraftSkillBorderLeft" file="Interface\TradeSkillFrame\UI-TradeSkill-SkillBorder">
+          <Size>
+            <AbsDimension x="256" y="8"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="63" y="-50"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0" right="1.0" top="0" bottom="0.25"/>
+        </Texture>
+        <Texture name="SPL_CraftSkillBorderRight" file="Interface\TradeSkillFrame\UI-TradeSkill-SkillBorder">
+          <Size>
+            <AbsDimension x="28" y="8"/>
+          </Size>
+          <Anchors>
+            <Anchor point="LEFT" relativeTo="SPL_CraftSkillBorderLeft" relativePoint="RIGHT"/>
+          </Anchors>
+          <TexCoords left="0" right="0.109375" top="0.25" bottom="0.5"/>
+        </Texture>
+        <Texture name="SPL_CraftHorizontalBarLeft" file="Interface\ClassTrainerFrame\UI-ClassTrainer-HorizontalBar">
+          <Size>
+            <AbsDimension x="256" y="16"/>
+          </Size>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset>
+                <AbsDimension x="15" y="-221"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0" right="1.0" top="0" bottom="0.25"/>
+        </Texture>
+        <Texture file="Interface\ClassTrainerFrame\UI-ClassTrainer-HorizontalBar">
+          <Size>
+            <AbsDimension x="75" y="16"/>
+          </Size>
+          <Anchors>
+            <Anchor point="LEFT" relativeTo="SPL_CraftHorizontalBarLeft" relativePoint="RIGHT">
+              <Offset>
+                <AbsDimension x="0" y="0"/>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0" right="0.29296875" top="0.25" bottom="0.5"/>
+        </Texture>
+      </Layer>
+    </Layers>
+    <Frames>
+      <Frame name="SPL_CraftFrameFilterDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
+        <Anchors>
+          <Anchor point="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-26" y="-64"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+            <!--CraftFrameFilterDropDown_OnLoad();-->
+          </OnLoad>
+          <OnShow>
+            <!--CraftFrameFilterDropDown_OnShow();-->
+          </OnShow>
+        </Scripts>
+      </Frame>
+      <StatusBar name="SPL_CraftRankFrame" drawLayer="BACKGROUND" minValue="0" maxValue="1" defaultValue="0">
+        <Size>
+          <AbsDimension x="268" y="15"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="73" y="-37"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <FontString name="$parentSkillName" inherits="GameFontNormalSmall">
+              <Anchors>
+                <Anchor point="LEFT">
+                  <Offset>
+                    <AbsDimension x="6" y="1"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+            <FontString name="$parentSkillRank" inherits="GameFontHighlightSmall" justifyH="LEFT">
+              <Size>
+                <AbsDimension x="128" y="0"/>
+              </Size>
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentSkillName" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="13" y="0"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </FontString>
+          </Layer>
+          <Layer level="BACKGROUND">
+            <Texture name="$parentBackground">
+              <Color r="1.0" g="1.0" b="1.0" a="0.2"/>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Frames>
+          <Button name="$parentBorder">
+            <Size>
+              <AbsDimension x="281" y="32"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT">
+                <Offset>
+                  <AbsDimension x="-5" y="0"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <NormalTexture name="$parentNormal" file="Interface\PaperDollInfoFrame\UI-Character-Skills-BarBorder" />
+          </Button>
+        </Frames>
+        <Scripts>
+          <OnLoad>
+            <!--this:RegisterEvent("SKILL_LINES_CHANGED");-->
+          </OnLoad>
+          <OnEvent>
+            <!--if ( event == "SKILL_LINES_CHANGED" ) then
+							CraftFrame_Update();
+						end-->
+          </OnEvent>
+        </Scripts>
+        <BarTexture name="$parentBar" file="Interface\PaperDollInfoFrame\UI-Character-Skills-Bar" />
+        <BarColor r="0.25" g="0.25" b="0.75" />
+      </StatusBar>
+      <Frame name="SPL_CraftExpandButtonFrame">
+        <Size>
+          <AbsDimension x="54" y="32"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="15" y="-71"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer level="BACKGROUND">
+            <Texture name="SPL_CraftExpandTabLeft" file="Interface\ClassTrainerFrame\UI-ClassTrainer-ExpandTab-Left">
+              <Size>
+                <AbsDimension x="8" y="32"/>
+              </Size>
+              <Anchors>
+                <Anchor point="TOPLEFT"/>
+              </Anchors>
+            </Texture>
+            <Texture name="SPL_CraftExpandTabMiddle" file="Interface\QuestFrame\UI-QuestLogSortTab-Middle">
+              <Size>
+                <AbsDimension x="38" y="32"/>
+              </Size>
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="SPL_CraftExpandTabLeft" relativePoint="RIGHT">
+                  <Offset>
+                    <AbsDimension x="0" y="6"/>
+                  </Offset>
+                </Anchor>
+              </Anchors>
+            </Texture>
+            <Texture name="SPL_CraftExpandTabRight" file="Interface\QuestFrame\UI-QuestLogSortTab-Right">
+              <Size>
+                <AbsDimension x="8" y="32"/>
+              </Size>
+              <Anchors>
+                <Anchor point="LEFT" relativeTo="SPL_CraftExpandTabMiddle" relativePoint="RIGHT"/>
+              </Anchors>
+            </Texture>
+          </Layer>
+        </Layers>
+        <Frames>
+          <Button name="SPL_CraftCollapseAllButton" hidden="false" inherits="ClassTrainerSkillButtonTemplate">
+            <Size>
+              <AbsDimension x="22" y="22"/>
+            </Size>
+            <Anchors>
+              <Anchor point="LEFT" relativeTo="SPL_CraftExpandTabLeft" relativePoint="RIGHT">
+                <Offset>
+                  <AbsDimension x="0" y="3"/>
+                </Offset>
+              </Anchor>
+            </Anchors>
+            <Scripts>
+              <OnLoad>
+                getglobal(this:GetName()):SetText(ALL);
+              </OnLoad>
+              <OnClick>
+                <!--CraftCollapseAllButton_OnClick();-->
+              </OnClick>
+            </Scripts>
+          </Button>
+        </Frames>
+      </Frame>
+      <Frame name="SPL_CraftHighlightFrame" hidden="true">
+        <Size>
+          <AbsDimension x="293" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT"/>
+        </Anchors>
+        <Layers>
+          <Layer level="ARTWORK">
+            <Texture name="SPL_CraftHighlight" file="Interface\Buttons\UI-Listbox-Highlight2"/>
+          </Layer>
+        </Layers>
+      </Frame>
+      <Button name="SPL_Craft1" inherits="SPL_CraftButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SPL_CraftFrame">
+            <Offset>
+              <AbsDimension x="22" y="-96"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SPL_Craft2" inherits="SPL_CraftButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SPL_Craft1" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SPL_Craft3" inherits="SPL_CraftButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SPL_Craft2" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SPL_Craft4" inherits="SPL_CraftButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SPL_Craft3" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SPL_Craft5" inherits="SPL_CraftButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SPL_Craft4" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SPL_Craft6" inherits="SPL_CraftButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SPL_Craft5" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SPL_Craft7" inherits="SPL_CraftButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SPL_Craft6" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <Button name="SPL_Craft8" inherits="SPL_CraftButtonTemplate">
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SPL_Craft7" relativePoint="BOTTOMLEFT">
+            <Offset>
+              <AbsDimension x="0" y="0"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+      <ScrollFrame name="SPL_CraftListScrollFrame" inherits="ClassTrainerListScrollFrameTemplate">
+        <Size>
+          <AbsDimension x="296" y="130"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="SPL_CraftFrame" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-67" y="-96"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnVerticalScroll>
+            <!--FauxScrollFrame_OnVerticalScroll(CRAFT_SKILL_HEIGHT, CraftFrame_Update)-->
+          </OnVerticalScroll>
+        </Scripts>
+      </ScrollFrame>
+      <!--
+			<Frame name="CraftMoneyFrame" inherits="SmallMoneyFrameTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT" relativeTo="CraftFrame" relativePoint="BOTTOMLEFT">
+						<Offset>
+							<AbsDimension x="180" y="86"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Frame>
+		-->
+      <ScrollFrame name="SPL_CraftDetailScrollFrame" inherits="ClassTrainerDetailScrollFrameTemplate">
+        <Size>
+          <AbsDimension x="297" y="176"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="20" y="-234"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <ScrollChild>
+          <Frame name="SPL_CraftDetailScrollChildFrame">
+            <Size>
+              <AbsDimension x="297" y="150"/>
+            </Size>
+            <Layers>
+              <Layer level="BACKGROUND">
+                <FontString name="SPL_CraftName" inherits="GameFontNormal" text="Skill Name" justifyH="LEFT">
+                  <Size>
+                    <AbsDimension x="244" y="0"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="TOPLEFT">
+                      <Offset>
+                        <AbsDimension x="50" y="-5"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                </FontString>
+                <FontString name="SPL_CraftRequirements" inherits="GameFontHighlightSmall">
+                  <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="SPL_CraftName" relativePoint="BOTTOMLEFT">
+                      <Offset>
+                        <AbsDimension x="0" y="0"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                </FontString>
+                <FontString name="SPL_CraftCost" inherits="GameFontHighlightSmall">
+                  <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="SPL_CraftRequirements" relativePoint="BOTTOMLEFT">
+                      <Offset>
+                        <AbsDimension x="0" y="0"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                </FontString>
+                <FontString name="SPL_CraftCooldown" inherits="GameFontRedSmall">
+                  <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="SPL_CraftRequirements" relativePoint="BOTTOMLEFT">
+                      <Offset>
+                        <AbsDimension x="0" y="0"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                </FontString>
+                <Texture name="SPL_CraftDetailHeaderLeft" file="Interface\ClassTrainerFrame\UI-ClassTrainer-DetailHeaderLeft">
+                  <Size>
+                    <AbsDimension x="256" y="64"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="TOPLEFT">
+                      <Offset>
+                        <AbsDimension x="0" y="3"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                </Texture>
+                <Texture file="Interface\ClassTrainerFrame\UI-ClassTrainer-DetailHeaderRight">
+                  <Size>
+                    <AbsDimension x="64" y="64"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="SPL_CraftDetailHeaderLeft" relativePoint="TOPRIGHT">
+                      <Offset>
+                        <AbsDimension x="0" y="0"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                </Texture>
+                <FontString name="SPL_CraftDescription" inherits="GameFontHighlightSmall" justifyH="LEFT">
+                  <Size>
+                    <AbsDimension x="290" y="0"/>
+                  </Size>
+                  <Anchors>
+                    <Anchor point="TOPLEFT">
+                      <Offset>
+                        <AbsDimension x="5" y="-50"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                </FontString>
+                <FontString name="SPL_CraftReagentLabel" inherits="GameFontNormalSmall" text="SPELL_REAGENTS">
+                  <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="SPL_CraftDescription" relativePoint="BOTTOMLEFT">
+                      <Offset>
+                        <AbsDimension x="0" y="-10"/>
+                      </Offset>
+                    </Anchor>
+                  </Anchors>
+                </FontString>
+              </Layer>
+            </Layers>
+            <Frames>
+              <Button name="SPL_CraftIcon">
+                <Size>
+                  <AbsDimension x="37" y="37"/>
+                </Size>
+                <Anchors>
+                  <Anchor point="TOPLEFT">
+                    <Offset>
+                      <AbsDimension x="8" y="-3"/>
+                    </Offset>
+                  </Anchor>
+                </Anchors>
+                <Layers>
+                  <Layer level="ARTWORK">
+                    <FontString name="SPL_CraftIconCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="false">
+                      <Anchors>
+                        <Anchor point="BOTTOMRIGHT">
+                          <Offset>
+                            <AbsDimension x="-5" y="2"/>
+                          </Offset>
+                        </Anchor>
+                      </Anchors>
+                    </FontString>
+                  </Layer>
+                </Layers>
+                <Scripts>
+                  <OnLoad>
+                    <!--this.hasItem = 1;-->
+                  </OnLoad>
+                  <OnClick>
+                  </OnClick>
+                  <OnEnter>
+                    <!--GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+										GameTooltip:SetCraftSpell(GetCraftSelectionIndex());
+										CursorUpdate();-->
+                  </OnEnter>
+                  <OnLeave>
+                    <!--GameTooltip:Hide();-->
+                    ResetCursor();
+                  </OnLeave>
+                  <OnUpdate>
+                    CursorOnUpdate();
+                  </OnUpdate>
+                </Scripts>
+              </Button>
+              <Button name="SPL_CraftReagent1" inherits="SPL_CraftItemTemplate" id="1">
+                <Anchors>
+                  <Anchor point="TOPLEFT" relativeTo="SPL_CraftReagentLabel" relativePoint="BOTTOMLEFT">
+                    <Offset>
+                      <AbsDimension x="0" y="-3"/>
+                    </Offset>
+                  </Anchor>
+                </Anchors>
+              </Button>
+              <Button name="SPL_CraftReagent2" inherits="SPL_CraftItemTemplate" id="2">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="SPL_CraftReagent1" relativePoint="RIGHT">
+                    <Offset>
+                      <AbsDimension x="0" y="0"/>
+                    </Offset>
+                  </Anchor>
+                </Anchors>
+              </Button>
+              <Button name="SPL_CraftReagent3" inherits="SPL_CraftItemTemplate" id="3">
+                <Anchors>
+                  <Anchor point="TOPLEFT" relativeTo="SPL_CraftReagent1" relativePoint="BOTTOMLEFT">
+                    <Offset>
+                      <AbsDimension x="0" y="-2"/>
+                    </Offset>
+                  </Anchor>
+                </Anchors>
+              </Button>
+              <Button name="SPL_CraftReagent4" inherits="SPL_CraftItemTemplate" id="4">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="SPL_CraftReagent3" relativePoint="RIGHT">
+                    <Offset>
+                      <AbsDimension x="0" y="0"/>
+                    </Offset>
+                  </Anchor>
+                </Anchors>
+              </Button>
+              <Button name="SPL_CraftReagent5" inherits="SPL_CraftItemTemplate" id="5">
+                <Anchors>
+                  <Anchor point="TOPLEFT" relativeTo="SPL_CraftReagent3" relativePoint="BOTTOMLEFT">
+                    <Offset>
+                      <AbsDimension x="0" y="-2"/>
+                    </Offset>
+                  </Anchor>
+                </Anchors>
+              </Button>
+              <Button name="SPL_CraftReagent6" inherits="SPL_CraftItemTemplate" id="6">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="SPL_CraftReagent5" relativePoint="RIGHT">
+                    <Offset>
+                      <AbsDimension x="0" y="0"/>
+                    </Offset>
+                  </Anchor>
+                </Anchors>
+              </Button>
+              <Button name="SPL_CraftReagent7" inherits="SPL_CraftItemTemplate" id="7">
+                <Anchors>
+                  <Anchor point="TOPLEFT" relativeTo="SPL_CraftReagent6" relativePoint="BOTTOMLEFT">
+                    <Offset>
+                      <AbsDimension x="0" y="-2"/>
+                    </Offset>
+                  </Anchor>
+                </Anchors>
+              </Button>
+              <Button name="SPL_CraftReagent8" inherits="SPL_CraftItemTemplate" id="8">
+                <Anchors>
+                  <Anchor point="LEFT" relativeTo="SPL_CraftReagent7" relativePoint="RIGHT">
+                    <Offset>
+                      <AbsDimension x="0" y="0"/>
+                    </Offset>
+                  </Anchor>
+                </Anchors>
+              </Button>
+            </Frames>
+          </Frame>
+        </ScrollChild>
+      </ScrollFrame>
+      <Button name="SPL_CraftCreateButton" inherits="UIPanelButtonTemplate" text="CREATE">
+        <Size>
+          <AbsDimension x="80" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="CENTER" relativeTo="SPL_CraftFrame" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="224" y="-422"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            SPL_DoCraft(SPL_GetCraftSelectionIndex());
+          </OnClick>
+        </Scripts>
+      </Button>
+      <Button name="SPL_CraftCancelButton" inherits="UIPanelButtonTemplate" text="EXIT">
+        <Size>
+          <AbsDimension x="80" y="22"/>
+        </Size>
+        <Anchors>
+          <Anchor point="CENTER" relativeTo="SPL_CraftFrame" relativePoint="TOPLEFT">
+            <Offset>
+              <AbsDimension x="305" y="-422"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            SPL_HideUIPanel(SPL_CraftFrame);
+          </OnClick>
+        </Scripts>
+      </Button>
+      <Button name="SPL_CraftFrameCloseButton" inherits="UIPanelCloseButton">
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="SPL_CraftFrame" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-29" y="-8"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </Button>
+    </Frames>
+    <Scripts>
+      <OnLoad>
+        SPL_CraftFrame_OnLoad();
+      </OnLoad>
+      <OnEvent>
+        SPL_CraftFrame_OnEvent();
+      </OnEvent>
+      <OnShow>
+        PlaySound("igCharacterInfoOpen");
+      </OnShow>
+      <OnHide>
+        SPL_CloseCraft();
+        PlaySound("igCharacterInfoClose");
+      </OnHide>
+      <OnMouseWheel>
+        return;
+      </OnMouseWheel>
+    </Scripts>
+  </Frame>
+</Ui>

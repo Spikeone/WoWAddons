@@ -1,0 +1,6 @@
+## Interface: 20400
+## Title : SpikesProfessionLink
+## Notes: Enables you to link your profession to anybody. The other player needs this addon as well.
+## Author: Spikeone @ B2B-WoW
+SpikesProfessionLink.xml
+RecipeDB_Engineering.lua
