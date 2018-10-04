@@ -23,11 +23,21 @@ CraftSubTypeColor["none"]		= { r = 0, g = 0.45, b = 0 };
 
 --UIPanelWindows["CraftFrame"] = { area = "left", pushable = 4 };
 
+SPL_TRADESKILLTOSTRING = {}
+SPL_TRADESKILLTOSTRING["Ingenieurskunst"] = "ENGINEERING"
+
 local SPL_TradeSkills = {}
 
 local SPL_ICONS = {}
 SPL_ICONS["ENGINEERING"] = "Interface\\Icons\\Trade_Engineering"
 
+local SPL_PLAYER_SPELLS = {}
+SPL_PLAYER_SPELLS["ENGINEERING"] = {}
+
+local SPL_PLAYER_SERIALIZED = {}
+
+
+local SPL_KNOWNPLAYERS = {}
 --function SPL_CraftFrame_Show()
 --	ShowUIPanel(SPL_CraftFrame);
 --	if ( not SPL_CraftFrame:IsVisible() ) then
@@ -52,6 +62,59 @@ SPL_ICONS["ENGINEERING"] = "Interface\\Icons\\Trade_Engineering"
 --	CraftListScrollFrameScrollBar:SetValue(0);
 --	CraftFrame_Update();
 --end
+
+local origChatFrame_OnHyperlinkShow = ChatFrame_OnHyperlinkShow;
+ChatFrame_OnHyperlinkShow = function(...)
+    local chatFrame, link, text, button = ...;
+
+    local r,g,b,itemID,linkType,skillLevel,skillData,E,F,G,H,name = link:match("^|cff(%x%x)(%x%x)(%x%x)|Hitem:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%-?%d+):(%d+)|h%[(.+)%]|h|r$")
+
+    -- linkType = flag (1 = player)
+    -- simpleData = Level, Race, Class etc.
+    if(itemID == "1" and linkType == "2") then
+
+        -- get professionname and player name
+        professionName, playerName = name:match("^(%w*) %((%w*)%)$")
+
+        DEFAULT_CHAT_FRAME:AddMessage("skillLevel: " ..skillLevel)
+        DEFAULT_CHAT_FRAME:AddMessage("skillData: " ..skillData)
+        DEFAULT_CHAT_FRAME:AddMessage("professionName: " ..professionName)
+        DEFAULT_CHAT_FRAME:AddMessage("playerName: " ..playerName)
+
+        SPL_ReadHyperlinkData(playerName, professionName, skillLevel, skillData)
+
+        return;
+    end
+    
+    return origChatFrame_OnHyperlinkShow(...);
+end
+
+function SPL_ReadHyperlinkData(strPlayer, strProfession, strSkillLevel, strData)
+
+    -- it's a completly new player
+    if (SPL_KNOWNPLAYERS[strPlayer] == nil) then
+        SPL_KNOWNPLAYERS[strPlayer] = {}
+    end
+
+    if (SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]] == nil) then
+        SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]] = {}
+        SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["RANK"] = strSkillLevel
+        SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["RAW"] = strData
+        SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["SPELLS"] = {}
+    end
+
+    -- build array
+    local tmpBuffer = {}
+
+    for i = 1, 11 do
+        tmpBuffer[i] = tonumber(SPL_LTrim(string.sub(strData, (i - 1) * 10 + 1, i * 10), "0"))
+    end
+
+    for h = 1, SPL_tablelength(tmpBuffer) do
+        DEFAULT_CHAT_FRAME:AddMessage("(" ..h.. "): " ..tmpBuffer[h])
+    end
+
+end
 
 function SPL_CraftFrame_Hide()
     HideUIPanel(SPL_CraftFrame);
@@ -84,7 +147,7 @@ function SPL_SlashCommandHandler(msg)
         -- engineering will be extracted from the hyperlink
         -- Skill level will be extracted from the hyperlink
         -- Skill level will be extracted from the hyperlink
-        SPL_CraftFrameSetData("ENGINEERING", "375", "Spikeone")
+        SPL_CraftFrameSetData("ENGINEERING", "375", "Spikeone", 173)
         SPL_CraftFrame:Show()
     elseif(command == "hide") then
         SPL_CraftFrame:Hide()
@@ -98,8 +161,10 @@ function SPL_ScanTradeskill()
 
     local tsName = GetTradeSkillLine()
 
+    DEFAULT_CHAT_FRAME:AddMessage("tsName: " ..tsName)
+
     if(numCrafts and tsName) then
-        SPL_ScanSpecificTradeskill(tsName, numCrafts)
+        SPL_ScanSpecificTradeskill(SPL_TRADESKILLTOSTRING[tsName], numCrafts)
     end
 end
 
@@ -113,19 +178,19 @@ function SPL_ScanSpecificTradeskill(tsName, tsCount)
         return -- tradeskill already scanned
     else
         SPL_TradeSkills[tsName] = {} --need to scan
+        SetupTradeSkillButton() -- add link button
     end
 
-    --if(tsCount > 10) then
-    --    tsCount = 10
-    --end
+    if(SPL_PLAYER_SPELLS[tsName] == nil) then
+        SPL_PLAYER_SPELLS[tsName] = {}
+    end
 
-    strSerializedTrade = ""
+    local skillLineName, skillLineRank, skillLineMaxRank = GetTradeSkillLine();
+    SPL_TradeSkills[tsName]["RANK"] = skillLineRank
+    SPL_TradeSkills[tsName]["LNAME"] = skillLineName
 
     numKnown = 0
     numKnownNotDB = 0
-
-    -- suggesting format:
-    -- header1:spell1,spell2,spell3,spell4:header2:spell5,spell6,spell7,spell8:header3:spell9 etc.
 
     for i = 1, tsCount do
         local skillname, skilltype, numAvailable, isExpanded = GetTradeSkillInfo(i)
@@ -133,47 +198,100 @@ function SPL_ScanSpecificTradeskill(tsName, tsCount)
         if(skilltype ~= "header") then
 
             local recipelink = GetTradeSkillRecipeLink(i)
-
             local r,g,b,spellID,name,C,D,E,F,G,H,I = recipelink:match("^|cff(%x%x)(%x%x)(%x%x)|Henchant:(%d+)|h%[(.+)%]|h|r$")
 
-            if(SPL_EngineeringDB[tonumber(spellID)]) then
+            if(SPELLDB[tsName][tonumber(spellID)]) then
+                SPL_PLAYER_SPELLS[tsName][tonumber(spellID)] = "known"
                 numKnown = numKnown + 1
             else
                 numKnownNotDB = numKnownNotDB + 1
                 DEFAULT_CHAT_FRAME:AddMessage("Unknown Spell: "..spellID)
             end
-
-            -- if the last char in the 'strSerializedTrade' is a ':' then we are just after the header thus no need to insert a ','
-            if(string.sub(strSerializedTrade, string.len(strSerializedTrade), string.len(strSerializedTrade)) == ":") then
-                strSerializedTrade = strSerializedTrade .. spellID
-            else
-                strSerializedTrade = strSerializedTrade ..",".. spellID
-            end
-
-
-            --strSerializedTrade .. strSerializedTrade
-        else
-            -- always add  : between headers and following spells
-            -- a header NEVER can be the last one
-            if(strSerializedTrade == "") then
-                strSerializedTrade = skillname .. ":"
-            else
-                strSerializedTrade = strSerializedTrade .. ":" ..skillname ..":"
-            end
         end
     end
 
-    DEFAULT_CHAT_FRAME:AddMessage("Currently " ..(numKnown + numKnownNotDB) .. " of " ..SPL_tablelength(SPL_EngineeringDB) .. " Recipes known")
+    DEFAULT_CHAT_FRAME:AddMessage("Currently " ..(numKnown + numKnownNotDB) .. " of " ..SPL_tablelength(SPELLDB[tsName]) .. " Recipes known")
     DEFAULT_CHAT_FRAME:AddMessage("numKnown " ..numKnown)
     DEFAULT_CHAT_FRAME:AddMessage("numKnownNotDB " ..numKnownNotDB)
-    DEFAULT_CHAT_FRAME:AddMessage("Serialized Profession length: " ..string.len(strSerializedTrade))
 
+    -- build array
+    local tmpBuffer = {}
+
+    for k = 1, 11 do
+        tmpBuffer[k] = 0
+    end
+
+    local tmpBit = 0
+
+    for spellIDDB in pairs(SPELLDB[tsName]) do 
+        if(SPL_PLAYER_SPELLS[tsName][spellIDDB]) then
+
+            local indexValue = math.floor((tmpBit / 32) + 1)
+
+            --DEFAULT_CHAT_FRAME:AddMessage("indexValue" ..indexValue)
+            tmpBuffer[indexValue] = bit.bor(tmpBuffer[indexValue],(bit.lshift(1,(tmpBit % 32))))
+        end
+
+        tmpBit = tmpBit + 1
+    end
+
+    for h = 1, SPL_tablelength(tmpBuffer) do
+        DEFAULT_CHAT_FRAME:AddMessage("(" ..h.. "): " ..tmpBuffer[h])
+    end
+
+    listSpellsCount = 0
+
+    tmpBit = 0
+    for knownSpell in pairs(SPELLDB[tsName]) do
+        local indexValue = math.floor(tmpBit / 32) + 1
+
+        if(bit.band(tmpBuffer[indexValue], bit.lshift(1, tmpBit % 32)) > 0) then
+            -- spieler kann zauber knownSpell yay \o/
+            --DEFAULT_CHAT_FRAME:AddMessage("knownSpell " ..knownSpell)
+            listSpellsCount = listSpellsCount + 1
+        end
+
+        tmpBit = tmpBit + 1
+    end
+
+    SPL_PLAYER_SERIALIZED[tsName] = SPL_SerializeKnownSpells(tsName)
+
+    DEFAULT_CHAT_FRAME:AddMessage("Known: " ..(numKnown + numKnownNotDB).. " vs " ..listSpellsCount .. " of " ..SPL_tablelength(SPELLDB[tsName]))
+end
+
+function SPL_SerializeKnownSpells(strProfession)
+    -- build array
+    local tmpBuffer = {}
+    for k = 1, 11 do
+        tmpBuffer[k] = 0
+    end
+
+    local tmpBit = 0
+
+    for spellIDDB in pairs(SPELLDB[strProfession]) do 
+        if(SPL_PLAYER_SPELLS[strProfession][spellIDDB]) then
+            local indexValue = math.floor((tmpBit / 32) + 1)
+            tmpBuffer[indexValue] = bit.bor(tmpBuffer[indexValue],(bit.lshift(1,(tmpBit % 32))))
+        end
+
+        tmpBit = tmpBit + 1
+    end
+
+
+    local strReturnString = ""
+    for h = 1, SPL_tablelength(tmpBuffer) do
+        strReturnString = strReturnString .. SPL_LPad(tmpBuffer[h], "0", 10)
+    end
+
+    return strReturnString
 end
 
 function SPL_tablelength(T)
-  local count = 0
-  for _ in pairs(T) do count = count + 1 end
-  return count
+    local count = 0
+    for _ in pairs(T) do 
+        count = count + 1 
+    end
+    return count
 end
 
 function SPL_CraftFrame_OnEvent()
@@ -181,12 +299,154 @@ function SPL_CraftFrame_OnEvent()
         DEFAULT_CHAT_FRAME:AddMessage("SPL Event: " ..event)
     elseif(event=="TRADE_SKILL_SHOW") then -- engineering/leatherworking are trades
         DEFAULT_CHAT_FRAME:AddMessage("SPL Event: " ..event)
+        if(TradeSkillFrame:IsVisible()) then
+            DEFAULT_CHAT_FRAME:AddMessage("TradeSkillFrame:IsVisible")
+        end
+
         SPL_ScanTradeskill()
     end
-
 end
 
-function SPL_CraftFrameSetData(strCraftName, strSkillLevel, strName)
+function SetupTradeSkillButton()
+        local button = CreateFrame("Button",nil,TradeSkillFrame)
+        button.obj = self
+        button:SetWidth(20)
+        button:SetHeight(20)
+        button:SetScript("OnEnter",function(this)
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+            GameTooltip:SetText("Link Profession", 1.0,1.0,1.0 )
+        end)
+        button:SetScript("OnLeave",function(this)
+            GameTooltip:Hide()
+        end)
+        button:SetScript("OnClick",SPL_TradeskillButton_OnClick)
+        button:SetNormalTexture("Interface\\Addons\\SpikesProfessionLink\\Media\\ICON_BUTTON_32x32")
+        button:SetPushedTexture("Interface\\Addons\\SpikesProfessionLink\\Media\\ICON_BUTTON_32x32")
+        button:SetDisabledTexture("Interface\\Addons\\SpikesProfessionLink\\Media\\ICON_BUTTON_32x32")
+        button:SetHighlightTexture("Interface\\Addons\\SpikesProfessionLink\\Media\\ICON_BUTTON_32x32", "ADD")
+        button:SetPoint("RIGHT",TradeSkillFrame,"RIGHT",-61,232)
+end
+
+function SPL_TradeskillButton_OnClick()
+    SPL_AddProfessionLink()
+end
+
+function SPL_BuildProfessionLink(strProfession)
+    local strPlayerItemString = "|cffffffff"
+
+    -- "|Hitem:1:1:0:0:0:0:0:0|h[asdf]h|r"
+
+    -- 1 = just an non existing item ID
+    -- 2 = faketyp (1 = player, 2 = profession)
+    strPlayerItemString = strPlayerItemString .. "|Hitem:1:2:"
+
+    strPlayerItemString = strPlayerItemString .. SPL_TradeSkills[strProfession]["RANK"] -- SkillLevel
+    
+    strPlayerItemString = strPlayerItemString .. ":"
+    
+    strPlayerItemString = strPlayerItemString .. SPL_PLAYER_SERIALIZED[strProfession] -- Data
+
+    strPlayerItemString = strPlayerItemString ..":"
+    
+    strPlayerItemString = strPlayerItemString .. "0"
+
+    strPlayerItemString = strPlayerItemString .. ":0:0:0|h["
+
+    strPlayerItemString = strPlayerItemString .. SPL_TradeSkills[strProfession]["LNAME"] .. " (" .. UnitName("player") .. ")"
+
+    strPlayerItemString = strPlayerItemString .. "]|h|r"
+
+    return strPlayerItemString
+end
+
+function SPL_AddProfessionLink()
+
+    -- This is for WIM compatibility
+    -- Step 1: Check if WIM is loaded
+    if(IsAddOnLoaded("WIM")) then
+        -- Step 2: iterate through all children of UI parent
+        for i = 1, select('#', UIParent:GetChildren()) do
+            -- Step 3: it might be a wim_window
+            local wim_messageframe = select(i, UIParent:GetChildren())
+
+            -- Step 3.1: has the frame a name?
+            if(wim_messageframe:GetName()) then
+                -- Step 3.2: Does the name start with "WIM_msgFrame"? (They are called WIM_msgFrame1, WIM_msgFrame2, etc.)
+                if(string.sub(wim_messageframe:GetName(), 0,12) == "WIM_msgFrame") then
+
+                    -- Step 4: iterate through all children of  the WIM_msgFrame
+                    for j = 1, select('#', wim_messageframe:GetChildren()) do
+                        -- Step 5: it might be a MsgBox (Input box)
+                        local wim_messageframe_edit = select(j, wim_messageframe:GetChildren())
+                        -- Step 5.1: Frame name contains MsgBox at the end?(They are called IM_msgFrame1MsgBox, WIM_msgFrame2MsgBox, etc) and the parent frame is shown?
+                        if(string.sub(wim_messageframe_edit:GetName(), 14,19) == "MsgBox" and wim_messageframe:IsShown()) then
+
+                            -- Step 5.2: the input box has focus?
+                            if(wim_messageframe_edit:HasFocus()) then
+                                -- Step 6: add message
+                                if(wim_messageframe_edit:GetText() ~= "") then
+                                    wim_messageframe_edit:SetText(wim_messageframe_edit:GetText() .. SPL_BuildProfessionLink("ENGINEERING") .. " ")
+                                else
+                                    wim_messageframe_edit:SetText(SPL_BuildProfessionLink("ENGINEERING") .. " ")
+                                end
+
+                                return
+                            end
+
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- this is called if no WIM window has been found
+    chatFrame = DEFAULT_CHAT_FRAME;
+
+    chatFrame.editBox:Show();
+    chatFrame.editBox.setText = 1;
+
+    if(chatFrame.editBox:GetText() ~= "") then
+        chatFrame.editBox.text = chatFrame.editBox:GetText() .. " " .. SPL_BuildProfessionLink("ENGINEERING") .. " ";
+    else
+        chatFrame.editBox.text = SPL_BuildProfessionLink("ENGINEERING") .. " ";
+    end
+end
+
+function SPL_LPad(strValue, strPadChar, iPadLength)
+
+    if (strValue == nil) then
+        strValue = ""
+    end
+    
+    if(string.len(strValue) >= iPadLength) then
+        return strValue;
+    end
+    
+    local strReturnString = ""
+    
+    for i = 0, (iPadLength - string.len(strValue) -1) do
+        strReturnString = strReturnString .. strPadChar
+    end
+    
+    strReturnString = strReturnString .. strValue
+
+    return tostring(strReturnString)
+end
+
+function SPL_LTrim(strString, strTrimchar)
+    while string.sub(strString, 1, 1) == strTrimchar do
+        strString = string.sub(strString, 2, string.len(strString))
+    end
+
+    if(strString == "" or strString == nil) then
+        strString = strTrimchar
+    end
+
+    return strString
+end
+
+function SPL_CraftFrameSetData(strCraftName, strSkillLevel, strName, numCrafts)
     -- set title
     SPL_CraftFrameTitleText:SetText(strCraftName)
     -- set portrait
@@ -202,6 +462,14 @@ function SPL_CraftFrameSetData(strCraftName, strSkillLevel, strName)
     SPL_CraftRankFrame:Show();
     SPL_CraftSkillBorderLeft:Show();
     SPL_CraftSkillBorderRight:Show();
+
+    for i = 1, 8 do
+        --getglobal("SPL_Craft" ..i):Hide()
+        getglobal("SPL_Craft" ..i):SetText(" asdasds")
+    end
+
+    -- used for setting the correct scrollbar (recipe list)
+    FauxScrollFrame_Update(SPL_CraftListScrollFrame, numCrafts, CRAFTS_DISPLAYED, CRAFT_SKILL_HEIGHT, nil, nil, nil, SPL_CraftHighlightFrame, 293, 316 );
 end
 
 function SPL_CraftFrame_Update()
@@ -279,8 +547,8 @@ function SPL_CraftFrame_Update()
 	CraftDescription:Show();
 	CraftCollapseAllButton:Enable();
 	
-	-- ScrollFrame update
-	FauxScrollFrame_Update(SPL_CraftListScrollFrame, numCrafts, CRAFTS_DISPLAYED, CRAFT_SKILL_HEIGHT, nil, nil, nil, CraftHighlightFrame, 293, 316 );
+    -- ScrollFrame update
+    --FauxScrollFrame_Update(SPL_CraftListScrollFrame, numCrafts, CRAFTS_DISPLAYED, CRAFT_SKILL_HEIGHT, nil, nil, nil, CraftHighlightFrame, 293, 316 );
 	
 	CraftHighlightFrame:Hide();
 	
@@ -364,8 +632,8 @@ function SPL_CraftFrame_Update()
 		end
 	end
 	
-	-- If player has training points show them here
-	Craft_UpdateTrainingPoints();
+    -- -- If player has training points show them here
+    --Craft_UpdateTrainingPoints();
 
 	-- Set the expand/collapse all button texture
 	local numHeaders = 0;
