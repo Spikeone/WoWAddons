@@ -110,8 +110,16 @@ function SPL_ReadHyperlinkData(strPlayer, strProfession, strSkillLevel, strData)
         tmpBuffer[i] = tonumber(SPL_LTrim(string.sub(strData, (i - 1) * 10 + 1, i * 10), "0"))
     end
 
-    for h = 1, SPL_tablelength(tmpBuffer) do
-        DEFAULT_CHAT_FRAME:AddMessage("(" ..h.. "): " ..tmpBuffer[h])
+    tmpBit = 0
+
+    for i = 1, 242 do
+        local indexValue = math.floor(tmpBit / 32) + 1
+
+        if(bit.band(tmpBuffer[indexValue], bit.lshift(1, tmpBit % 32)) > 0) then
+            SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["SPELLS"][SPELLDB[SPL_TRADESKILLTOSTRING[strProfession]][i].spell] = "known"
+        end
+
+        tmpBit = tmpBit + 1
     end
 
 end
@@ -200,63 +208,14 @@ function SPL_ScanSpecificTradeskill(tsName, tsCount)
             local recipelink = GetTradeSkillRecipeLink(i)
             local r,g,b,spellID,name,C,D,E,F,G,H,I = recipelink:match("^|cff(%x%x)(%x%x)(%x%x)|Henchant:(%d+)|h%[(.+)%]|h|r$")
 
-            if(SPELLDB[tsName][tonumber(spellID)]) then
-                SPL_PLAYER_SPELLS[tsName][tonumber(spellID)] = "known"
-                numKnown = numKnown + 1
-            else
-                numKnownNotDB = numKnownNotDB + 1
-                DEFAULT_CHAT_FRAME:AddMessage("Unknown Spell: "..spellID)
-            end
+            SPL_PLAYER_SPELLS[tsName][tonumber(spellID)] = "known"
+            numKnown = numKnown + 1
+
         end
-    end
-
-    DEFAULT_CHAT_FRAME:AddMessage("Currently " ..(numKnown + numKnownNotDB) .. " of " ..SPL_tablelength(SPELLDB[tsName]) .. " Recipes known")
-    DEFAULT_CHAT_FRAME:AddMessage("numKnown " ..numKnown)
-    DEFAULT_CHAT_FRAME:AddMessage("numKnownNotDB " ..numKnownNotDB)
-
-    -- build array
-    local tmpBuffer = {}
-
-    for k = 1, 11 do
-        tmpBuffer[k] = 0
-    end
-
-    local tmpBit = 0
-
-    for spellIDDB in pairs(SPELLDB[tsName]) do 
-        if(SPL_PLAYER_SPELLS[tsName][spellIDDB]) then
-
-            local indexValue = math.floor((tmpBit / 32) + 1)
-
-            --DEFAULT_CHAT_FRAME:AddMessage("indexValue" ..indexValue)
-            tmpBuffer[indexValue] = bit.bor(tmpBuffer[indexValue],(bit.lshift(1,(tmpBit % 32))))
-        end
-
-        tmpBit = tmpBit + 1
-    end
-
-    for h = 1, SPL_tablelength(tmpBuffer) do
-        DEFAULT_CHAT_FRAME:AddMessage("(" ..h.. "): " ..tmpBuffer[h])
-    end
-
-    listSpellsCount = 0
-
-    tmpBit = 0
-    for knownSpell in pairs(SPELLDB[tsName]) do
-        local indexValue = math.floor(tmpBit / 32) + 1
-
-        if(bit.band(tmpBuffer[indexValue], bit.lshift(1, tmpBit % 32)) > 0) then
-            -- spieler kann zauber knownSpell yay \o/
-            --DEFAULT_CHAT_FRAME:AddMessage("knownSpell " ..knownSpell)
-            listSpellsCount = listSpellsCount + 1
-        end
-
-        tmpBit = tmpBit + 1
     end
 
     SPL_PLAYER_SERIALIZED[tsName] = SPL_SerializeKnownSpells(tsName)
 
-    DEFAULT_CHAT_FRAME:AddMessage("Known: " ..(numKnown + numKnownNotDB).. " vs " ..listSpellsCount .. " of " ..SPL_tablelength(SPELLDB[tsName]))
 end
 
 function SPL_SerializeKnownSpells(strProfession)
@@ -268,15 +227,17 @@ function SPL_SerializeKnownSpells(strProfession)
 
     local tmpBit = 0
 
-    for spellIDDB in pairs(SPELLDB[strProfession]) do 
-        if(SPL_PLAYER_SPELLS[strProfession][spellIDDB]) then
+    for i = 1, 242 do
+
+        if(SPL_PLAYER_SPELLS[strProfession][SPELLDB[strProfession][i].spell]) then
             local indexValue = math.floor((tmpBit / 32) + 1)
             tmpBuffer[indexValue] = bit.bor(tmpBuffer[indexValue],(bit.lshift(1,(tmpBit % 32))))
-        end
 
+            local name, rank, icon, castTime, minRange, maxRange = GetSpellInfo(SPELLDB[strProfession][i].spell)
+            DEFAULT_CHAT_FRAME:AddMessage(name .. "(" .. SPELLDB[strProfession][i].spell .. ")")
+        end
         tmpBit = tmpBit + 1
     end
-
 
     local strReturnString = ""
     for h = 1, SPL_tablelength(tmpBuffer) do
@@ -463,13 +424,61 @@ function SPL_CraftFrameSetData(strCraftName, strSkillLevel, strName, numCrafts)
     SPL_CraftSkillBorderLeft:Show();
     SPL_CraftSkillBorderRight:Show();
 
-    for i = 1, 8 do
-        --getglobal("SPL_Craft" ..i):Hide()
-        getglobal("SPL_Craft" ..i):SetText(" asdasds")
-    end
+    SPL_SetCraftButton(1, "Nummer 1", true, true)
+    SPL_SetCraftButton(2, "Nummer 2", true, false)
+    SPL_SetCraftButton(3, "Nummer 3", false, true)
+    SPL_SetCraftButton(4, "Nummer 4", false, false)
 
     -- used for setting the correct scrollbar (recipe list)
     FauxScrollFrame_Update(SPL_CraftListScrollFrame, numCrafts, CRAFTS_DISPLAYED, CRAFT_SKILL_HEIGHT, nil, nil, nil, SPL_CraftHighlightFrame, 293, 316 );
+end
+
+function SPL_SetCraftButton(iID, strText, isHeader, isExpanded)
+    local tmpButton = getglobal("SPL_Craft" ..iID)
+
+    if(isHeader) then
+        -- set text
+        tmpButton:SetText(strText)
+
+        -- display + / - signs
+        if ( isExpanded ) then
+            tmpButton:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up");
+        else
+            tmpButton:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
+        end
+
+        -- highlighting 
+        getglobal("SPL_Craft"..iID.."Highlight"):SetTexture("Interface\\Buttons\\UI-PlusButton-Hilight");
+        getglobal("SPL_Craft"..iID):UnlockHighlight();
+
+        -- set colors
+        color = { r = 1.00, g = 0.82, b = 0 }
+
+        tmpButton:SetTextColor(color.r, color.g, color.b);
+        tmpButton.r = color.r;
+        tmpButton.g = color.g;
+        tmpButton.b = color.b
+    else
+        -- set text
+        tmpButton:SetText(" " .. strText)
+
+        -- remove any - / + signs
+        tmpButton:SetNormalTexture("")
+
+        -- remove highlight if not selected index
+        getglobal("SPL_Craft"..iID.."Highlight"):SetTexture("");
+        getglobal("SPL_Craft"..iID):UnlockHighlight();
+
+        -- set colors
+        color = { r = 0.50, g = 0.50, b = 0.50 }
+
+        tmpButton:SetTextColor(color.r, color.g, color.b);
+        tmpButton.r = color.r;
+        tmpButton.g = color.g;
+        tmpButton.b = color.b
+    end
+
+    tmpButton:Show()
 end
 
 function SPL_CraftFrame_Update()

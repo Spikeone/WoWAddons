@@ -649,7 +649,7 @@
               </Button>
               <Button name="SPL_CraftReagent7" inherits="SPL_CraftItemTemplate" id="7">
                 <Anchors>
-                  <Anchor point="TOPLEFT" relativeTo="SPL_CraftReagent6" relativePoint="BOTTOMLEFT">
+                  <Anchor point="TOPLEFT" relativeTo="SPL_CraftReagent5" relativePoint="BOTTOMLEFT">
                     <Offset>
                       <AbsDimension x="0" y="-2"/>
                     </Offset>
