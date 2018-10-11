@@ -111,16 +111,52 @@ function SPL_ReadHyperlinkData(strPlayer, strProfession, strSkillLevel, strData)
     end
 
     tmpBit = 0
+    strLastCap = ""
+    iCaps = 0
+    iSpells = 0
 
     for i = 1, 242 do
         local indexValue = math.floor(tmpBit / 32) + 1
 
         if(bit.band(tmpBuffer[indexValue], bit.lshift(1, tmpBit % 32)) > 0) then
-            SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["SPELLS"][SPELLDB[SPL_TRADESKILLTOSTRING[strProfession]][i].spell] = "known"
+
+
+            -- check if we need to add a new cap
+            strCurrentCap = SPL_GetCategoryByClass(SPELLDB[SPL_TRADESKILLTOSTRING[strProfession]][i].class, SPELLDB[SPL_TRADESKILLTOSTRING[strProfession]][i].subclass)
+
+            if(strCurrentCap ~= strLastCap) then
+                
+                -- insert new cap
+                SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["SPELLS"][iSpells + iCaps + 1] = strCurrentCap
+
+                strLastCap = strCurrentCap
+                iCaps = iCaps + 1
+            end
+
+            -- SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["SPELLS"][i]:match(^(%d*)$) = number
+            SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["SPELLS"][iSpells + iCaps + 1] = i
+
+            iSpells = iSpells +1
+            SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["LISTCOUNT"] = iSpells + iCaps
         end
 
         tmpBit = tmpBit + 1
     end
+
+    --DEFAULT_CHAT_FRAME:AddMessage("Output: ")
+
+    --for j = 1, SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["LISTCOUNT"] do
+    --    if(tostring(SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["SPELLS"][j]):match("^(%d*)$")) then
+    --        local name, rank, icon, castTime, minRange, maxRange = GetSpellInfo(SPELLDB[SPL_TRADESKILLTOSTRING[strProfession]][SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["SPELLS"][j]].spell)
+    --
+    --        DEFAULT_CHAT_FRAME:AddMessage(name)
+    --    else
+    --        DEFAULT_CHAT_FRAME:AddMessage(SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["SPELLS"][j])
+    --    end
+    --end
+
+    SPL_CraftFrameSetData(SPL_TRADESKILLTOSTRING[strProfession], SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["RANK"], strPlayer, SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["LISTCOUNT"])
+    SPL_CraftFrame:Show()
 
 end
 
@@ -424,10 +460,24 @@ function SPL_CraftFrameSetData(strCraftName, strSkillLevel, strName, numCrafts)
     SPL_CraftSkillBorderLeft:Show();
     SPL_CraftSkillBorderRight:Show();
 
-    SPL_SetCraftButton(1, "Nummer 1", true, true)
-    SPL_SetCraftButton(2, "Nummer 2", true, false)
-    SPL_SetCraftButton(3, "Nummer 3", false, true)
-    SPL_SetCraftButton(4, "Nummer 4", false, false)
+    for j = 1, 8 do
+        DEFAULT_CHAT_FRAME:AddMessage("strName: " ..strName.. " strCraftName: " .. strCraftName)
+        if(tostring(SPL_KNOWNPLAYERS[strName][strCraftName]["SPELLS"][j]):match("^(%d*)$")) then
+            local name, rank, icon, castTime, minRange, maxRange = GetSpellInfo(SPELLDB[strCraftName][SPL_KNOWNPLAYERS[strName][strCraftName]["SPELLS"][j]].spell)
+    
+            SPL_SetCraftButton(j, name, false, false)
+            --DEFAULT_CHAT_FRAME:AddMessage(name)
+        else
+            --DEFAULT_CHAT_FRAME:AddMessage(SPL_KNOWNPLAYERS[strPlayer][SPL_TRADESKILLTOSTRING[strProfession]]["SPELLS"][j])
+            SPL_SetCraftButton(j, SPL_KNOWNPLAYERS[strName][strCraftName]["SPELLS"][j], true, true)
+        end
+    end
+
+
+    --SPL_SetCraftButton(1, "Nummer 1", true, true)
+    --SPL_SetCraftButton(2, "Nummer 2", true, false)
+    --SPL_SetCraftButton(3, "Nummer 3", false, true)
+    --SPL_SetCraftButton(4, "Nummer 4", false, false)
 
     -- used for setting the correct scrollbar (recipe list)
     FauxScrollFrame_Update(SPL_CraftListScrollFrame, numCrafts, CRAFTS_DISPLAYED, CRAFT_SKILL_HEIGHT, nil, nil, nil, SPL_CraftHighlightFrame, 293, 316 );
@@ -479,6 +529,14 @@ function SPL_SetCraftButton(iID, strText, isHeader, isExpanded)
     end
 
     tmpButton:Show()
+end
+
+function SPL_GetCategoryByClass(iClass, iSubclass)
+    if(CATEGORYDB[tonumber(iClass)][tonumber(iSubclass)]) then
+        return CATEGORYDB[tonumber(iClass)][tonumber(iSubclass)]
+    end
+
+    return "Unknown"
 end
 
 function SPL_CraftFrame_Update()

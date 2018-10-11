@@ -1,3 +1,149 @@
+CATEGORYDB = {}
+CATEGORYDB[0] = {}
+CATEGORYDB[0][0] = "Consumable"
+CATEGORYDB[0][1] = "Potion"
+CATEGORYDB[0][2] = "Elixir"
+CATEGORYDB[0][3] = "Flask"
+CATEGORYDB[0][4] = "Scroll"
+CATEGORYDB[0][5] = "Food & Drink"
+CATEGORYDB[0][6] = "Item Enhancement"
+CATEGORYDB[0][7] = "Bandage"
+CATEGORYDB[0][8] = "Other"
+
+CATEGORYDB[1] = {}
+CATEGORYDB[1][0] = "Bag"
+CATEGORYDB[1][1] = "Soul Bag"
+CATEGORYDB[1][2] = "Herb Bag"
+CATEGORYDB[1][3] = "Enchanting Bag"
+CATEGORYDB[1][4] = "Engineering Bag"
+CATEGORYDB[1][5] = "Gem Bag"
+CATEGORYDB[1][6] = "Mining Bag"
+CATEGORYDB[1][7] = "Leatherworking Bag"
+
+CATEGORYDB[2] = {}
+CATEGORYDB[2][0] = "One handed axe"
+CATEGORYDB[2][1] = "Two handed axe"
+CATEGORYDB[2][2] = "Bow"
+CATEGORYDB[2][3] = "Gun"
+CATEGORYDB[2][4] = "One handed mace"
+CATEGORYDB[2][5] = "Two handed mace"
+CATEGORYDB[2][6] = "Polearm"
+CATEGORYDB[2][7] = "One handed sword"
+CATEGORYDB[2][8] = "Two handed sword"
+CATEGORYDB[2][10] = "Staff"
+CATEGORYDB[2][13] = "Fist Weapon"
+CATEGORYDB[2][14] = "Miscellaneous"
+CATEGORYDB[2][15] = "Dagger"
+CATEGORYDB[2][16] = "Thrown"
+CATEGORYDB[2][17] = "Spear"
+CATEGORYDB[2][18] = "Crossbow"
+CATEGORYDB[2][19] = "Wand"
+CATEGORYDB[2][20] = "Fishing Pole"
+
+CATEGORYDB[3] = {}
+CATEGORYDB[3][0] = "Red"
+CATEGORYDB[3][1] = "Blue"
+CATEGORYDB[3][2] = "Yellow"
+CATEGORYDB[3][3] = "Purple"
+CATEGORYDB[3][4] = "Green"
+CATEGORYDB[3][5] = "Orange"
+CATEGORYDB[3][6] = "Meta"
+CATEGORYDB[3][7] = "Simple"
+CATEGORYDB[3][8] = "Prismatic"
+
+CATEGORYDB[4] = {}
+CATEGORYDB[4][0] = "Miscellaneous"
+CATEGORYDB[4][1] = "Cloth"
+CATEGORYDB[4][2] = "Leather"
+CATEGORYDB[4][3] = "Mail"
+CATEGORYDB[4][4] = "Plate"
+CATEGORYDB[4][5] = "Buckler"
+CATEGORYDB[4][6] = "Shield"
+CATEGORYDB[4][7] = "Libram"
+CATEGORYDB[4][8] = "Idol"
+CATEGORYDB[4][9] = "Totem"
+
+CATEGORYDB[5] = {}
+CATEGORYDB[5][0] = "Reagent"
+
+CATEGORYDB[6] = {}
+CATEGORYDB[6][0] = "Wand"
+CATEGORYDB[6][1] = "Bolt"
+CATEGORYDB[6][2] = "Arrow"
+CATEGORYDB[6][3] = "Bullet"
+CATEGORYDB[6][4] = "Thrown"
+
+CATEGORYDB[7] = {}
+CATEGORYDB[7][0] = "Trade Goods"
+CATEGORYDB[7][1] = "Parts"
+CATEGORYDB[7][2] = "Explosives"
+CATEGORYDB[7][3] = "Devices"
+CATEGORYDB[7][4] = "Jewelcrafting"
+CATEGORYDB[7][5] = "Cloth"
+CATEGORYDB[7][6] = "Leather"
+CATEGORYDB[7][7] = "Metal & Stone"
+CATEGORYDB[7][8] = "Meat"
+CATEGORYDB[7][9] = "Herb"
+CATEGORYDB[7][10] = "Elemental"
+CATEGORYDB[7][11] = "Other"
+CATEGORYDB[7][12] = "Enchanting"
+
+CATEGORYDB[8] = {}
+CATEGORYDB[8][0] = "Generic"
+
+CATEGORYDB[9] = {}
+CATEGORYDB[9][0] = "Book"
+CATEGORYDB[9][1] = "Leatherworking"
+CATEGORYDB[9][2] = "Tailoring"
+CATEGORYDB[9][3] = "Engineering"
+CATEGORYDB[9][4] = "Blacksmithing"
+CATEGORYDB[9][5] = "Cooking"
+CATEGORYDB[9][6] = "Alchemy"
+CATEGORYDB[9][7] = "First Aid"
+CATEGORYDB[9][8] = "Enchanting"
+CATEGORYDB[9][9] = "Fishing"
+CATEGORYDB[9][10] = "Jewelcrafting"
+
+CATEGORYDB[10] = {}
+CATEGORYDB[10][0] = "Money"
+
+CATEGORYDB[11] = {}
+CATEGORYDB[11][0] = "Quiver"
+CATEGORYDB[11][1] = "Quiver"
+CATEGORYDB[11][2] = "Quiver"
+CATEGORYDB[11][3] = "Ammo Pouch"
+
+CATEGORYDB[12] = {}
+CATEGORYDB[12][0] = "Quest"
+
+CATEGORYDB[13] = {}
+CATEGORYDB[13][0] = "Key"
+CATEGORYDB[13][1] = "Lockpick"
+
+CATEGORYDB[14] = {}
+CATEGORYDB[14][0] = "Permanent"
+
+CATEGORYDB[15] = {}
+CATEGORYDB[15][0] = "Junk"
+CATEGORYDB[15][1] = "Reagent"
+CATEGORYDB[15][2] = "Pet"
+CATEGORYDB[15][3] = "Holiday"
+CATEGORYDB[15][4] = "Other"
+CATEGORYDB[15][5] = "Mount"
+
+CATEGORYDB[16] = {}
+CATEGORYDB[16][1] = "Warrior"
+CATEGORYDB[16][2] = "Paladin"
+CATEGORYDB[16][3] = "Hunter"
+CATEGORYDB[16][4] = "Rogue"
+CATEGORYDB[16][5] = "Priest"
+CATEGORYDB[16][6] = "Death Knight"
+CATEGORYDB[16][7] = "Shaman"
+CATEGORYDB[16][8] = "Mage"
+CATEGORYDB[16][9] = "Warlock"
+CATEGORYDB[16][11] = "Druid"
+
+
 SPELLDB = {}
 
 SPELLDB["ENGINEERING"] = {}
