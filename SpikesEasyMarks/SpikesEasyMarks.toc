@@ -1,0 +1,7 @@
+## Interface: 20400
+## Title : SpikesEasyMarks
+## Notes: You can easily mark any unit by GUID
+## Author: Spikeone @ B2B-WoW
+## SavedVariables: SEM_MARKS_LOCAL
+SpikesEasyMarks.xml
+SpikesEasyMarks_config.xml
