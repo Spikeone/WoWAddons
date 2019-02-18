@@ -1,0 +1,24 @@
+------------------------------------------------------------------------
+r57 | Zeksie | 2009-05-20 11:59:44 +0000 (Wed, 20 May 2009) | 2 lines
+Changed paths:
+   M /trunk/LibTalentQuery-1.0.lua
+
+LibTalentQuery-1.0:
+- Fixed assumption about UnitIsUnit not working for inspect targets outside of group. Now using UnitGUID to match them up.
+------------------------------------------------------------------------
+r56 | Zeksie | 2009-05-20 11:44:01 +0000 (Wed, 20 May 2009) | 5 lines
+Changed paths:
+   M /trunk/LibTalentQuery-1.0.lua
+
+LibTalentQuery-1.0:
+- Huge performance improvements over previous versions. Full raid of 25 players can be talent scanned reliably in around 15-20 seconds, compared to the 2 or more minutes of older versions.
+- Added new fired event 'TalentQuery_Ready_Outsider' to allow catching of talent scans triggered by other sources for opportunistic talent re-scan.
+- Fixed return values for NameToUnitID target/pettarget units, and fixed non local 'unit'.
+
+------------------------------------------------------------------------
+r55 | nevcairiel | 2009-03-06 10:12:47 +0000 (Fri, 06 Mar 2009) | 1 line
+Changed paths:
+   M /trunk/LibTalentQuery-1.0.toc
+
+Restore LoD to Libraries, as 3.0.8 fixed all bugs that blocked LoD OptionalDeps to load properly.
+------------------------------------------------------------------------
