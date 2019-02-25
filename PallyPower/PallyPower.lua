@@ -6,6 +6,11 @@ local L = AceLibrary("AceLocale-2.2"):new("PallyPower")
 -- @Spikeone
 local TalentQuery = LibStub:GetLibrary("LibTalentQuery-1.0")
 local raidTalents = {}
+tempMem = 0;
+raidCount = 0;
+members = 0;
+offlinePlayers = 0;
+local myZone = GetRealZoneText();
 
 local classlist, classes = {}, {}
 LastCast = {}
@@ -22,21 +27,43 @@ PP_IsPally = false
 
 --  @Spikeone
 function PallyPower:TalentQuery_Ready(e, name, realm)
-    DEFAULT_CHAT_FRAME:AddMessage("PallyPower:TalentQuery_Ready(" ..e .. ", " ..name.. ", realm)")
-
+    DEFAULT_CHAT_FRAME:AddMessage("PallyPower:TalentQuery_Ready(" ..e .. ", " ..name.. ", B2B)");
     local spec = {}
     local isnotplayer = (name ~= UnitName("player"))
     for tab = 1, GetNumTalentTabs(isnotplayer) do
         local treename, _, pointsspent = GetTalentTabInfo(tab, isnotplayer)
         tinsert(spec, pointsspent)
     end
-
-    raidTalents[name].Skills = spec
-
+	raidTalents[name].Skills = spec
     local strRole = getRoleByInfo(name)
     raidTalents[name].Role = strRole
-
+    --DEFAULT_CHAT_FRAME:AddMessage("test");
+    raidCount = raidCount + 1;
 end
+
+local function MyAddonCommands(msg, editbox)
+	if(msg == 'status') then
+		DEFAULT_CHAT_FRAME:AddMessage(getRaidStatus());
+	elseif(msg == 'instance') then
+    	if(GetZoneTableEntry(GetRealZoneText()) > 0) then
+    		local ind = GetZoneTableEntry(GetRealZoneText());
+    		DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Instance:|r |cFFFFFF00" .. PP_ZoneTable[ind].de .. "|r | |cFF00FF00Limit:|r |cFFFFFF00" .. PP_ZoneTable[ind].PlayerLimit .. "|r");
+		else
+			DEFAULT_CHAT_FRAME:AddMessage("You're not in a raid/instance!");
+		end
+	end
+end
+
+function getRaidStatus()
+	PallyPowerConfig_ScanRoles();
+	allPercent = string.format("%02d",(raidCount / members) * 100);
+	onlinePercent = string.format("%02d",(raidCount / (members - offlinePlayers)) * 100);
+	strOutput = "|cFF00FF00Synchronized Data:\n".. allPercent .. "% including offline players|r\n|cFFFFFF00" .. onlinePercent .."% excluding offline players|r";
+    return strOutput;
+end
+
+SLASH_PALLY1 = '/pally';
+SlashCmdList["PALLY"] = MyAddonCommands
 
 function PallyPower:OnInitialize()
 	self:RegisterDB("PallyPowerDB")
@@ -55,7 +82,7 @@ function PallyPower:OnInitialize()
 	self.PreviousAutoBuffedUnit = nil
 
     -- @Spikeone
-    TalentQuery.RegisterCallback(self, "TalentQuery_Ready")
+    TalentQuery.RegisterCallback(self, "TalentQuery_Ready");
 end
 
 function PallyPower:OnEnable()
@@ -65,11 +92,15 @@ function PallyPower:OnEnable()
 	self:RegisterEvent("CHAT_MSG_SYSTEM")
 	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	self:RegisterEvent("SPELLS_CHANGED")
+	self:RegisterEvent("RAID_ROSTER_UPDATE")
+	--self:RegisterEvent("PLAYER_LOGIN")
 	self:RegisterBucketEvent("RosterLib_RosterUpdated", 1, "UpdateRoster")
 	self:ScheduleRepeatingEvent("PallyPowerInventoryScan", self.InventoryScan, 60, self)
 	self:UpdateRoster()
 	self:BindKeys()
 end
+
+
 
 function PallyPower:BindKeys()
 	-- First unbind stuff because clearing one removes both.
@@ -117,40 +148,79 @@ function PallyPowerConfig_Clear()
 end
 
 function PallyPowerConfig_ScanRoles()
-    --if InCombatLockdown() then return false end
-    
-    DEFAULT_CHAT_FRAME:AddMessage("PallyPowerConfig_ScanRoles")
-    
-    for i = 1, 40 do
+    --if InCombatLockdown() then return false end    
+    --DEFAULT_CHAT_FRAME:AddMessage("PallyPowerConfig_ScanRoles")
+    SetMapToCurrentZone();
+	--raidCount = 0;
+	members = 0;
+	offlinePlayers = 0;
+	local ind = GetZoneTableEntry(GetRealZoneText());
+    DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Instance:|r |cFFFFFF00" .. PP_ZoneTable[ind].de .. "|r | |cFF00FF00Limit:|r |cFFFFFF00" .. PP_ZoneTable[ind].PlayerLimit .. "|r");
+    members = PP_ZoneTable[ind].PlayerLimit;
+    for i = 1, members do
         local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i);
         local localizedClass, englishClass, classIndex = UnitClass(("raid" .. i));
-
+        isConnected = UnitIsConnected("raid" .. i);
+        if(name and not isConnected) then
+        	offlinePlayers = offlinePlayers + 1;
+		end
         if(name and online) then
-            
             if(raidTalents[name] == nil) then
                 raidTalents[name] = {}
             end
-
             if(raidTalents[name].Skills == nil) then
-                
                 raidTalents[name].Class = englishClass
-
                 if (name == UnitName("player")) then
-                    PallyPower:TalentQuery_Ready("TalentQuery_Ready", name, nil)
+                    PallyPower:TalentQuery_Ready("TalentQuery_Ready", name, nil);
                 else
                     TalentQuery:Query(("raid" .. i))
                 end
             end
         end
     end
-
 end
 
 function PallyPowerConfig_OutputRoles()
     for k, v in pairs(raidTalents) do
         --DEFAULT_CHAT_FRAME:AddMessage(k .. " = " ..raidTalents[k].Role)
-        SendChatMessage((k .. " = " ..raidTalents[k].Role) ,"RAID" , nil ,nil);
+        --SendChatMessage((k .. " = " ..raidTalents[k].Role) ,"RAID" , nil ,nil);
+        DEFAULT_CHAT_FRAME:AddMessage(k .. ":");
+        if(raidTalents[k].mightScore ~= nil) then
+    		DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDM");
+    	end
+    	if(raidTalents[k].wisdomScore ~= nil) then
+    		DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDW");
+    	end
+    	if(raidTalents[k].kingsScore ~= nil) then
+    		DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDK");
+    	end
+    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.a);
+    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.b);
+    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.c);
+    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.d);
+    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.e);
+    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.f);
     end
+end
+
+-- eintrag aus array holen
+function GetZoneTableEntry(zoneName)
+    for index, zoneTable in pairs(PP_ZoneTable) do
+        if(zoneTable.en == zoneName or zoneTable.de == zoneName or zoneTable.fr == zoneName or zoneTable.es == zoneName) then
+            return index;
+        end
+    end
+    return 0;
+end
+
+function MetaMap_GetCurrentMapInfo()
+	local mapName, dataZone;
+	if(MetaMapFrame:IsVisible()) then
+		mapName = MetaMapOptions.MetaMapZone;
+	else
+	mapName = MetaMap_ZoneIDToName(GetCurrentMapContinent(), GetCurrentMapZone());
+	end
+	return mapName, MetaMap_Notes[mapName];
 end
 
 function getRoleByInfo(strName)
@@ -166,31 +236,45 @@ function getRoleByInfo(strName)
 
     if(raidTalents[strName].Class == "PALADIN") then
         if(raidTalents[strName].Skills[1] > raidTalents[strName].Skills[2] and raidTalents[strName].Skills[1] > raidTalents[strName].Skills[3]) then
+            raidTalents[strName].wisdomScore = 500;
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[2];
             return "PALADIN_HEAL"
         elseif(raidTalents[strName].Skills[2] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[2] > raidTalents[strName].Skills[3]) then
+            raidTalents[strName].kingsScore = 500;
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[1];
             return "PALADIN_TANK"
         elseif(raidTalents[strName].Skills[3] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[3] > raidTalents[strName].Skills[2]) then
+            raidTalents[strName].mightScore = 500;
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[3];
             return "PALADIN_MELEE"
         else
             return "PALADIN_UNKNOWN"
         end
     elseif(raidTalents[strName].Class == "DRUID") then
         if(raidTalents[strName].Skills[1] > raidTalents[strName].Skills[2] and raidTalents[strName].Skills[1] > raidTalents[strName].Skills[3]) then
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[7];
             return "DRUID_CASTER"
         elseif(raidTalents[strName].Skills[2] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[2] > raidTalents[strName].Skills[3]) then
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[6];
             return "DRUID_MELEE"
         elseif(raidTalents[strName].Skills[3] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[3] > raidTalents[strName].Skills[2]) then
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[8];
             return "DRUID_HEAL"
         else
             return "DRUID_UNKNOWN"
         end
+        --TODO: Druid Off-/Tank/melee Unterscheidung?
     elseif(raidTalents[strName].Class == "MAGE") then
+    	raidTalents[strName].requiredBuffs = PP_BuffPriority[18];
         return "MAGE_CASTER"
     elseif(raidTalents[strName].Class == "WARLOCK") then
+    	raidTalents[strName].requiredBuffs = PP_BuffPriority[16];
         return "WARLOCK_CASTER"
     elseif(raidTalents[strName].Class == "ROGUE") then
+    	raidTalents[strName].requiredBuffs = PP_BuffPriority[19];
         return "ROGUE_MELEE"
     elseif(raidTalents[strName].Class == "PRIEST") then
+    	raidTalents[strName].requiredBuffs = PP_BuffPriority[15];
         if(raidTalents[strName].Skills[1] > raidTalents[strName].Skills[2] and raidTalents[strName].Skills[1] > raidTalents[strName].Skills[3]) then
             return "PRIEST_HEAL"
         elseif(raidTalents[strName].Skills[2] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[2] > raidTalents[strName].Skills[3]) then
@@ -201,81 +285,36 @@ function getRoleByInfo(strName)
             return "PRIEST_UNKNOWN"
         end
     elseif(raidTalents[strName].Class == "HUNTER") then
+    	raidTalents[strName].requiredBuffs = PP_BuffPriority[17];
         return "HUNTER_MELEE"
     elseif(raidTalents[strName].Class == "SHAMAN") then
         if(raidTalents[strName].Skills[1] > raidTalents[strName].Skills[2] and raidTalents[strName].Skills[1] > raidTalents[strName].Skills[3]) then
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[13];
             return "SHAMAN_CASTER"
         elseif(raidTalents[strName].Skills[2] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[2] > raidTalents[strName].Skills[3]) then
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[12];
             return "SHAMAN_MELEE"
         elseif(raidTalents[strName].Skills[3] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[3] > raidTalents[strName].Skills[2]) then
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[14];
             return "SHAMAN_HEAL"
         else
             return "SHAMAN_UNKNOWN"
         end
     elseif(raidTalents[strName].Class == "WARRIOR") then
         if(raidTalents[strName].Skills[1] > raidTalents[strName].Skills[2] and raidTalents[strName].Skills[1] > raidTalents[strName].Skills[3]) then
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[11];
             return "WARRIOR_MELEE"
         elseif(raidTalents[strName].Skills[2] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[2] > raidTalents[strName].Skills[3]) then
             return "WARRIOR_MELEE"
         elseif(raidTalents[strName].Skills[3] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[3] > raidTalents[strName].Skills[2]) then
+            raidTalents[strName].requiredBuffs = PP_BuffPriority[9];
             return "WARRIOR_TANK"
         else
             return "WARRIOR_UNKNOWN"
         end
+        --TODO: Unterscheidung off-/tank/?
     else
         return "UNKNOWN"
-    end
-end
-
-PP_Index = 1
-PP_WaitOpen = true
-PP_Scaning = false
-PP_WaitTimer = 0
-
-function PallyPowerConfigFrame_OnUpdate(self, elapsed)
-    --DEFAULT_CHAT_FRAME:AddMessage("PP Update: " ..elapsed)
-    if(PP_Scaning and PP_Index <= 40) then
-        if(PP_WaitOpen) then
-            local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(PP_Index);
-            local strPlayerUnitID = ("raid" .. PP_Index)
-            NotifyInspect(strPlayerUnitID)
-
-            if(name and online and name ~= UnitName("player")) then
-                InspectUnit(strPlayerUnitID)
-                PP_WaitOpen = false
-            else -- player offline or no player at index
-                PP_WaitOpen = true
-                PP_Index = PP_Index + 1
-                PP_WaitTimer = 0
-            end
-        else
-            -- 250ms wait timer?
-            -- for a raid this makes 250 x 25 = 6250 ms = 6s?
-            if(PP_WaitTimer > 250) then
-                local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(PP_Index);
-                local localizedClass, englishClass, classIndex = UnitClass(("raid" .. PP_Index));
-                local treename, texture, pointsSpentTab1 = GetTalentTabInfo(1, true)
-                local treename, texture, pointsSpentTab2 = GetTalentTabInfo(2, true)
-                local treename, texture, pointsSpentTab3 = GetTalentTabInfo(3, true)
-                DEFAULT_CHAT_FRAME:AddMessage("pointsSpentTab1: " ..pointsSpentTab1)
-                DEFAULT_CHAT_FRAME:AddMessage("pointsSpentTab2: " ..pointsSpentTab2)
-                DEFAULT_CHAT_FRAME:AddMessage("pointsSpentTab3: " ..pointsSpentTab3)
-                DEFAULT_CHAT_FRAME:AddMessage("class: " ..englishClass)
-                
-                local strRole = getRoleByInfo(englishClass, subgroup, pointsSpentTab1, pointsSpentTab2, pointsSpentTab3)
-                
-                SendChatMessage("PallyPower hat erkannt, dass du ein '".. strRole .."' bist!" ,"WHISPER" , nil ,name);
-                PP_WaitOpen = true
-                PP_Index = PP_Index + 1
-                PP_WaitTimer = 0
-            else
-                PP_WaitTimer = PP_WaitTimer + (elapsed * 1000)
-            end
-        end
-    else
-        PP_Index = 1
-        PP_WaitOpen = true
-        PP_Scaning = false
     end
 end
 
@@ -495,6 +534,43 @@ function PlayerButton_DragStop(frame)
 	end
 end
 
+-- @Spikeone
+function PallyPower_GetRoleIconIndex(strPlayerName)
+    if(strPlayerName == nil) then
+        return 5
+    end
+
+    if(raidTalents[strPlayerName] == nil) then
+        return 5
+    end
+
+    if(raidTalents[strPlayerName].Role == nil) then
+        return 5
+    end
+
+    if(string.find(raidTalents[strPlayerName].Role, "UNKNOWN")) then
+        return 5
+    end
+
+    if(string.find(raidTalents[strPlayerName].Role, "CASTER")) then
+        return 4
+    end
+
+    if(string.find(raidTalents[strPlayerName].Role, "MELEE")) then
+        return 3
+    end
+
+    if(string.find(raidTalents[strPlayerName].Role, "HEAL")) then
+        return 2
+    end
+
+    if(string.find(raidTalents[strPlayerName].Role, "TANK")) then
+        return 1
+    end
+
+    return 5
+end
+
 function PallyPowerConfigGrid_Update()
 	if not initalized then PallyPower:ScanSpells() end
 	if PallyPowerConfigFrame:IsVisible() then
@@ -512,11 +588,20 @@ function PallyPowerConfigGrid_Update()
 			getglobal(fname.."ClassButtonIcon"):SetTexture(PallyPower.ClassIcons[i])
 			for j = 1, PALLYPOWER_MAXPERCLASS do
 				local pbnt = fname.."PlayerButton"..j
+
+                -- icon for class role @Spikeone
+                local pbnticn = fname.."PlayerIcon"..j
+
                 if i == 11 then
                     getglobal(pbnt):Hide()
                 else 
                     if classes[i] and classes[i][j] then
                         local unit = classes[i][j]
+                        -- show icon for role @Spikeone
+                        -- set it to default
+                        getglobal(pbnt.."Role"):SetTexture(PallyPower.RoleIcons[PallyPower_GetRoleIconIndex(unit.name)])
+
+                        -- this is where the name of a player of a class is shown
                         getglobal(pbnt.."Text"):SetText(unit.name)
                         local normal, greater = PallyPower:GetSpellID(i, unit.name)
                         local icon
@@ -575,6 +660,7 @@ function PallyPowerConfigGrid_Update()
 				end
 			end
 			for id = 1, PALLYPOWER_MAXCLASSES do
+                -- @Hoelle Hier werden die Siegel angezeigt
                 if id == 11 then
                     if BuffInfo and BuffInfo[id] then
                         getglobal(fname.."Class"..id.."Icon"):SetTexture(PallyPower.SealIcons[BuffInfo[id]])
@@ -885,7 +971,7 @@ function PallyPower:ScanSpells()
 		local RankInfo = {}
 		for i = 1, 6 do -- find max spell ranks
 			local spellName, spellRank = GetSpellInfo(PallyPower.GSpells[i])
-			if not spellName then -- fallback to lower blessings
+			if not spellName then -- fallback to 4er blessings
 				spellName, spellRank = GetSpellInfo(PallyPower.Spells[i])
 			end
 			if not spellRank or spellRank == "" then -- spells without ranks
@@ -1007,6 +1093,11 @@ end
 
 function PallyPower:SPELLS_CHANGED()
 	self:ScanSpells()
+end
+
+--update() function for changes in raid composition
+function PallyPower:RAID_ROSTER_UPDATE()
+	DEFAULT_CHAT_FRAME:AddMessage(getRaidStatus());
 end
 
 function PallyPower:CHAT_MSG_ADDON(prefix, message, distribution, sender)
@@ -1855,6 +1946,7 @@ end
 function PallyPower:GetSpellID(classID, playerName)
 	local normal = 0
 	local greater = 0
+	local seal = 0
 	if playerName and
 	   PallyPower_NormalAssignments[self.player] and 
 	   PallyPower_NormalAssignments[self.player][classID] and
@@ -1867,7 +1959,7 @@ function PallyPower:GetSpellID(classID, playerName)
 	if normal == 0 then 
 		normal = greater
 	end
-	return normal, greater
+	return normal, greater, seal
 end
 
 function PallyPower:GetUnit(classID, playerID)
@@ -1916,6 +2008,7 @@ function PallyPower:IsBuffActive(spellName, gspellName, unitID)
 	return nil
 end
 
+-- @Hoelle hier geschieht magie indem der Spell wohl auf den Mausbutton gelegt wird oder sowas
 function PallyPower:ButtonPreClick(mousebutton)
 	if (not InCombatLockdown()) then
 		local button = this
@@ -2022,7 +2115,7 @@ function PallyPower:AutoBuff(mousebutton)
 							--self:Print("unit.name " .. unit.name)
 							--self:Print("penalty " .. penalty)
 							if (penalty < classMinUnitPenalty) then
-								--self:Print(unit.name .. " has lowest penalty (" .. penalty .. ")")
+								--self:Print(unit.name .. " has 4est penalty (" .. penalty .. ")")
 								classMinUnit = unit
 								classMinUnitPenalty = penalty
 							end
