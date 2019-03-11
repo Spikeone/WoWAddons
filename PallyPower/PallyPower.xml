@@ -406,7 +406,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 
 <Button name="ClassButtonTemplate" hidden="false" virtual="true">
 	<Size>
-		<AbsDimension x="84" y="54" /> 
+		<AbsDimension x="96" y="54" /> 
 	</Size>
 	<Layers>
 		<Layer level="ARTWORK">
@@ -450,7 +450,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 
 <Button name="PlayerButtonTemplate" hidden="false" virtual="true" movable="false">
 	<Size>
-		<AbsDimension x="84" y="13" /> 
+		<AbsDimension x="96" y="13" /> 
 	</Size>
 	<Layers>
 		<Layer level="OVERLAY">
@@ -515,7 +515,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 
 <Frame name="ClassGroupTemplate" hidden="false" virtual="true">
 	<Size>
-		<AbsDimension x="84" y="158" /> 
+		<AbsDimension x="96" y="158" /> 
 	</Size>
 	<Layers>
 		<Layer level="ARTWORK">
@@ -620,7 +620,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 
 <Button name="BuffGridButtonTemplate" hidden="false" virtual="true">
 	<Size>
-		<AbsDimension x="84" y="54" /> 
+		<AbsDimension x="96" y="54" /> 
 	</Size>
 	<Layers>
 		<Layer level="OVERLAY">
@@ -751,7 +751,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 			</Texture>
 			<Texture name="$parentLine1" file="Interface\Tooltips\UI-Tooltip-Background" hidden="false">
 				<Size>
-					<AbsDimension x="1072" y="2" /> 
+					<AbsDimension x="1208" y="2" /> 
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
@@ -780,7 +780,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentLine2">
 						<Offset>
-							<AbsDimension x="86" y="0" /> 
+							<AbsDimension x="98" y="0" /> 
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -792,7 +792,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentLine3">
 						<Offset>
-							<AbsDimension x="86" y="0" /> 
+							<AbsDimension x="98" y="0" /> 
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -804,7 +804,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentLine4">
 						<Offset>
-							<AbsDimension x="86" y="0" /> 
+							<AbsDimension x="98" y="0" /> 
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -816,7 +816,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentLine5">
 						<Offset>
-							<AbsDimension x="86" y="0" /> 
+							<AbsDimension x="98" y="0" /> 
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -828,7 +828,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentLine6">
 						<Offset>
-							<AbsDimension x="86" y="0" /> 
+							<AbsDimension x="98" y="0" /> 
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -840,7 +840,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentLine7">
 						<Offset>
-							<AbsDimension x="86" y="0" /> 
+							<AbsDimension x="98" y="0" /> 
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -852,7 +852,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentLine8">
 						<Offset>
-							<AbsDimension x="86" y="0" /> 
+							<AbsDimension x="98" y="0" /> 
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -864,7 +864,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentLine9">
 						<Offset>
-							<AbsDimension x="86" y="0" /> 
+							<AbsDimension x="98" y="0" /> 
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -876,7 +876,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentLine10">
 						<Offset>
-							<AbsDimension x="86" y="0" /> 
+							<AbsDimension x="98" y="0" /> 
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -888,7 +888,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentLine11">
 						<Offset>
-							<AbsDimension x="86" y="0" /> 
+							<AbsDimension x="98" y="0" /> 
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -1048,7 +1048,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 
 <Frame name="PallyPowerConfigFrame" hidden="true" toplevel="true" frameStrata="HIGH" enableMouse="true" movable="true" parent="UIParent">
 	<Size>
-		<AbsDimension x="1088" y="760" /> 
+		<AbsDimension x="1224" y="760" /> 
 	</Size>
 	<Anchors>
 		<Anchor point="TOPLEFT" relativeTo="UIParent" relativePoint="BOTTOMLEFT">
@@ -1111,6 +1111,30 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 							</Anchor>
 						</Anchors>
 					</FontString>
+                  <FontString name="$parentAutoPPInfo" inherits="GameFontNormal" text="Auto PP Info:" justifyH="LEFT">
+                    <Size>
+                      <AbsDimension x="100" y="12" />
+                    </Size>
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="PallyPowerConfigFrame">
+                        <Offset>
+                          <AbsDimension x="10" y="-12" />
+                        </Offset>
+                      </Anchor>
+                    </Anchors>
+                  </FontString>
+                  <FontString name="TextScanned" inherits="GameFontHighlightSmall" text="Scanned: -/-" justifyH="LEFT">
+                    <Size>
+                      <AbsDimension x="100" y="12" />
+                    </Size>
+                    <Anchors>
+                      <Anchor point="TOPLEFT" relativeTo="$parentAutoPPInfo">
+                      <Offset>
+                        <AbsDimension x="0" y="-24" />
+                      </Offset>
+                      </Anchor>
+                    </Anchors>
+                  </FontString>
 				</Layer>
 			</Layers>
 		</Button>

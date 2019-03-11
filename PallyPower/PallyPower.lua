@@ -62,6 +62,24 @@ function getRaidStatus()
     return strOutput;
 end
 
+function PallyPower:getNumScanned()
+    scanned = 0
+
+    for i = 1, 40 do
+        local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i);
+        if(name) then
+            if(raidTalents[name] ~= nil) then
+                if(raidTalents[name].Skills ~= nil) then
+                    scanned = scanned + 1
+                end
+            end
+            
+        end
+    end
+
+    return scanned
+end
+
 SLASH_PALLY1 = '/pally';
 SlashCmdList["PALLY"] = MyAddonCommands
 
@@ -155,15 +173,18 @@ function PallyPowerConfig_ScanRoles()
 	members = 0;
 	offlinePlayers = 0;
 	local ind = GetZoneTableEntry(GetRealZoneText());
-    DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Instance:|r |cFFFFFF00" .. PP_ZoneTable[ind].de .. "|r | |cFF00FF00Limit:|r |cFFFFFF00" .. PP_ZoneTable[ind].PlayerLimit .. "|r");
-    members = PP_ZoneTable[ind].PlayerLimit;
+    if(ind ~= nil) then
+    --    DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Instance:|r |cFFFFFF00" .. PP_ZoneTable[ind].de .. "|r | |cFF00FF00Limit:|r |cFFFFFF00" .. PP_ZoneTable[ind].PlayerLimit .. "|r");
+          members = PP_ZoneTable[ind].PlayerLimit;
+    end
+
     for i = 1, members do
         local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i);
         local localizedClass, englishClass, classIndex = UnitClass(("raid" .. i));
         isConnected = UnitIsConnected("raid" .. i);
         if(name and not isConnected) then
-        	offlinePlayers = offlinePlayers + 1;
-		end
+            offlinePlayers = offlinePlayers + 1;
+        end
         if(name and online) then
             if(raidTalents[name] == nil) then
                 raidTalents[name] = {}
@@ -210,7 +231,7 @@ function GetZoneTableEntry(zoneName)
             return index;
         end
     end
-    return 0;
+    return nil;
 end
 
 function MetaMap_GetCurrentMapInfo()
@@ -591,6 +612,8 @@ function PallyPowerConfigGrid_Update()
 
                 -- icon for class role @Spikeone
                 local pbnticn = fname.."PlayerIcon"..j
+
+                getglobal("TextScanned"):SetText("Scanned: " .. PallyPower:getNumScanned() .. " / " ..PallyPower:GetNumUnits())
 
                 if i == 11 then
                     getglobal(pbnt):Hide()
@@ -1097,7 +1120,8 @@ end
 
 --update() function for changes in raid composition
 function PallyPower:RAID_ROSTER_UPDATE()
-	DEFAULT_CHAT_FRAME:AddMessage(getRaidStatus());
+    PallyPowerConfig_ScanRoles();
+	--DEFAULT_CHAT_FRAME:AddMessage(getRaidStatus());
 end
 
 function PallyPower:CHAT_MSG_ADDON(prefix, message, distribution, sender)
