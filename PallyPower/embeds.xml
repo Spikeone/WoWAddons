@@ -14,5 +14,6 @@
   <Script file="libs\RosterLib\Roster-2.1.lua"/>
   <Script file="libs\DewdropLib\Dewdrop-2.0.lua"/>
   <Script file="libs\LibTalentQuery-1.0\LibTalentQuery-1.0.lua"/>
+  <Script file="libs\LibTalentProcess-1.0\LibTalentProcess-1.0.lua"/>
 
 </Ui>

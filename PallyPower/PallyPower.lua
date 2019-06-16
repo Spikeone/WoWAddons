@@ -5,6 +5,7 @@ local RL = AceLibrary("Roster-2.1")
 local L = AceLibrary("AceLocale-2.2"):new("PallyPower")
 -- @Spikeone
 local TalentQuery = LibStub:GetLibrary("LibTalentQuery-1.0")
+local TalentProcess = LibStub:GetLibrary("LibTalentProcess-1.0")
 local raidTalents = {}
 tempMem = 0;
 raidCount = 0;
@@ -26,6 +27,10 @@ PP_Symbols = 0
 PP_IsPally = false
 
 --  @Spikeone
+function PallyPower:TalentProcess_Ready(e, data)
+    DEFAULT_CHAT_FRAME:AddMessage("Rolle: " .. data.role)
+end
+
 function PallyPower:TalentQuery_Ready(e, name, realm)
     DEFAULT_CHAT_FRAME:AddMessage("PallyPower:TalentQuery_Ready(" ..e .. ", " ..name.. ", B2B)");
     local spec = {}
@@ -119,6 +124,7 @@ function PallyPower:OnInitialize()
 
     -- @Spikeone
     TalentQuery.RegisterCallback(self, "TalentQuery_Ready");
+    TalentProcess.RegisterCallback(self, "TalentProcess_Ready");
 end
 
 function PallyPower:OnEnable()
@@ -225,21 +231,29 @@ function PallyPowerConfig_OutputRoles()
         --SendChatMessage((k .. " = " ..raidTalents[k].Role) ,"RAID" , nil ,nil);
         DEFAULT_CHAT_FRAME:AddMessage(k .. ":");
         if(raidTalents[k].mightScore ~= nil) then
-    		DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDM");
-    	end
-    	if(raidTalents[k].wisdomScore ~= nil) then
-    		DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDW");
-    	end
-    	if(raidTalents[k].kingsScore ~= nil) then
-    		DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDK");
-    	end
-    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.a);
-    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.b);
-    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.c);
-    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.d);
-    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.e);
-    	DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.f);
+            DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDM");
+        end
+        if(raidTalents[k].wisdomScore ~= nil) then
+            DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDW");
+        end
+        if(raidTalents[k].kingsScore ~= nil) then
+            DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDK");
+        end
+        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.a);
+        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.b);
+        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.c);
+        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.d);
+        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.e);
+        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.f);
     end
+
+    talents = {}
+    talents.unit = "Spikeone"
+    talents[1] = 0
+    talents[2] = 1
+    talents[3] = 59
+
+    TalentProcess:Query(talents)
 end
 
 -- eintrag aus array holen
