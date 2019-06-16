@@ -9,12 +9,15 @@ PallyPower.options = {
 			desc = L["BAS_DESC"],
 			func = function() PallyPowerConfig_Toggle() end,
 		},
-		report = {
-			name = L["BRPT"],
-			type = "execute",
-			desc = L["BRPT_DESC"],
-			func = function() PallyPower:Report() end,
-		},
+        report = {
+				name = L["BRPT"],
+				desc = L["BRPT_DESC"],
+                usage = "Arguments: all, target, tclass",
+				type = "text",
+				order = 30,
+				get = false,
+				set = function (arg) PallyPower:Report(arg) end,
+			},
 		buffscale = {
 			name = L["BSC"],
 			type = "range",

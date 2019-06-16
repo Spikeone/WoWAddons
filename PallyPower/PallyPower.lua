@@ -63,7 +63,11 @@ function getRaidStatus()
 end
 
 function PallyPower:getNumScanned()
-    scanned = 0
+    local scanned = 0
+    local tanks = 0
+    local heals = 0
+    local dds = 0
+    local unknown = 0
 
     for i = 1, 40 do
         local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i);
@@ -71,13 +75,27 @@ function PallyPower:getNumScanned()
             if(raidTalents[name] ~= nil) then
                 if(raidTalents[name].Skills ~= nil) then
                     scanned = scanned + 1
+
+                    rid = PallyPower_GetRoleIconIndex(name)
+
+                    if(rid and rid>0) then
+                        if(rid == 4 or rid == 3) then
+                            dds = dds +1
+                        elseif(rid == 2) then
+                            heals = heals + 1
+                        elseif(rid == 1) then
+                            tanks = tanks + 1
+                        else
+                            unknown = unknown + 1
+                        end
+                    end
                 end
             end
             
         end
     end
 
-    return scanned
+    return scanned, tanks, heals, dds, unknown
 end
 
 SLASH_PALLY1 = '/pally';
@@ -613,7 +631,13 @@ function PallyPowerConfigGrid_Update()
                 -- icon for class role @Spikeone
                 local pbnticn = fname.."PlayerIcon"..j
 
-                getglobal("TextScanned"):SetText("Scanned: " .. PallyPower:getNumScanned() .. " / " ..PallyPower:GetNumUnits())
+                scanned, tanks, heals, dds, unknown = PallyPower:getNumScanned()
+
+                getglobal("TextScanned"):SetText("Scanned: " ..scanned.. " / " ..PallyPower:GetNumUnits())
+                getglobal("TextTanks"):SetText("Tanks: " ..tanks)
+                getglobal("TextHeals"):SetText("Heals: " ..heals)
+                getglobal("TextDDs"):SetText("DDs: " ..dds)
+                getglobal("TextUnknown"):SetText("Unknown: " ..unknown)
 
                 if i == 11 then
                     getglobal(pbnt):Hide()
@@ -621,8 +645,11 @@ function PallyPowerConfigGrid_Update()
                     if classes[i] and classes[i][j] then
                         local unit = classes[i][j]
                         -- show icon for role @Spikeone
-                        -- set it to default
-                        getglobal(pbnt.."Role"):SetTexture(PallyPower.RoleIcons[PallyPower_GetRoleIconIndex(unit.name)])
+                        if(i < (PALLYPOWER_MAXCLASSES - 2)) then
+                            getglobal(pbnt.."Role"):SetTexture(PallyPower.RoleIcons[PallyPower_GetRoleIconIndex(unit.name)])
+                        else -- not for pets
+                            getglobal(pbnt.."Role"):SetTexture(PallyPower.RoleIcons[3])
+                        end
 
                         -- this is where the name of a player of a class is shown
                         getglobal(pbnt.."Text"):SetText(unit.name)
@@ -724,46 +751,115 @@ end
 -- Main functionality
 --
 
-function PallyPower:Report(type)
+function PallyPower:Report(arg)
+    if(arg) then
+        arg = string.lower(arg)
+    end
+
 	if self:GetNumUnits() > 0 then
-	if not type then
 		if GetNumRaidMembers() > 0 then
-			type = "RAID"
+		    chattype = "RAID"
 		else
-			type = "PARTY"
+		    chattype = "PARTY"
 		end
-	end
+
 		if PallyPower:CheckRaidLeader(self.player) then
-			SendChatMessage(PALLYPOWER_ASSIGNMENTS1, type)
-			local list = {}
-			for name in pairs(AllPallys) do
-				local blessings
-				for i = 1, 6 do
-					list[i] = 0
-				end
-				for id = 1, PALLYPOWER_MAXCLASSES do
-					local bid = PallyPower_Assignments[name][id]
-					if bid and bid > 0 then
-						list[bid] = list[bid] + 1
-					end
-				end
-				for id = 1, 6 do
-					if (list[id] > 0) then
-						if (blessings) then
-							blessings = blessings .. ", "
-						else
-							blessings = ""
-						end
-						local _,_, spell = string.find(PallyPower.Spells[id], PallyPower_BlessingNameSearch)
-						blessings = blessings .. spell
-					end
-				end
-				if not (blessings) then
-					blessings = "Nothing"
-				end
-				SendChatMessage(name ..": ".. blessings, type)
-			end
-			SendChatMessage(PALLYPOWER_ASSIGNMENTS2, type)
+            if(arg == "all") then
+			    SendChatMessage(PALLYPOWER_ASSIGNMENTS1, chattype)
+			    local list = {}
+			    for name in pairs(AllPallys) do
+			    	local blessings
+			    	for i = 1, 6 do
+			    		list[i] = 0
+			    	end
+			    	for id = 1, PALLYPOWER_MAXCLASSES do
+			    		local bid = PallyPower_Assignments[name][id]
+			    		if bid and bid > 0 then
+			    			list[bid] = list[bid] + 1
+			    		end
+			    	end
+			    	for id = 1, 6 do
+			    		if (list[id] > 0) then
+			    			if (blessings) then
+			    				blessings = blessings .. ", "
+			    			else
+			    				blessings = ""
+			    			end
+			    			local _,_, spell = string.find(PallyPower.Spells[id], PallyPower_BlessingNameSearch)
+			    			blessings = blessings .. spell
+			    		end
+			    	end
+			    	if not (blessings) then
+			    		blessings = "Nothing"
+			    	end
+			    	SendChatMessage(name ..": ".. blessings, chattype)
+			    end
+			    SendChatMessage(PALLYPOWER_ASSIGNMENTS2, chattype)
+            elseif(arg == "target") then
+                targetnick = UnitName("target")
+                targetclass, targetclassen = UnitClass("target")
+
+                if(targetnick and targetclassen) then
+                    SendChatMessage("--- PallyPower: " ..targetnick.. " ---", chattype)
+
+                    for id = 1, 11 do
+                        if(PallyPower.ClassID[id] == targetclassen) then
+
+                            for pname in pairs(AllPallys) do
+                                local bid = PallyPower_NormalAssignments[pname][id][targetnick]
+
+                                if bid and bid > 0 then
+                                    local _,_, spell = string.find(PallyPower.Spells[bid], PallyPower_BlessingNameSearch)
+                                    SendChatMessage(pname.. ": " ..spell, chattype)
+                                else
+                                    local bid = PallyPower_Assignments[pname][id]
+                                    if bid and bid > 0 then
+                                        local _,_, spell = string.find(PallyPower.GSpells[bid], PallyPower_BlessingNameSearch)
+                                        SendChatMessage(pname.. ": " ..spell, chattype)
+                                    end
+                                end
+                            end
+                        end
+                    end
+
+                    SendChatMessage(PALLYPOWER_ASSIGNMENTS2, chattype)
+                end
+            elseif(arg == "tclass") then
+                targetclass, targetclassen = UnitClass("target")
+
+                if(targetclass) then
+                    SendChatMessage("--- PallyPower: " ..targetclass.. " ---", chattype)
+
+                    for id = 1, 11 do
+                        if(PallyPower.ClassID[id] == targetclassen) then
+                            for pname in pairs(AllPallys) do
+
+                                if(PallyPower_NormalAssignments[pname][id]) then
+                                    for tname in pairs(PallyPower_NormalAssignments[pname][id]) do
+                                        if(PallyPower_NormalAssignments[pname][id][tname] > 0) then
+                                            local bid = PallyPower_NormalAssignments[pname][id][tname]
+
+                                            if bid and bid > 0 then
+                                                local _,_, spell = string.find(PallyPower.Spells[bid], PallyPower_BlessingNameSearch)
+                                                SendChatMessage(pname.. ": " ..spell, chattype)
+                                            end
+                                        end
+                                    end
+                                end
+                                
+                                local bid = PallyPower_Assignments[pname][id]
+                                if bid and bid > 0 then
+                                    local _,_, spell = string.find(PallyPower.GSpells[bid], PallyPower_BlessingNameSearch)
+                                    SendChatMessage(pname.. ": " ..spell, chattype)
+                                end
+                            end
+                            
+                        end
+                    end
+
+                    SendChatMessage(PALLYPOWER_ASSIGNMENTS2, chattype)
+                end
+            end
 		else
 			self:Print(ERR_NOT_LEADER)
 		end
