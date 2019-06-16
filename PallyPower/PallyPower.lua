@@ -29,10 +29,11 @@ PP_IsPally = false
 --  @Spikeone
 function PallyPower:TalentProcess_Ready(e, data)
     DEFAULT_CHAT_FRAME:AddMessage("Rolle: " .. data.role)
+    raidTalents[data.unit].Role = data.role
 end
 
 function PallyPower:TalentQuery_Ready(e, name, realm)
-    DEFAULT_CHAT_FRAME:AddMessage("PallyPower:TalentQuery_Ready(" ..e .. ", " ..name.. ", B2B)");
+    --DEFAULT_CHAT_FRAME:AddMessage("PallyPower:TalentQuery_Ready(" ..e .. ", " ..name.. ", B2B)");
     local spec = {}
     local isnotplayer = (name ~= UnitName("player"))
     for tab = 1, GetNumTalentTabs(isnotplayer) do
@@ -40,8 +41,8 @@ function PallyPower:TalentQuery_Ready(e, name, realm)
         tinsert(spec, pointsspent)
     end
 	raidTalents[name].Skills = spec
-    local strRole = getRoleByInfo(name)
-    raidTalents[name].Role = strRole
+    --getRoleByInfo(name)
+    --raidTalents[name].Role = strRole
     --DEFAULT_CHAT_FRAME:AddMessage("test");
     raidCount = raidCount + 1;
 end
@@ -223,12 +224,21 @@ function PallyPowerConfig_ScanRoles()
             end
         end
     end
+    
+    PallyPowerConfig_OutputRoles();
 end
 
 function PallyPowerConfig_OutputRoles()
+    --DEFAULT_CHAT_FRAME:AddMessage("PallyPowerConfig_OutputRoles")
     for k, v in pairs(raidTalents) do
         --DEFAULT_CHAT_FRAME:AddMessage(k .. " = " ..raidTalents[k].Role)
         --SendChatMessage((k .. " = " ..raidTalents[k].Role) ,"RAID" , nil ,nil);
+        raidTalents[k].Skills.unit  = k;
+        raidTalents[k].Skills.class = raidTalents[k].Class;
+        TalentProcess:Query(raidTalents[k].Skills)
+
+        getRoleByInfo(k)
+
         DEFAULT_CHAT_FRAME:AddMessage(k .. ":");
         if(raidTalents[k].mightScore ~= nil) then
             DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDM");
@@ -245,19 +255,18 @@ function PallyPowerConfig_OutputRoles()
         DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.d);
         DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.e);
         DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.f);
-    end
+    end    
 
-    talents = {}
-    talents.unit = "Spikeone"
-    talents[1] = 0
-    talents[2] = 1
-    talents[3] = 59
+    --talents = {}
+    --raidTalents[name].Skills
+    --talents.unit = "Aggrotanker"
 
-    TalentProcess:Query(talents)
+    --TalentProcess:Query(raidTalents[name].Skills)
 end
 
 -- eintrag aus array holen
 function GetZoneTableEntry(zoneName)
+    --return 5;
     for index, zoneTable in pairs(PP_ZoneTable) do
         if(zoneTable.en == zoneName or zoneTable.de == zoneName or zoneTable.fr == zoneName or zoneTable.es == zoneName) then
             return index;
@@ -277,98 +286,70 @@ function MetaMap_GetCurrentMapInfo()
 end
 
 function getRoleByInfo(strName)
-    if(raidTalents[strName] == nil) then
-        --DEFAULT_CHAT_FRAME:AddMessage("raidTalents[name] == nil")
-        return "UNKNOWN"
-    end
-
-    if(raidTalents[strName].Skills == nil or raidTalents[strName].Class == nil) then
-        --DEFAULT_CHAT_FRAME:AddMessage("raidTalents[name].Skills == nil or raidTalents[name].Class == nil")
-        return "UNKNOWN"
-    end
-
-    if(raidTalents[strName].Class == "PALADIN") then
-        if(raidTalents[strName].Skills[1] > raidTalents[strName].Skills[2] and raidTalents[strName].Skills[1] > raidTalents[strName].Skills[3]) then
+    if (raidTalents[strName].Class == "PALADIN") then
+        if (raidTalents[strName].Role == "PALADIN_HEAL") then
             raidTalents[strName].wisdomScore = 500;
             raidTalents[strName].requiredBuffs = PP_BuffPriority[2];
-            return "PALADIN_HEAL"
-        elseif(raidTalents[strName].Skills[2] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[2] > raidTalents[strName].Skills[3]) then
+            --return "PALADIN_HEAL"
+        elseif (raidTalents[strName].Role == "PALADIN_TANK") then
             raidTalents[strName].kingsScore = 500;
             raidTalents[strName].requiredBuffs = PP_BuffPriority[1];
-            return "PALADIN_TANK"
-        elseif(raidTalents[strName].Skills[3] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[3] > raidTalents[strName].Skills[2]) then
+            --return "PALADIN_TANK"
+        elseif (raidTalents[strName].Role == "PALADIN_MELEE") then
             raidTalents[strName].mightScore = 500;
             raidTalents[strName].requiredBuffs = PP_BuffPriority[3];
-            return "PALADIN_MELEE"
+            --return "PALADIN_MELEE"
         else
-            return "PALADIN_UNKNOWN"
+            --return "PALADIN_UNKNOWN"
         end
     elseif(raidTalents[strName].Class == "DRUID") then
-        if(raidTalents[strName].Skills[1] > raidTalents[strName].Skills[2] and raidTalents[strName].Skills[1] > raidTalents[strName].Skills[3]) then
+        if (raidTalents[strName].Role == "DRUID_CASTER") then
             raidTalents[strName].requiredBuffs = PP_BuffPriority[7];
-            return "DRUID_CASTER"
-        elseif(raidTalents[strName].Skills[2] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[2] > raidTalents[strName].Skills[3]) then
+            --return "DRUID_CASTER"
+        elseif (raidTalents[strName].Role == "DRUID_MELEE") then
             raidTalents[strName].requiredBuffs = PP_BuffPriority[6];
-            return "DRUID_MELEE"
-        elseif(raidTalents[strName].Skills[3] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[3] > raidTalents[strName].Skills[2]) then
+            --return "DRUID_MELEE"
+        elseif (raidTalents[strName].Role == "DRUID_HEAL") then
             raidTalents[strName].requiredBuffs = PP_BuffPriority[8];
-            return "DRUID_HEAL"
+            --return "DRUID_HEAL"
         else
-            return "DRUID_UNKNOWN"
+            -- "DRUID_UNKNOWN"
         end
-        --TODO: Druid Off-/Tank/melee Unterscheidung?
     elseif(raidTalents[strName].Class == "MAGE") then
     	raidTalents[strName].requiredBuffs = PP_BuffPriority[18];
-        return "MAGE_CASTER"
     elseif(raidTalents[strName].Class == "WARLOCK") then
     	raidTalents[strName].requiredBuffs = PP_BuffPriority[16];
-        return "WARLOCK_CASTER"
     elseif(raidTalents[strName].Class == "ROGUE") then
     	raidTalents[strName].requiredBuffs = PP_BuffPriority[19];
-        return "ROGUE_MELEE"
     elseif(raidTalents[strName].Class == "PRIEST") then
     	raidTalents[strName].requiredBuffs = PP_BuffPriority[15];
-        if(raidTalents[strName].Skills[1] > raidTalents[strName].Skills[2] and raidTalents[strName].Skills[1] > raidTalents[strName].Skills[3]) then
-            return "PRIEST_HEAL"
-        elseif(raidTalents[strName].Skills[2] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[2] > raidTalents[strName].Skills[3]) then
-            return "PRIEST_HEAL"
-        elseif(raidTalents[strName].Skills[3] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[3] > raidTalents[strName].Skills[2]) then
-            return "PRIEST_CASTER"
-        else
-            return "PRIEST_UNKNOWN"
-        end
     elseif(raidTalents[strName].Class == "HUNTER") then
     	raidTalents[strName].requiredBuffs = PP_BuffPriority[17];
-        return "HUNTER_MELEE"
     elseif(raidTalents[strName].Class == "SHAMAN") then
-        if(raidTalents[strName].Skills[1] > raidTalents[strName].Skills[2] and raidTalents[strName].Skills[1] > raidTalents[strName].Skills[3]) then
+        if (raidTalents[strName].Role == "SHAMAN_CASTER") then
             raidTalents[strName].requiredBuffs = PP_BuffPriority[13];
-            return "SHAMAN_CASTER"
-        elseif(raidTalents[strName].Skills[2] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[2] > raidTalents[strName].Skills[3]) then
+            --return "SHAMAN_CASTER"
+        elseif (raidTalents[strName].Role == "SHAMAN_MELEE") then
             raidTalents[strName].requiredBuffs = PP_BuffPriority[12];
-            return "SHAMAN_MELEE"
-        elseif(raidTalents[strName].Skills[3] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[3] > raidTalents[strName].Skills[2]) then
+            --return "SHAMAN_MELEE"
+        elseif (raidTalents[strName].Role == "SHAMAN_HEAL") then
             raidTalents[strName].requiredBuffs = PP_BuffPriority[14];
-            return "SHAMAN_HEAL"
+            --return "SHAMAN_HEAL"
         else
-            return "SHAMAN_UNKNOWN"
+            --return "SHAMAN_UNKNOWN"
         end
     elseif(raidTalents[strName].Class == "WARRIOR") then
-        if(raidTalents[strName].Skills[1] > raidTalents[strName].Skills[2] and raidTalents[strName].Skills[1] > raidTalents[strName].Skills[3]) then
+        if (raidTalents[strName].Role == "WARRIOR_MELEE") then
             raidTalents[strName].requiredBuffs = PP_BuffPriority[11];
-            return "WARRIOR_MELEE"
-        elseif(raidTalents[strName].Skills[2] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[2] > raidTalents[strName].Skills[3]) then
-            return "WARRIOR_MELEE"
-        elseif(raidTalents[strName].Skills[3] > raidTalents[strName].Skills[1] and raidTalents[strName].Skills[3] > raidTalents[strName].Skills[2]) then
+            --return "WARRIOR_MELEE"
+        elseif (raidTalents[strName].Role == "WARRIOR_TANK") then
             raidTalents[strName].requiredBuffs = PP_BuffPriority[9];
-            return "WARRIOR_TANK"
+            --return "WARRIOR_TANK"
         else
-            return "WARRIOR_UNKNOWN"
+            --return "WARRIOR_UNKNOWN"
         end
-        --TODO: Unterscheidung off-/tank/?
-    else
-        return "UNKNOWN"
     end
+    
 end
 
 function PallyPowerConfig_Options()
