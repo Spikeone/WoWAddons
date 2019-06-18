@@ -25,6 +25,7 @@ function lib:Query(talents)
         error("Error: " .. tostring(talents.unit) .. " does not exist or is no player!")
     else
         DEFAULT_CHAT_FRAME:AddMessage("Talents Unit   : " .. talents.unit)
+        DEFAULT_CHAT_FRAME:AddMessage("Talents UnitID : " .. talents.unitID)
         DEFAULT_CHAT_FRAME:AddMessage("Talents Class  : " .. talents.class)
         DEFAULT_CHAT_FRAME:AddMessage("Talents Tree 1 : " .. talents[1])
         DEFAULT_CHAT_FRAME:AddMessage("Talents Tree 2 : " .. talents[2])
@@ -42,7 +43,6 @@ end
 
 -- INSPECT_TALENT_READY
 function lib:ProcessTalents(talents)
-
     if(talents.class == "PALADIN") then
         if(talents[1] > talents[2] and talents[1] > talents[3]) then
             talents.role = "PALADIN_HEAL"
@@ -57,10 +57,27 @@ function lib:ProcessTalents(talents)
         if(talents[1] > talents[2] and talents[1] > talents[3]) then
             talents.role = "DRUID_CASTER"
         elseif(talents[2] > talents[1] and talents[2] > talents[3]) then
-            -- TODO: Druid Off-/Tank/Melee Unterscheidung?
             talents.role = "DRUID_MELEE"
-            talents.role = "DRUID_OFF_TANK"
-            talents.role = "DRUID_TANK"
+
+            -- TODO: Druid Off-/Tank/Melee Unterscheidung?
+            local health = UnitHealthMax(talents.unitID)
+            local base, effectiveArmor, armor, posBuff, negBuff = UnitArmor(talents.unitID);
+            local baseDefense, armorDefense = UnitDefense(talents.unitID);
+            
+            if health >= 10000 then
+                if effectiveArmor >= 20000 then
+                    if (baseDefense + armorDefense) >= 380 then
+                        talents.role = "DRUID_TANK"
+                    else
+                        talents.role = "DRUID_OFF_TANK"
+                    end
+                else
+                    talents.role = "DRUID_OFF_TANK"
+                end
+            else
+                talents.role = "DRUID_OFF_TANK"
+            end
+
         elseif(talents[3] > talents[1] and talents[3] > talents[2]) then
             talents.role = "DRUID_HEAL"
         else
@@ -95,13 +112,11 @@ function lib:ProcessTalents(talents)
             talents.role = "SHAMAN_UNKNOWN"
         end
     elseif(talents.class == "WARRIOR") then
-        -- TODO: Off-/Tank Unterscheidung?
         if(talents[1] > talents[2] and talents[1] > talents[3]) then
             talents.role = "WARRIOR_MELEE"
         elseif(talents[2] > talents[1] and talents[2] > talents[3]) then
             talents.role = "WARRIOR_MELEE"
         elseif(talents[3] > talents[1] and talents[3] > talents[2]) then
-            talents.role = "WARRIOR_OFF_TANK"
             talents.role = "WARRIOR_TANK"
         else
             talents.role = "WARRIOR_UNKNOWN"

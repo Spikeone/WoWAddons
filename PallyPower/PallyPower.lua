@@ -218,8 +218,10 @@ function PallyPowerConfig_ScanRoles()
                 raidTalents[name].Class = englishClass
                 if (name == UnitName("player")) then
                     PallyPower:TalentQuery_Ready("TalentQuery_Ready", name, nil);
+                    raidTalents[name].unitID = "player"
                 else
                     TalentQuery:Query(("raid" .. i))
+                    raidTalents[name].unitID = "raid" .. i
                 end
             end
         end
