@@ -25,7 +25,6 @@ function lib:Query(talents)
         error("Error: " .. tostring(talents.unit) .. " does not exist or is no player!")
     else
         DEFAULT_CHAT_FRAME:AddMessage("Talents Unit   : " .. talents.unit)
-        DEFAULT_CHAT_FRAME:AddMessage("Talents UnitID : " .. talents.unitID)
         DEFAULT_CHAT_FRAME:AddMessage("Talents Class  : " .. talents.class)
         DEFAULT_CHAT_FRAME:AddMessage("Talents Tree 1 : " .. talents[1])
         DEFAULT_CHAT_FRAME:AddMessage("Talents Tree 2 : " .. talents[2])
@@ -41,15 +40,14 @@ function lib:Reset()
     -- currently do nothing
 end
 
-local function GetUnitID(strSummonerName)
+local function GetUnitID(unitName)
     for i = 1, 40 do
         name, rank, subgroup = GetRaidRosterInfo(i);
-        if (name ==  strSummonerName) then
+        if (name ==  unitName) then
             return ("raid" .. i) 
         end
     end
 end
-
 
 -- INSPECT_TALENT_READY
 function lib:ProcessTalents(talents)
