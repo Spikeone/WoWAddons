@@ -41,8 +41,19 @@ function lib:Reset()
     -- currently do nothing
 end
 
+local function GetUnitID(strSummonerName)
+    for i = 1, 40 do
+        name, rank, subgroup = GetRaidRosterInfo(i);
+        if (name ==  strSummonerName) then
+            return ("raid" .. i) 
+        end
+    end
+end
+
+
 -- INSPECT_TALENT_READY
 function lib:ProcessTalents(talents)
+    local tmpUnitID = GetUnitID(talents.unit);
     if(talents.class == "PALADIN") then
         if(talents[1] > talents[2] and talents[1] > talents[3]) then
             talents.role = "PALADIN_HEAL"
@@ -60,12 +71,12 @@ function lib:ProcessTalents(talents)
             talents.role = "DRUID_MELEE"
 
             -- TODO: Druid Off-/Tank/Melee Unterscheidung?
-            local health = UnitHealthMax(talents.unitID)
-            local stamina = UnitStat(talents.unitID, 3);
-            local base, effectiveArmor, armor, posBuff, negBuff = UnitArmor(talents.unitID);
-            local baseDefense, armorDefense = UnitDefense(talents.unitID);
+            local health = UnitHealthMax(tmpUnitID)
+            local stamina = UnitStat(tmpUnitID, 3);
+            local base, effectiveArmor, armor, posBuff, negBuff = UnitArmor(tmpUnitID);
+            local baseDefense, armorDefense = UnitDefense(tmpUnitID);
             -- 0 = MANA (Normal), 1 = WUT/RAGE (Tank), 3 = ENERGIE/ENERGY (Cat)
-            local powerType = UnitPowerType(talents.unitID);
+            local powerType = UnitPowerType(tmpUnitID);
 
             if powerType == 1 then
                 if health >= 10000 then
