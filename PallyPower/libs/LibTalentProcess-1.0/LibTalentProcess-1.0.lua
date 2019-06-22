@@ -61,21 +61,44 @@ function lib:ProcessTalents(talents)
 
             -- TODO: Druid Off-/Tank/Melee Unterscheidung?
             local health = UnitHealthMax(talents.unitID)
+            local stamina = UnitStat(talents.unitID, 3);
             local base, effectiveArmor, armor, posBuff, negBuff = UnitArmor(talents.unitID);
             local baseDefense, armorDefense = UnitDefense(talents.unitID);
-            
-            if health >= 10000 then
-                if effectiveArmor >= 20000 then
-                    if (baseDefense + armorDefense) >= 380 then
-                        talents.role = "DRUID_TANK"
+            -- 0 = MANA (Normal), 1 = WUT/RAGE (Tank), 3 = ENERGIE/ENERGY (Cat)
+            local powerType = UnitPowerType(talents.unitID);
+
+            if powerType == 1 then
+                if health >= 10000 then
+                    if effectiveArmor >= 20000 then
+                        if (baseDefense + armorDefense) >= 380 then
+                            talents.role = "DRUID_TANK"
+                        else
+                            talents.role = "DRUID_OFF_TANK"
+                        end
                     else
                         talents.role = "DRUID_OFF_TANK"
                     end
                 else
                     talents.role = "DRUID_OFF_TANK"
                 end
-            else
-                talents.role = "DRUID_OFF_TANK"
+            elseif powerType == 0 then
+                -- Tank in Normalform
+                if stamina >= 600 and effectiveArmor >= 6000 then
+                    if (baseDefense + armorDefense) >= 380 then
+                        talents.role = "DRUID_TANK"
+                    else
+                        talents.role = "DRUID_OFF_TANK"
+                    end
+                end
+            elseif powerType == 3 then
+                -- Tank in Katze
+                if stamina >= 600 and effectiveArmor >= 6000 then
+                    if (baseDefense + armorDefense) >= 380 then
+                        talents.role = "DRUID_TANK"
+                    else
+                        talents.role = "DRUID_OFF_TANK"
+                    end
+                end
             end
 
         elseif(talents[3] > talents[1] and talents[3] > talents[2]) then
