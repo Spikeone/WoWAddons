@@ -233,7 +233,6 @@ function PallyPowerConfig_OutputRoles()
     for k, v in pairs(raidTalents) do
         --DEFAULT_CHAT_FRAME:AddMessage(k .. " = " ..raidTalents[k].Role)
         --SendChatMessage((k .. " = " ..raidTalents[k].Role) ,"RAID" , nil ,nil);
-        raidTalents[k].Skills.unit  = k;
         raidTalents[k].Skills.class = raidTalents[k].Class;
         TalentProcess:Query(raidTalents[k].Skills)
 
@@ -259,7 +258,7 @@ function PallyPowerConfig_OutputRoles()
 
     --talents = {}
     --raidTalents[name].Skills
-    --talents.unit = "Aggrotanker"
+    --talents.unit = ""
 
     --TalentProcess:Query(raidTalents[name].Skills)
 end
@@ -1209,10 +1208,17 @@ function PallyPower:SPELLS_CHANGED()
 	self:ScanSpells()
 end
 
+--update() function for changes in party composition
+-- i had issues with RAID ROSTER UPDATE in partys
+function PallyPower:PARTY_MEMBERS_CHANGED()
+    PallyPowerConfig_ScanRoles();
+    --DEFAULT_CHAT_FRAME:AddMessage(getRaidStatus());
+end
+
 --update() function for changes in raid composition
 function PallyPower:RAID_ROSTER_UPDATE()
     PallyPowerConfig_ScanRoles();
-	--DEFAULT_CHAT_FRAME:AddMessage(getRaidStatus());
+    --DEFAULT_CHAT_FRAME:AddMessage(getRaidStatus());
 end
 
 function PallyPower:CHAT_MSG_ADDON(prefix, message, distribution, sender)

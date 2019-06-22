@@ -40,9 +40,18 @@ function lib:Reset()
     -- currently do nothing
 end
 
+local function GetUnitID(unitName)
+    for i = 1, 40 do
+        name, rank, subgroup = GetRaidRosterInfo(i);
+        if (name ==  unitName) then
+            return ("raid" .. i) 
+        end
+    end
+end
+
 -- INSPECT_TALENT_READY
 function lib:ProcessTalents(talents)
-
+    local tmpUnitID = GetUnitID(talents.unit);
     if(talents.class == "PALADIN") then
         if(talents[1] > talents[2] and talents[1] > talents[3]) then
             talents.role = "PALADIN_HEAL"
@@ -57,10 +66,50 @@ function lib:ProcessTalents(talents)
         if(talents[1] > talents[2] and talents[1] > talents[3]) then
             talents.role = "DRUID_CASTER"
         elseif(talents[2] > talents[1] and talents[2] > talents[3]) then
-            -- TODO: Druid Off-/Tank/Melee Unterscheidung?
             talents.role = "DRUID_MELEE"
-            talents.role = "DRUID_OFF_TANK"
-            talents.role = "DRUID_TANK"
+
+            -- TODO: Druid Off-/Tank/Melee Unterscheidung?
+            local health = UnitHealthMax(tmpUnitID)
+            local stamina = UnitStat(tmpUnitID, 3);
+            local base, effectiveArmor, armor, posBuff, negBuff = UnitArmor(tmpUnitID);
+            local baseDefense, armorDefense = UnitDefense(tmpUnitID);
+            -- 0 = MANA (Normal), 1 = WUT/RAGE (Tank), 3 = ENERGIE/ENERGY (Cat)
+            local powerType = UnitPowerType(tmpUnitID);
+
+            if powerType == 1 then
+                if health >= 10000 then
+                    if effectiveArmor >= 20000 then
+                        if (baseDefense + armorDefense) >= 380 then
+                            talents.role = "DRUID_TANK"
+                        else
+                            talents.role = "DRUID_OFF_TANK"
+                        end
+                    else
+                        talents.role = "DRUID_OFF_TANK"
+                    end
+                else
+                    talents.role = "DRUID_OFF_TANK"
+                end
+            elseif powerType == 0 then
+                -- Tank in Normalform
+                if stamina >= 600 and effectiveArmor >= 6000 then
+                    if (baseDefense + armorDefense) >= 380 then
+                        talents.role = "DRUID_TANK"
+                    else
+                        talents.role = "DRUID_OFF_TANK"
+                    end
+                end
+            elseif powerType == 3 then
+                -- Tank in Katze
+                if stamina >= 600 and effectiveArmor >= 6000 then
+                    if (baseDefense + armorDefense) >= 380 then
+                        talents.role = "DRUID_TANK"
+                    else
+                        talents.role = "DRUID_OFF_TANK"
+                    end
+                end
+            end
+
         elseif(talents[3] > talents[1] and talents[3] > talents[2]) then
             talents.role = "DRUID_HEAL"
         else
@@ -95,13 +144,11 @@ function lib:ProcessTalents(talents)
             talents.role = "SHAMAN_UNKNOWN"
         end
     elseif(talents.class == "WARRIOR") then
-        -- TODO: Off-/Tank Unterscheidung?
         if(talents[1] > talents[2] and talents[1] > talents[3]) then
             talents.role = "WARRIOR_MELEE"
         elseif(talents[2] > talents[1] and talents[2] > talents[3]) then
             talents.role = "WARRIOR_MELEE"
         elseif(talents[3] > talents[1] and talents[3] > talents[2]) then
-            talents.role = "WARRIOR_OFF_TANK"
             talents.role = "WARRIOR_TANK"
         else
             talents.role = "WARRIOR_UNKNOWN"
