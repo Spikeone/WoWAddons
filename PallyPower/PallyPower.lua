@@ -218,10 +218,8 @@ function PallyPowerConfig_ScanRoles()
                 raidTalents[name].Class = englishClass
                 if (name == UnitName("player")) then
                     PallyPower:TalentQuery_Ready("TalentQuery_Ready", name, nil);
-                    raidTalents[name].unitID = "player"
                 else
                     TalentQuery:Query(("raid" .. i))
-                    raidTalents[name].unitID = "raid" .. i
                 end
             end
         end
@@ -235,7 +233,6 @@ function PallyPowerConfig_OutputRoles()
     for k, v in pairs(raidTalents) do
         --DEFAULT_CHAT_FRAME:AddMessage(k .. " = " ..raidTalents[k].Role)
         --SendChatMessage((k .. " = " ..raidTalents[k].Role) ,"RAID" , nil ,nil);
-        raidTalents[k].Skills.unit  = k;
         raidTalents[k].Skills.class = raidTalents[k].Class;
         TalentProcess:Query(raidTalents[k].Skills)
 
