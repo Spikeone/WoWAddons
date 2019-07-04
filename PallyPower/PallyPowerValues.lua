@@ -106,13 +106,32 @@ PallyPower.RoleIcons = {
     -- Tank
     [1] = "Interface\\Icons\\INV_Shield_06",
     -- Heal
-    [2] = "Interface\\Icons\\Spell_ChargePositive",
+    [2] = "Interface\\Icons\\Spell_Nature_HealingTouch",
     -- Melee
     [3] = "Interface\\Icons\\Ability_DualWield",
     -- Caster
     [4] = "Interface\\Icons\\INV_Wand_11",
     -- Unknown
     [5] = "Interface\\Icons\\INV_Misc_QuestionMark",
+}
+
+PallyPower.RoleNameToType =
+{
+    ["None"] = "",
+    ["Tank"] = "_TANK", 
+    ["Off-Tank"] = "_OFFTANK", 
+    ["Heal"] = "_HEAL", 
+    ["Melee"] = "_MELEE", 
+    ["Caster"] = "_CASTER",
+}
+
+PallyPower.TypeToRoleName =
+{
+    ["_TANK"] = "Tank", 
+    ["_OFFTANK"] = "Off-Tank", 
+    ["_HEAL"] = "Heal", 
+    ["_MELEE"] = "Melee", 
+    ["_CASTER"] = "Caster",
 }
 
 -- array

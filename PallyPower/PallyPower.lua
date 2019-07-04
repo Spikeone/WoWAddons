@@ -40,7 +40,7 @@ function PallyPower:TalentQuery_Ready(e, name, realm)
         local treename, _, pointsspent = GetTalentTabInfo(tab, isnotplayer)
         tinsert(spec, pointsspent)
     end
-	raidTalents[name].Skills = spec
+    raidTalents[name].Skills = spec
     --getRoleByInfo(name)
     --raidTalents[name].Role = strRole
     --DEFAULT_CHAT_FRAME:AddMessage("test");
@@ -213,6 +213,7 @@ function PallyPowerConfig_ScanRoles()
         if(name and online) then
             if(raidTalents[name] == nil) then
                 raidTalents[name] = {}
+                raidTalents[name].ForcedRole = "None"
             end
             if(raidTalents[name].Skills == nil) then
                 raidTalents[name].Class = englishClass
@@ -433,8 +434,29 @@ function PallyPowerGrid_NormalBlessingMenu(btn, mouseBtn, pname, class)
 				}
 			}
 		}
+
+        -- add another submenu
+        -- no idea what the "args" name is used for
+        -- name = name that is show as selection
+        -- type = type of the menu entry
+        -- desc = description, no idea when it's shown
+        -- get = get the currently set value
+        -- set = set a new value
+        -- validate = guess possible options
+        tempoptions.args["Role"] = 
+        {
+            name = "Force Role",
+            type = "text",
+            desc = "Force role for player",
+            order = 9,
+            get = function() return getForcedRole(pname, class) end,
+            set = function(value) setForcedRole(pname, class, value) end,
+            validate = {"None","Tank", "Off-Tank", "Heal", "Melee", "Caster"},
+        }
+
 		local pre, suf
 		for pally in pairs(AllPallys) do
+            -- control actually means cancontrol (change buffs), changes color to red
 			local control
 			control = PallyPower:CanControl(pally)
 			if not control then
@@ -444,6 +466,9 @@ function PallyPowerGrid_NormalBlessingMenu(btn, mouseBtn, pname, class)
 				pre = ""
 				suf = ""
 			end
+            --
+
+            -- fill a blessings array with class buffs
 			local blessings = {["0"] = string.format("%s%s%s", pre, "(none)", suf)}
 			for index, blessing in ipairs(PallyPower.Spells) do
 				if PallyPower:CanBuff(pally, index) then
@@ -452,6 +477,9 @@ function PallyPowerGrid_NormalBlessingMenu(btn, mouseBtn, pname, class)
 					end
 				end
 			end
+            --
+
+            -- pally = paladin name, this adds the possible settings for the target player
 			tempoptions.args[pally] = {
 				name = string.format("%s%s%s", pre, pally, suf),
 				type = "text",
@@ -463,6 +491,7 @@ function PallyPowerGrid_NormalBlessingMenu(btn, mouseBtn, pname, class)
 
 			}
 		end
+
 		dewdrop:Register(btn, "children", 
 			function(level, value) dewdrop:FeedAceOptionsTable(tempoptions) end,
 			"dontHook", true,
@@ -479,6 +508,36 @@ function PallyPowerGrid_NormalBlessingMenu(btn, mouseBtn, pname, class)
 		end
 	end
 end
+
+-- @Spikeone
+function getForcedRole(strPlayerName, class)
+    if(raidTalents[strPlayerName] == nil) then
+        raidTalents[strPlayerName] = {}
+        raidTalents[strPlayerName].ForcedRole = "None"
+    end
+
+    if(raidTalents[strPlayerName] == nil) then return "None" end
+
+    if(raidTalents[strPlayerName].ForcedRole == "") then return "None" end
+
+    local strClasslessRole = string.gsub(raidTalents[strPlayerName].ForcedRole, PallyPower.ClassID[tonumber(class)], "")
+
+    return PallyPower.TypeToRoleName[strClasslessRole]
+end
+
+-- @Spikeone
+function setForcedRole(strPlayerName, class, value)
+    if(raidTalents[strPlayerName] == nil) then return end
+
+    if(value == "None") then 
+        raidTalents[strPlayerName].ForcedRole = "None"
+    else
+        raidTalents[strPlayerName].ForcedRole = (PallyPower.ClassID[tonumber(class)] .. PallyPower.RoleNameToType[tostring(value)])
+    end
+
+    PallyPower:SendMessage("RASSIGN " ..strPlayerName.." " ..raidTalents[strPlayerName].ForcedRole)
+end
+
 
 function PallyPowerPlayerButton_OnClick(btn, mouseBtn)
 	if InCombatLockdown() then return false end
@@ -569,6 +628,7 @@ end
 
 -- @Spikeone
 function PallyPower_GetRoleIconIndex(strPlayerName)
+
     if(strPlayerName == nil) then
         return 5
     end
@@ -577,27 +637,31 @@ function PallyPower_GetRoleIconIndex(strPlayerName)
         return 5
     end
 
-    if(raidTalents[strPlayerName].Role == nil) then
+    if(raidTalents[strPlayerName].Role == nil and raidTalents[strPlayerName].ForcedRole == "None") then
         return 5
     end
 
-    if(string.find(raidTalents[strPlayerName].Role, "UNKNOWN")) then
+    strPlayerRole = raidTalents[strPlayerName].Role
+
+    if(raidTalents[strPlayerName].ForcedRole ~= "None") then strPlayerRole = raidTalents[strPlayerName].ForcedRole end
+
+    if(string.find(strPlayerRole, "UNKNOWN")) then
         return 5
     end
 
-    if(string.find(raidTalents[strPlayerName].Role, "CASTER")) then
+    if(string.find(strPlayerRole, "CASTER")) then
         return 4
     end
 
-    if(string.find(raidTalents[strPlayerName].Role, "MELEE")) then
+    if(string.find(strPlayerRole, "MELEE")) then
         return 3
     end
 
-    if(string.find(raidTalents[strPlayerName].Role, "HEAL")) then
+    if(string.find(strPlayerRole, "HEAL")) then
         return 2
     end
 
-    if(string.find(raidTalents[strPlayerName].Role, "TANK")) then
+    if(string.find(strPlayerRole, "TANK")) then
         return 1
     end
 
@@ -1184,6 +1248,8 @@ function PallyPower:SendSelf()
 		until offset > count
 	end
 	
+    -- TODO: Send MRASSIGN (Multi Role Assign)
+
 	self:SendMessage("SYMCOUNT " .. PP_Symbols)
 	if self.opt.freeassign then
 		self:SendMessage("FREEASSIGN YES")
@@ -1354,6 +1420,16 @@ function PallyPower:ParseMessage(sender, msg)
 	if msg == "FREEASSIGN NO" and AllPallys[sender] then
 		AllPallys[sender].freeassign = false
 	end
+
+    if string.find(msg, "^RASSIGN") then
+        _, _, name, role = string.find(msg, "^RASSIGN (.*) (.*)")
+
+        if(raidTalents[name] == nil) then
+            raidTalents[name] = {}
+        end
+
+        raidTalents[name].ForcedRole = role
+    end
 end
 
 function PallyPower:FormatTime(time)
