@@ -7,11 +7,9 @@ local L = AceLibrary("AceLocale-2.2"):new("PallyPower")
 local TalentQuery = LibStub:GetLibrary("LibTalentQuery-1.0")
 local TalentProcess = LibStub:GetLibrary("LibTalentProcess-1.0")
 local raidTalents = {}
-tempMem = 0;
-raidCount = 0;
-members = 0;
-offlinePlayers = 0;
-local myZone = GetRealZoneText();
+
+-- this one is saved
+PallyPower_ForcedRoles = {};
 
 local classlist, classes = {}, {}
 LastCast = {}
@@ -28,7 +26,6 @@ PP_IsPally = false
 
 --  @Spikeone
 function PallyPower:TalentProcess_Ready(e, data)
-    DEFAULT_CHAT_FRAME:AddMessage("Rolle: " .. data.role)
     raidTalents[data.unit].Role = data.role
 end
 
@@ -44,28 +41,12 @@ function PallyPower:TalentQuery_Ready(e, name, realm)
     --getRoleByInfo(name)
     --raidTalents[name].Role = strRole
     --DEFAULT_CHAT_FRAME:AddMessage("test");
-    raidCount = raidCount + 1;
-end
 
-local function MyAddonCommands(msg, editbox)
-	if(msg == 'status') then
-		DEFAULT_CHAT_FRAME:AddMessage(getRaidStatus());
-	elseif(msg == 'instance') then
-    	if(GetZoneTableEntry(GetRealZoneText()) > 0) then
-    		local ind = GetZoneTableEntry(GetRealZoneText());
-    		DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Instance:|r |cFFFFFF00" .. PP_ZoneTable[ind].de .. "|r | |cFF00FF00Limit:|r |cFFFFFF00" .. PP_ZoneTable[ind].PlayerLimit .. "|r");
-		else
-			DEFAULT_CHAT_FRAME:AddMessage("You're not in a raid/instance!");
-		end
-	end
-end
+    -- upon receiving the talents, scan the role
+    raidTalents[name].Skills.class = raidTalents[name].Class;
+    raidTalents[name].Skills.unit = name;
 
-function getRaidStatus()
-	PallyPowerConfig_ScanRoles();
-	allPercent = string.format("%02d",(raidCount / members) * 100);
-	onlinePercent = string.format("%02d",(raidCount / (members - offlinePlayers)) * 100);
-	strOutput = "|cFF00FF00Synchronized Data:\n".. allPercent .. "% including offline players|r\n|cFFFFFF00" .. onlinePercent .."% excluding offline players|r";
-    return strOutput;
+    TalentProcess:Query(raidTalents[name].Skills)
 end
 
 function PallyPower:getNumScanned()
@@ -104,9 +85,6 @@ function PallyPower:getNumScanned()
     return scanned, tanks, heals, dds, unknown
 end
 
-SLASH_PALLY1 = '/pally';
-SlashCmdList["PALLY"] = MyAddonCommands
-
 function PallyPower:OnInitialize()
 	self:RegisterDB("PallyPowerDB")
 	self:RegisterChatCommand({"/pp"}, self.options)
@@ -136,7 +114,7 @@ function PallyPower:OnEnable()
 	self:RegisterEvent("PLAYER_REGEN_ENABLED")
 	self:RegisterEvent("SPELLS_CHANGED")
 	self:RegisterEvent("RAID_ROSTER_UPDATE")
-	--self:RegisterEvent("PLAYER_LOGIN")
+	self:RegisterEvent("PLAYER_ENTERING_WORLD")
 	self:RegisterBucketEvent("RosterLib_RosterUpdated", 1, "UpdateRoster")
 	self:ScheduleRepeatingEvent("PallyPowerInventoryScan", self.InventoryScan, 60, self)
 	self:UpdateRoster()
@@ -191,30 +169,18 @@ function PallyPowerConfig_Clear()
 end
 
 function PallyPowerConfig_ScanRoles()
-    --if InCombatLockdown() then return false end    
-    --DEFAULT_CHAT_FRAME:AddMessage("PallyPowerConfig_ScanRoles")
-    SetMapToCurrentZone();
-	--raidCount = 0;
-	members = 0;
-	offlinePlayers = 0;
-	local ind = GetZoneTableEntry(GetRealZoneText());
-    if(ind ~= nil) then
-    --    DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Instance:|r |cFFFFFF00" .. PP_ZoneTable[ind].de .. "|r | |cFF00FF00Limit:|r |cFFFFFF00" .. PP_ZoneTable[ind].PlayerLimit .. "|r");
-          members = PP_ZoneTable[ind].PlayerLimit;
-    end
+    --if InCombatLockdown() then return false end
 
-    for i = 1, members do
+    for i = 1, 40 do
         local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(i);
         local localizedClass, englishClass, classIndex = UnitClass(("raid" .. i));
         isConnected = UnitIsConnected("raid" .. i);
-        if(name and not isConnected) then
-            offlinePlayers = offlinePlayers + 1;
-        end
+        
         if(name and online) then
             if(raidTalents[name] == nil) then
                 raidTalents[name] = {}
-                raidTalents[name].ForcedRole = "None"
             end
+
             if(raidTalents[name].Skills == nil) then
                 raidTalents[name].Class = englishClass
                 if (name == UnitName("player")) then
@@ -226,63 +192,6 @@ function PallyPowerConfig_ScanRoles()
         end
     end
     
-    PallyPowerConfig_OutputRoles();
-end
-
-function PallyPowerConfig_OutputRoles()
-    --DEFAULT_CHAT_FRAME:AddMessage("PallyPowerConfig_OutputRoles")
-    for k, v in pairs(raidTalents) do
-        --DEFAULT_CHAT_FRAME:AddMessage(k .. " = " ..raidTalents[k].Role)
-        --SendChatMessage((k .. " = " ..raidTalents[k].Role) ,"RAID" , nil ,nil);
-        raidTalents[k].Skills.class = raidTalents[k].Class;
-        TalentProcess:Query(raidTalents[k].Skills)
-
-        getRoleByInfo(k)
-
-        DEFAULT_CHAT_FRAME:AddMessage(k .. ":");
-        if(raidTalents[k].mightScore ~= nil) then
-            DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDM");
-        end
-        if(raidTalents[k].wisdomScore ~= nil) then
-            DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDW");
-        end
-        if(raidTalents[k].kingsScore ~= nil) then
-            DEFAULT_CHAT_FRAME:AddMessage("Sollte buffen: SDK");
-        end
-        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.a);
-        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.b);
-        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.c);
-        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.d);
-        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.e);
-        DEFAULT_CHAT_FRAME:AddMessage(raidTalents[k].requiredBuffs.f);
-    end    
-
-    --talents = {}
-    --raidTalents[name].Skills
-    --talents.unit = ""
-
-    --TalentProcess:Query(raidTalents[name].Skills)
-end
-
--- eintrag aus array holen
-function GetZoneTableEntry(zoneName)
-    --return 5;
-    for index, zoneTable in pairs(PP_ZoneTable) do
-        if(zoneTable.en == zoneName or zoneTable.de == zoneName or zoneTable.fr == zoneName or zoneTable.es == zoneName) then
-            return index;
-        end
-    end
-    return nil;
-end
-
-function MetaMap_GetCurrentMapInfo()
-	local mapName, dataZone;
-	if(MetaMapFrame:IsVisible()) then
-		mapName = MetaMapOptions.MetaMapZone;
-	else
-	mapName = MetaMap_ZoneIDToName(GetCurrentMapContinent(), GetCurrentMapZone());
-	end
-	return mapName, MetaMap_Notes[mapName];
 end
 
 function getRoleByInfo(strName)
@@ -510,32 +419,53 @@ function PallyPowerGrid_NormalBlessingMenu(btn, mouseBtn, pname, class)
 end
 
 -- @Spikeone
-function getForcedRole(strPlayerName, class)
+function getPlayerRole(strPlayerName)
     if(raidTalents[strPlayerName] == nil) then
-        raidTalents[strPlayerName] = {}
-        raidTalents[strPlayerName].ForcedRole = "None"
+        return "UNKNOWN"
     end
 
-    if(raidTalents[strPlayerName] == nil) then return "None" end
+    if(PallyPower_ForcedRoles[strPlayerName] == nil) then
+        if(raidTalents[strPlayerName].Role ~= nil) then
+            return raidTalents[strPlayerName]
+        else
+            return "UNKNOWN"
+        end
+    else
+        if(PallyPower_ForcedRoles[strPlayerName] == nil) then
+            return "UNKNOWN"
+        else
+            return PallyPower_ForcedRoles[strPlayerName]
+        end
+    end
 
-    if(raidTalents[strPlayerName].ForcedRole == "") then return "None" end
+    return "UNKNOWN"
 
-    local strClasslessRole = string.gsub(raidTalents[strPlayerName].ForcedRole, PallyPower.ClassID[tonumber(class)], "")
+end
+
+-- @Spikeone
+function getForcedRole(strPlayerName, class)
+
+    if(PallyPower_ForcedRoles[strPlayerName] == nil) then
+        return "None" 
+    end
+
+    local strClasslessRole = string.gsub(PallyPower_ForcedRoles[strPlayerName], PallyPower.ClassID[tonumber(class)], "")
 
     return PallyPower.TypeToRoleName[strClasslessRole]
 end
 
 -- @Spikeone
 function setForcedRole(strPlayerName, class, value)
-    if(raidTalents[strPlayerName] == nil) then return end
 
     if(value == "None") then 
-        raidTalents[strPlayerName].ForcedRole = "None"
+        PallyPower_ForcedRoles[strPlayerName] = nil
+        PallyPower:SendMessage("RASSIGN " ..strPlayerName.." " .. "None")
     else
-        raidTalents[strPlayerName].ForcedRole = (PallyPower.ClassID[tonumber(class)] .. PallyPower.RoleNameToType[tostring(value)])
+        PallyPower_ForcedRoles[strPlayerName] = (PallyPower.ClassID[tonumber(class)] .. PallyPower.RoleNameToType[tostring(value)])
+        PallyPower:SendMessage("RASSIGN " ..strPlayerName.." " ..PallyPower_ForcedRoles[strPlayerName])
     end
 
-    PallyPower:SendMessage("RASSIGN " ..strPlayerName.." " ..raidTalents[strPlayerName].ForcedRole)
+    
 end
 
 
@@ -637,13 +567,13 @@ function PallyPower_GetRoleIconIndex(strPlayerName)
         return 5
     end
 
-    if(raidTalents[strPlayerName].Role == nil and raidTalents[strPlayerName].ForcedRole == "None") then
+    if(raidTalents[strPlayerName].Role == nil and PallyPower_ForcedRoles[strPlayerName] == nil) then
         return 5
     end
 
     strPlayerRole = raidTalents[strPlayerName].Role
 
-    if(raidTalents[strPlayerName].ForcedRole ~= "None") then strPlayerRole = raidTalents[strPlayerName].ForcedRole end
+    if(PallyPower_ForcedRoles[strPlayerName] ~= nil) then strPlayerRole = PallyPower_ForcedRoles[strPlayerName] end
 
     if(string.find(strPlayerRole, "UNKNOWN")) then
         return 5
@@ -703,7 +633,7 @@ function PallyPowerConfigGrid_Update()
                     if classes[i] and classes[i][j] then
                         local unit = classes[i][j]
                         -- show icon for role @Spikeone
-                        if(i < (PALLYPOWER_MAXCLASSES - 2)) then
+                        if(i < (PALLYPOWER_MAXCLASSES - 1)) then
                             getglobal(pbnt.."Role"):SetTexture(PallyPower.RoleIcons[PallyPower_GetRoleIconIndex(unit.name)])
                         else -- not for pets
                             getglobal(pbnt.."Role"):SetTexture(PallyPower.RoleIcons[3])
@@ -1248,7 +1178,12 @@ function PallyPower:SendSelf()
 		until offset > count
 	end
 	
-    -- TODO: Send MRASSIGN (Multi Role Assign)
+    -- @Spikeone, no array style because there shouldn't be many forced roles
+    for pname in pairs(raidTalents) do
+        if(PallyPower_ForcedRoles[pname] ~= nil) then
+            PallyPower:SendMessage("RASSIGN " ..pname.." " ..PallyPower_ForcedRoles[pname])
+        end
+    end
 
 	self:SendMessage("SYMCOUNT " .. PP_Symbols)
 	if self.opt.freeassign then
@@ -1278,13 +1213,15 @@ end
 -- i had issues with RAID ROSTER UPDATE in partys
 function PallyPower:PARTY_MEMBERS_CHANGED()
     PallyPowerConfig_ScanRoles();
-    --DEFAULT_CHAT_FRAME:AddMessage(getRaidStatus());
 end
 
 --update() function for changes in raid composition
 function PallyPower:RAID_ROSTER_UPDATE()
     PallyPowerConfig_ScanRoles();
-    --DEFAULT_CHAT_FRAME:AddMessage(getRaidStatus());
+end
+
+function PallyPower:PLAYER_ENTERING_WORLD()
+    PallyPowerConfig_ScanRoles();
 end
 
 function PallyPower:CHAT_MSG_ADDON(prefix, message, distribution, sender)
@@ -1424,11 +1361,7 @@ function PallyPower:ParseMessage(sender, msg)
     if string.find(msg, "^RASSIGN") then
         _, _, name, role = string.find(msg, "^RASSIGN (.*) (.*)")
 
-        if(raidTalents[name] == nil) then
-            raidTalents[name] = {}
-        end
-
-        raidTalents[name].ForcedRole = role
+        PallyPower_ForcedRoles[name] = role
     end
 end
 

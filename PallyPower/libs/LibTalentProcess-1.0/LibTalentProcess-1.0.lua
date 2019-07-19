@@ -18,20 +18,19 @@ function lib:Query(talents)
     --talents.unit = "Player"
 
     if talents == nil then
-        error("Error: No Talents")
+        --error("Error: No Talents")
     elseif (talents[1] == nil or talents[2] == nil or talents[3] == nil or talents.unit == nil or talents.class == nil) then
-        error("Error: wrong Talent format or no unit or no class!")
+        --error("Error: wrong Talent format or no unit or no class!")
     elseif not UnitExists(talents.unit) or not UnitIsPlayer(talents.unit) then
-        error("Error: " .. tostring(talents.unit) .. " does not exist or is no player!")
+        --error("Error: " .. tostring(talents.unit) .. " does not exist or is no player!")
     else
-        DEFAULT_CHAT_FRAME:AddMessage("Talents Unit   : " .. talents.unit)
-        DEFAULT_CHAT_FRAME:AddMessage("Talents Class  : " .. talents.class)
-        DEFAULT_CHAT_FRAME:AddMessage("Talents Tree 1 : " .. talents[1])
-        DEFAULT_CHAT_FRAME:AddMessage("Talents Tree 2 : " .. talents[2])
-        DEFAULT_CHAT_FRAME:AddMessage("Talents Tree 3 : " .. talents[3])
+        --DEFAULT_CHAT_FRAME:AddMessage("Talents Unit   : " .. talents.unit)
+        --DEFAULT_CHAT_FRAME:AddMessage("Talents Class  : " .. talents.class)
+        --DEFAULT_CHAT_FRAME:AddMessage("Talents Tree 1 : " .. talents[1])
+        --DEFAULT_CHAT_FRAME:AddMessage("Talents Tree 2 : " .. talents[2])
+        --DEFAULT_CHAT_FRAME:AddMessage("Talents Tree 3 : " .. talents[3])
 
         self:ProcessTalents(talents)
-       -- TODO: Do stuff
     end
 end
 
@@ -47,11 +46,14 @@ local function GetUnitID(unitName)
             return ("raid" .. i) 
         end
     end
+
+    return 0
 end
 
 -- INSPECT_TALENT_READY
 function lib:ProcessTalents(talents)
     local tmpUnitID = GetUnitID(talents.unit);
+
     if(talents.class == "PALADIN") then
         if(talents[1] > talents[2] and talents[1] > talents[3]) then
             talents.role = "PALADIN_HEAL"
@@ -68,44 +70,46 @@ function lib:ProcessTalents(talents)
         elseif(talents[2] > talents[1] and talents[2] > talents[3]) then
             talents.role = "DRUID_MELEE"
 
-            -- TODO: Druid Off-/Tank/Melee Unterscheidung?
-            local health = UnitHealthMax(tmpUnitID)
-            local stamina = UnitStat(tmpUnitID, 3);
-            local base, effectiveArmor, armor, posBuff, negBuff = UnitArmor(tmpUnitID);
-            local baseDefense, armorDefense = UnitDefense(tmpUnitID);
-            -- 0 = MANA (Normal), 1 = WUT/RAGE (Tank), 3 = ENERGIE/ENERGY (Cat)
-            local powerType = UnitPowerType(tmpUnitID);
+            if(tmpUnitID ~= 0) then
+                -- TODO: Druid Off-/Tank/Melee Unterscheidung?
+                local health = UnitHealthMax(tmpUnitID)
+                local stamina = UnitStat(tmpUnitID, 3);
+                local base, effectiveArmor, armor, posBuff, negBuff = UnitArmor(tmpUnitID);
+                local baseDefense, armorDefense = UnitDefense(tmpUnitID);
+                -- 0 = MANA (Normal), 1 = WUT/RAGE (Tank), 3 = ENERGIE/ENERGY (Cat)
+                local powerType = UnitPowerType(tmpUnitID);
 
-            if powerType == 1 then
-                if health >= 10000 then
-                    if effectiveArmor >= 20000 then
+                if powerType == 1 then
+                    if health >= 10000 then
+                        if effectiveArmor >= 20000 then
+                            if (baseDefense + armorDefense) >= 380 then
+                                talents.role = "DRUID_TANK"
+                            else
+                                talents.role = "DRUID_OFFTANK"
+                            end
+                        else
+                            talents.role = "DRUID_OFFTANK"
+                        end
+                    else
+                        talents.role = "DRUID_OFFTANK"
+                    end
+                elseif powerType == 0 then
+                    -- Tank in Normalform
+                    if stamina >= 600 and effectiveArmor >= 6000 then
                         if (baseDefense + armorDefense) >= 380 then
                             talents.role = "DRUID_TANK"
                         else
-                            talents.role = "DRUID_OFF_TANK"
+                            talents.role = "DRUID_OFFTANK"
                         end
-                    else
-                        talents.role = "DRUID_OFF_TANK"
                     end
-                else
-                    talents.role = "DRUID_OFF_TANK"
-                end
-            elseif powerType == 0 then
-                -- Tank in Normalform
-                if stamina >= 600 and effectiveArmor >= 6000 then
-                    if (baseDefense + armorDefense) >= 380 then
-                        talents.role = "DRUID_TANK"
-                    else
-                        talents.role = "DRUID_OFF_TANK"
-                    end
-                end
-            elseif powerType == 3 then
-                -- Tank in Katze
-                if stamina >= 600 and effectiveArmor >= 6000 then
-                    if (baseDefense + armorDefense) >= 380 then
-                        talents.role = "DRUID_TANK"
-                    else
-                        talents.role = "DRUID_OFF_TANK"
+                elseif powerType == 3 then
+                    -- Tank in Katze
+                    if stamina >= 600 and effectiveArmor >= 6000 then
+                        if (baseDefense + armorDefense) >= 380 then
+                            talents.role = "DRUID_TANK"
+                        else
+                            talents.role = "DRUID_OFFTANK"
+                        end
                     end
                 end
             end
