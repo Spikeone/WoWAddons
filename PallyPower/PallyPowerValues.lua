@@ -134,26 +134,33 @@ PallyPower.TypeToRoleName =
     ["_CASTER"] = "Caster",
 }
 
-PP_BuffPriority = {
-	[1] = {role = "PALADIN_TANK", a = "SDRef", b = "SDK", c = "SDM", d = "SDW", e = "SDL", f = ""},
-	[2] = {role = "PALADIN_HEAL", a = "SDR", b = "SDK", c = "SDW", d = "SDL", e = "SDRef", f = "SDM"},
-	[3] = {role = "PALADIN_MELEE", a = "SDR", b = "SDM", c = "SDK", d = "SDW", e = "SDL", f = "SDRef"},
-	[4] = {role = "DRUID_TANK", a = "SDK", b = "SDM", c = "SDW", d = "SDL", e = "SDRef", f = ""},
-	[5] = {role = "DRUID_OFF_TANK", a = "SDR", b = "SDK", c = "SDM", d = "SDW", e = "SDL", f = "SDRef"},
-	[6] = {role = "DRUID_MELEE", a = "SDR", b = "SDK", c = "SDM", d = "SDW", e = "SDL", f = "SDRef"},
-	[7] = {role = "DRUID_CASTER", a = "SDR", b = "SDK", c = "SDW", d = "SDL", e = "SDRef", f = "SDM"},
-	[8] = {role = "DRUID_HEAL", a = "SDR", b = "SDK", c = "SDW", d = "SDL", e = "SDRef", f = "SDM"},
-	[9] = {role = "WARRIOR_TANK", a = "SDK", b = "SDM", c = "SDRef", d = "SDL", e = "SDW", f = ""},
-	[10] = {role = "WARRIOR_OFF_TANK", a = "SDR", b = "SDK", c = "SDM", d = "SDRef", e = "SDL", f = "SDW"},
-	[11] = {role = "WARRIOR_MELEE", a = "SDR", b = "SDK", c = "SDM", d = "SDL", e = "SDRef", f = "SDW"},
-	[12] = {role = "SHAMAN_MELEE", a = "SDR", b = "SDM", c = "SDK", d = "SDW", e = "SDL", f = "SDRef"},
-	[13] = {role = "SHAMAN_CASTER", a = "SDR", b = "SDK", c = "SDW", d = "SDL", e = "SDRef", f = "SDM"},
-	[14] = {role = "SHAMAN_HEAL", a = "SDR", b = "SDK", c = "SDW", d = "SDL", e = "SDRef", f = "SDM"},
-	[15] = {role = "PRIEST_CASTER", a = "SDR", b = "SDK", c = "SDW", d = "SDL", e = "SDRef", f = "SDM"},
-	[16] = {role = "WARLOCK_CASTER", a = "SDR", b = "SDK", c = "SDW", d = "SDL", e = "SDRef", f = "SDM"},
-	[17] = {role = "HUNTER_MELEE", a = "SDM", b = "SDK", c = "SDR", d = "SDW", e = "SDL", f = "SDRef"},
-	[18] = {role = "MAGE_CASTER", a = "SDR", b = "SDK", c = "SDW", d = "SDL", e = "SDRef", f = "SDM"},
-	[19] = {role = "ROGUE_MELEE", a = "SDR", b = "SDM", c = "SDK", d = "SDL", e = "SDRef", f = "SDW"},
+-- 1 = sdw
+-- 2 = sdm
+-- 3 = sdr
+-- 4 = sdl
+-- 5 = sdk
+-- 6 = sdref
+prio = indexbuff
+PallyPower.BuffPriority = {
+    ["PALADIN_TANK"]        = {6, 5, 1, 4, 2, nil},
+    ["PALADIN_HEAL"]        = {3, 5, 1, 4, 6, 2},
+    ["PALADIN_MELEE"]       = {3, 2, 5, 1, 4, 6},
+    ["DRUID_TANK"]          = {5, 2, 1, 4, 6, nil},
+    ["DRUID_OFF_TANK"]      = {3, 5, 2, 1, 4, 6},
+    ["DRUID_MELEE"]         = {3, 5, 2, 1, 4, 6},
+    ["DRUID_CASTER"]        = {3, 5, 1, 4, 6, 2},
+    ["DRUID_HEAL"]          = {3, 5, 1, 4, 6, 2},
+    ["WARRIOR_TANK"]        = {5, 2, 6, 4, 1, nil},
+    ["WARRIOR_OFF_TANK"]    = {3, 5, 2, 6, 4, 1},
+    ["WARRIOR_MELEE"]       = {3, 5, 2, 4, 6, 1},
+    ["SHAMAN_MELEE"]        = {3, 2, 5, 1, 4, 6},
+    ["SHAMAN_CASTER"]       = {3, 5, 1, 4, 6, 2},
+    ["SHAMAN_HEAL"]         = {3, 5, 1, 4, 6, 2},
+    ["PRIEST_CASTER"]       = {3, 5, 1, 4, 6, 2},
+    ["WARLOCK_CASTER"]      = {3, 5, 1, 4, 6, 2},
+    ["HUNTER_MELEE"]        = {2, 5, 3, 1, 4, 6},
+    ["MAGE_CASTER"]         = {3, 5, 1, 4, 6, 2},
+    ["ROGUE_MELEE"]         = {3, 2, 5, 4, 6, 1},
 }
 --
 -- Need to add localizations

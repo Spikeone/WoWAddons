@@ -1268,7 +1268,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
         </Anchors>
         <Scripts>
           <OnClick>
-           	PallyPowerConfig_ScanRoles();
+            PallyPowerConfig_SetPrio();
           </OnClick>
         </Scripts>
       </Button>

@@ -26,7 +26,15 @@ PP_IsPally = false
 
 --  @Spikeone
 function PallyPower:TalentProcess_Ready(e, data)
-    raidTalents[data.unit].Role = data.role
+
+    if(raidTalents[data.unit].Role == nil) then
+        raidTalents[data.unit].Role = data.role
+        PallyPower:SendMessage("TRASSIGN " ..data.unit.." " ..raidTalents[data.unit].Role)
+    elseif(raidTalents[data.unit].Role ~= data.role) then
+        raidTalents[data.unit].Role = data.role
+        PallyPower:SendMessage("TRASSIGN " ..data.unit.." " ..raidTalents[data.unit].Role)
+    end
+
 end
 
 function PallyPower:TalentQuery_Ready(e, name, realm)
@@ -166,6 +174,40 @@ function PallyPowerConfig_Clear()
 	if PallyPower:CheckRaidLeader(UnitName("player")) then
 		PallyPower:SendMessage("CLEAR")
 	end
+end
+
+function PallyPowerConfig_SetPrio()
+    -- 1 = sdw
+    -- 2 = sdm
+    -- 3 = sdr
+    -- 4 = sdl
+    -- 5 = sdk
+    -- 6 = sdref
+    -- sdk / sdref =  + 10
+    -- sdm / sdw   =  + talent
+    -- sdl         =  1
+
+    strRole = "PALADIN_TANK"
+    DEFAULT_CHAT_FRAME:AddMessage("For role '" ..strRole.. "'")
+    for j = 1, 6 do
+        if (PallyPower.BuffPriority[strRole][j] ~= nil) then
+            DEFAULT_CHAT_FRAME:AddMessage("" ..j.. ": " ..PallyPower.GSpells[PallyPower.BuffPriority[strRole][j]])
+        end
+    end
+
+    for name in pairs(AllPallys) do
+        DEFAULT_CHAT_FRAME:AddMessage("Paladin: " ..name)
+        for i = 1, 6 do
+            DEFAULT_CHAT_FRAME:AddMessage("Index ("..i.."): " ..PallyPower.GSpells[i])
+            if (AllPallys[name][i] ~= nil) then
+                DEFAULT_CHAT_FRAME:AddMessage("Rank: "..AllPallys[name][i].rank)
+                DEFAULT_CHAT_FRAME:AddMessage("Talent: "..AllPallys[name][i].talent)
+            else
+                DEFAULT_CHAT_FRAME:AddMessage("Rank: -")
+                DEFAULT_CHAT_FRAME:AddMessage("Talent: -")
+            end
+        end
+    end
 end
 
 function PallyPowerConfig_ScanRoles()
@@ -426,7 +468,7 @@ function getPlayerRole(strPlayerName)
 
     if(PallyPower_ForcedRoles[strPlayerName] == nil) then
         if(raidTalents[strPlayerName].Role ~= nil) then
-            return raidTalents[strPlayerName]
+            return raidTalents[strPlayerName].Role
         else
             return "UNKNOWN"
         end
@@ -459,10 +501,10 @@ function setForcedRole(strPlayerName, class, value)
 
     if(value == "None") then 
         PallyPower_ForcedRoles[strPlayerName] = nil
-        PallyPower:SendMessage("RASSIGN " ..strPlayerName.." " .. "None")
+        PallyPower:SendMessage("FRASSIGN " ..strPlayerName.." " .. "None")
     else
         PallyPower_ForcedRoles[strPlayerName] = (PallyPower.ClassID[tonumber(class)] .. PallyPower.RoleNameToType[tostring(value)])
-        PallyPower:SendMessage("RASSIGN " ..strPlayerName.." " ..PallyPower_ForcedRoles[strPlayerName])
+        PallyPower:SendMessage("FRASSIGN " ..strPlayerName.." " ..PallyPower_ForcedRoles[strPlayerName])
     end
 
     
@@ -573,7 +615,9 @@ function PallyPower_GetRoleIconIndex(strPlayerName)
 
     strPlayerRole = raidTalents[strPlayerName].Role
 
-    if(PallyPower_ForcedRoles[strPlayerName] ~= nil) then strPlayerRole = PallyPower_ForcedRoles[strPlayerName] end
+    if(PallyPower_ForcedRoles[strPlayerName] ~= nil) then
+        strPlayerRole = PallyPower_ForcedRoles[strPlayerName] 
+    end
 
     if(string.find(strPlayerRole, "UNKNOWN")) then
         return 5
@@ -1181,9 +1225,25 @@ function PallyPower:SendSelf()
     -- @Spikeone, no array style because there shouldn't be many forced roles
     for pname in pairs(raidTalents) do
         if(PallyPower_ForcedRoles[pname] ~= nil) then
-            PallyPower:SendMessage("RASSIGN " ..pname.." " ..PallyPower_ForcedRoles[pname])
+            PallyPower:SendMessage("FRASSIGN " ..pname.." " ..PallyPower_ForcedRoles[pname])
         end
     end
+
+    for pname in pairs(raidTalents) do
+        if(raidTalents[pname] ~= nil) then
+            if(raidTalents[pname].Role ~= nil) then
+                PallyPower:SendMessage("TRASSIGN " ..pname.." " ..raidTalents[pname].Role)
+            end
+        end
+    end
+
+    --if (string.find(msg, "^TRASSIGN")) then
+    --    _, _, name, role = string.find(msg, "^TRASSIGN (.*) (.*)")
+    --    if(raidTalents[name] == nil) then
+    --        raidTalents[name] = {}
+    --    end
+    --    raidTalents[name].Role = role
+    --end
 
 	self:SendMessage("SYMCOUNT " .. PP_Symbols)
 	if self.opt.freeassign then
@@ -1358,11 +1418,24 @@ function PallyPower:ParseMessage(sender, msg)
 		AllPallys[sender].freeassign = false
 	end
 
-    if string.find(msg, "^RASSIGN") then
-        _, _, name, role = string.find(msg, "^RASSIGN (.*) (.*)")
+    if string.find(msg, "^FRASSIGN") then
+        _, _, name, role = string.find(msg, "^FRASSIGN (.*) (.*)")
 
-        PallyPower_ForcedRoles[name] = role
+        if(role == "None") then
+            PallyPower_ForcedRoles[name] = nil
+        else
+            PallyPower_ForcedRoles[name] = role
+        end
     end
+
+    if (string.find(msg, "^TRASSIGN")) then
+        _, _, name, role = string.find(msg, "^TRASSIGN (.*) (.*)")
+        if(raidTalents[name] == nil) then
+            raidTalents[name] = {}
+        end
+        raidTalents[name].Role = role
+    end
+
 end
 
 function PallyPower:FormatTime(time)
