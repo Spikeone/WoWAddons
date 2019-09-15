@@ -108,18 +108,18 @@ function AloftLevelText:OnEnable()
 end
 
 function AloftLevelText:OnDisable()
-	self:UnregisterAllEvents()
+    self:UnregisterAllEvents()
 
-	for aloftData in Aloft:IterateNameplates() do
-		local levelTextRegion = aloftData.levelTextRegion
+    for aloftData in Aloft:IterateNameplates() do
+        local levelTextRegion = aloftData.levelTextRegion
 
-		levelTextRegion:ClearAllPoints()
-		levelTextRegion:SetPoint("CENTER", aloftData.nameplateFrame, "BOTTOMRIGHT", -13.331, 10.288)
-		levelTextRegion:SetFont(NAMEPLATE_FONT, 11)		
-		levelTextRegion:SetShadowOffset(1, -1)
-		levelTextRegion:SetAlpha(1)
-		levelTextRegion:SetText(aloftData.level or -1)
-	end
+        levelTextRegion:ClearAllPoints()
+        levelTextRegion:SetPoint("CENTER", aloftData.nameplateFrame, "BOTTOMRIGHT", -13.331, 10.288)
+        levelTextRegion:SetFont(NAMEPLATE_FONT, 11)
+        levelTextRegion:SetShadowOffset(1, -1)
+        levelTextRegion:SetAlpha(1)
+        levelTextRegion:SetText(aloftData.level or -1)
+    end
 end
 
 function AloftLevelText:SetupFrame(aloftData)

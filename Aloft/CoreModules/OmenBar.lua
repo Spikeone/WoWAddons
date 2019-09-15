@@ -46,6 +46,12 @@ Aloft:RegisterDefaults("omenBar", "profile", {
         [3] = {    0.96, 0.76, 0.07, 1},   -- YELLOW      -> 130% - 150%
         [4] = {    0.08, 0.64, 0.03, 1}    -- GREEN       -< > 150%
     },
+    point           = "RIGHT",
+    font            = "Arial Narrow",
+    fontSize        = 8,
+    outline         = "OUTLINE",
+    shadow          = false,
+    relativeToPoint = "RIGHT",
 })
 
 local profile
@@ -83,6 +89,26 @@ function AloftOmenBar:AcquireOmenBar(aloftData)
 
         aloftData.omenBar = omenBar
         self:PlaceBar(aloftData)
+    end
+
+    local omenBarBossTextF = aloftData.bossTextF
+
+    if not omenBarBossTextF and aloftData.isBoss then
+        omenBarBossTextF = CreateFrame("Frame", nil, aloftData.nameplateFrame)
+        omenBarBossText = omenBarBossTextF:CreateFontString(nil,"OVERLAY","GameFontHighlightSmall", 8, "OUTLINE");
+
+        omenBarBossText:ClearAllPoints()
+        omenBarBossText:SetPoint("RIGHT", aloftData.healthBar, "RIGHT", 0, 0)
+        omenBarBossText:SetFont(profile.font, profile.fontSize)
+        omenBarBossText:SetShadowOffset(1, -1)
+        omenBarBossText:SetAlpha(1)
+        omenBarBossText:SetText("")
+
+        omenBarBossText:Show()
+        omenBarBossTextF:Show()
+
+        aloftData.bossTextF = omenBarBossTextF
+        aloftData.bossText = omenBarBossText
     end
     return omenBar
 end
@@ -291,27 +317,35 @@ function AloftOmenBar:UpdateOmenBar(aloftData)
         --AloftOmenBar:ShowThreat(aloftData, guid_player, threat_player, guid_second, threat_second, guid_max, threat_max)
     end
 
+
+    local levelTextRegion = aloftData.levelTextRegion
+
+    if(aloftData.isBoss and aloftData.bossText) then
+        levelTextRegion = aloftData.bossText
+    end
+
+
     -- show threat instead of level?
     if(profile.threatinsteadlevel) then
         if(guid_player == guid_max) then -- player is first in threat
             if(threat_second ~= 0) then -- he is not alone
                 -- threat_max == threat_player
                 -- math.floor(((threat_max - threat_second) / 1000 ) + 0.5)
-                aloftData.levelTextRegion:SetText("+ " ..math.floor(((threat_max - threat_second) / 1000 ) + 0.5) .."k" )
+                levelTextRegion:SetText("+ " ..math.floor(((threat_max - threat_second) / 1000 ) + 0.5) .."k" )
                 if(profile.tank) then
-                    aloftData.levelTextRegion:SetTextColor(0, 1, 0)
+                    levelTextRegion:SetTextColor(0, 1, 0)
                 else
-                    aloftData.levelTextRegion:SetTextColor(1, 0, 0)
+                    levelTextRegion:SetTextColor(1, 0, 0)
                 end
             else
-                aloftData.levelTextRegion:SetText("")
+                levelTextRegion:SetText("")
             end
         elseif(threat_max ~= 0 and threat_player ~= 0) then
-            aloftData.levelTextRegion:SetText("- " ..math.floor(((threat_max - threat_player) / 1000 ) + 0.5) .."k" )
+            levelTextRegion:SetText("- " ..math.floor(((threat_max - threat_player) / 1000 ) + 0.5) .."k" )
             if(profile.tank) then
-                aloftData.levelTextRegion:SetTextColor(1, 0, 0)
+                levelTextRegion:SetTextColor(1, 0, 0)
             else
-                aloftData.levelTextRegion:SetTextColor(0, 1, 0)
+                levelTextRegion:SetTextColor(0, 1, 0)
             end
         end
     end
@@ -347,26 +381,43 @@ function AloftOmenBar:SetOmenBarValue(aloftdata, guid_player, threat_player, gui
 end
 
 function AloftOmenBar:ShowThreat(aloftdata, guid_player, threat_player, guid_second, threat_second, guid_max, threat_max)
+
+    local levelTextRegion = aloftData.levelTextRegion
+
+    if(aloftData.isBoss and aloftData.bossText) then
+        levelTextRegion = aloftData.bossText
+    end
+
     if(profile.threatinsteadlevel) then
         if(guid_player == guid_max) then -- player is first in threat
             if(threat_second ~= 0) then -- he is not alone
                 -- threat_max == threat_player
-                aloftData.levelTextRegion:SetText("+ " ..math.floor(((threat_max - threat_second) / 1000 ) + 0.5) .."k" )
+                if((threat_max - threat_second) > 1000)then
+                    levelTextRegion:SetText("+ " ..math.floor(((threat_max - threat_second) / 1000 ) + 0.5) .."k" )
+                else
+                    levelTextRegion:SetText("+ " ..(threat_max - threat_second))
+                end
 
                 if(profile.tank) then
-                    aloftData.levelTextRegion:SetTextColor(0, 1, 0)
+                    levelTextRegion:SetTextColor(0, 1, 0)
                 else
-                    aloftData.levelTextRegion:SetTextColor(1, 0, 0)
+                    levelTextRegion:SetTextColor(1, 0, 0)
                 end
             else
-                aloftData.levelTextRegion:SetText("")
+                levelTextRegion:SetText("")
             end
         elseif(threat_max ~= 0 and threat_player ~= 0) then
-            aloftData.levelTextRegion:SetText("- " ..math.floor(((threat_max - threat_player) / 1000 ) + 0.5) .."k" )
-            if(profile.tank) then
-                aloftData.levelTextRegion:SetTextColor(1, 0, 0)
+
+            if((threat_max - threat_player) > 1000) then
+                levelTextRegion:SetText("- " ..math.floor(((threat_max - threat_player) / 1000 ) + 0.5) .."k" )
             else
-                aloftData.levelTextRegion:SetTextColor(0, 1, 0)
+                levelTextRegion:SetText("- " ..(threat_max - threat_player))
+            end
+
+            if(profile.tank) then
+                levelTextRegion:SetTextColor(1, 0, 0)
+            else
+                levelTextRegion:SetTextColor(0, 1, 0)
             end
         end
     end

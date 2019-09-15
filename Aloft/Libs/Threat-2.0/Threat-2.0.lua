@@ -87,6 +87,8 @@ ThreatLib.partyUnits = ThreatLib.partyUnits or {}
 ThreatLib.callbacks = ThreatLib.callbacks or CallbackHandler:New(ThreatLib)
 ThreatLib.GUIDNameLookup = ThreatLib.GUIDNameLookup or setmetatable({}, { __index = function() return "<unknown>" end })
 ThreatLib.threatLog = ThreatLib.threatLog or {}
+ThreatLib.partyMemberServerThreatRevisions = ThreatLib.partyMemberServerThreatRevisions or {}
+ThreatLib.serverThreatEnabled = (ThreatLib.serverThreatEnabled ~= nil and ThreatLib.serverThreatEnabled) or true
 local guidLookup = ThreatLib.GUIDNameLookup
 
 local _callbacks = ThreatLib.callbacks
@@ -96,13 +98,14 @@ local lastPublishedThreat = ThreatLib.lastPublishedThreat
 local partyUnits = ThreatLib.partyUnits
 local partyMemberAgents = ThreatLib.partyMemberAgents
 local partyMemberRevisions = ThreatLib.partyMemberRevisions
+local partyMemberServerThreatRevisions = ThreatLib.partyMemberServerThreatRevisions
 local timers = {}
 local inParty, inRaid = false, false
 local lastPublishTime = ThreatLib.lastPublishTime
 local new, del, newHash, newSet = ThreatLib.new, ThreatLib.del, ThreatLib.newHash, ThreatLib.newSet
 
 -- For development
-ThreatLib.DebugEnabled = false
+ThreatLib.DebugEnabled = true
 ThreatLib.alwaysRunOnSolo = false
 
 -- GUID compression, thanks Arrowmaster!
@@ -152,7 +155,8 @@ ThreatLib:RegisterMemoizations({
 	THREAT_UPDATE 			= "TU",
 	WIPE_ALL_THREAT 		= "WT",
 	ACTIVATE_NPC_MODULE 	= "AM",
-	SET_NPC_MODULE_VALUE 	= "SV"
+	SET_NPC_MODULE_VALUE 	= "SV",
+	SERVER_THREAT 			= "ST"
 })
 ThreatLib.WowVersion, ThreatLib.WowMajor, ThreatLib.WowMinor = (GetBuildInfo()):match("(%d).(%d).(%d)")
 ThreatLib.WowVersion, ThreatLib.WowMajor, ThreatLib.WowMinor = tonumber(ThreatLib.WowVersion), tonumber(ThreatLib.WowMajor), tonumber(ThreatLib.WowMinor)
@@ -183,8 +187,8 @@ function ThreatLib:OnEnable()
 	self:RegisterEvent("PLAYER_LOGIN")
 	
 	-- (re)boot the NPC core
-	self:DisableModule("NPCCore")
-	self:EnableModule("NPCCore")
+	-- self:DisableModule("NPCCore")
+	-- self:EnableModule("NPCCore")
 
 	-- Do event registrations here, as a Blizzard bug seems to be causing lockups if these are registered too early
 	self:RegisterEvent("PARTY_MEMBERS_CHANGED")
@@ -226,6 +230,11 @@ function ThreatLib:PLAYER_ENTERING_WORLD(force)
 		self.running = false
 	else
 		self:Debug("Activating...self.alwaysRunOnSolo: %s", self.alwaysRunOnSolo)
+		self.running = true
+	end
+	if self.DebugEnabled then
+		-- always enable when debugging
+		self:Debug("Activating, self.DebugEnabled: %s", self.DebugEnabled)
 		self.running = true
 	end
 	if previousRunning ~= self.running or force then
@@ -378,6 +387,37 @@ end
 
 local BLACKLIST_MOB_IDS = ThreatLib.BLACKLIST_MOB_IDS or {}
 
+function ThreatLib.OnCommReceive:SERVER_THREAT(sender, distribution, msg)
+	if not msg then return end
+	if sender ~= "" then
+		ThreatLib:Debug("Ignoring server threat from sender <%s>", sender)
+	end
+
+	self.LastServerThreatMessage = GetTime()
+
+	local tag = guid_decompress[(string_match(msg, "^([^:]+)"))]
+
+	-- player or pet threat? (or neither?)
+	local module = ThreatLib:GetModule("Player")
+	if not module or module.unitGUID ~= tag then
+		module = ThreatLib:GetModule("Pet")
+		if not module or module.unitGUID ~= tag then
+			ThreatLib:Debug("Ignoring server threat for unknown unit guid <%s>", tag)
+			return
+		end
+		ThreatLib:Debug("Received server threat for Pet")
+	else
+		ThreatLib:Debug("Received server threat for Player")
+	end
+
+	for k, v in string_gmatch(msg, "([^=:]+)=(%d+),") do
+		local dstGUID, threat = guid_decompress[k], tonumber(v)
+		if dstGUID and threat then
+			module:SetTargetThreat(dstGUID, threat)
+		end
+	end
+end
+
 function ThreatLib.OnCommReceive:THREAT_UPDATE(sender, distribution, msg)
 	if not msg then return end
 	local tag = guid_decompress[(string_match(msg, "^([^:]+)"))]
@@ -455,6 +495,7 @@ local function mobThreatWipeFunc(self, mob_id)
 end
 
 function ThreatLib.OnCommReceive:RAID_MOB_THREAT_WIPE(sender, distribution, mob_guid)
+	if ThreatLib.serverThreatEnabled then return end
 	if BLACKLIST_MOB_IDS[string_sub(mob_guid, -12,-7)] then return end
 	if GetTime() - (cooldownTimes[mob_guid] or 0) > 10 then
 		cooldownTimes[mob_guid] = GetTime()
@@ -473,6 +514,7 @@ function ThreatLib:ClearStoredThreatTables(mob_guid)
 end
 
 function ThreatLib.OnCommReceive:MISDIRECT_THREAT(sender, distribution, target_player_guid, target_enemy_guid, amount)
+	if self.serverThreatEnabled then return end
 	if BLACKLIST_MOB_IDS[string_sub(target_enemy_guid, -12,-7)] then return end
 	ThreatLib:Debug("Got misdirect from %s: give %s threat to %s on mob %s", sender, amount, target_player_guid, target_enemy_guid)
 	if select(2, UnitClass(sender)) ~= "HUNTER" then return end
@@ -486,12 +528,13 @@ function ThreatLib.OnCommReceive:MISDIRECT_THREAT(sender, distribution, target_p
 	end
 end
 
-function ThreatLib.OnCommReceive:REQUEST_CLIENT_INFO(sender, distribution, revision, useragent, lastCompatible)
+function ThreatLib.OnCommReceive:REQUEST_CLIENT_INFO(sender, distribution, revision, useragent, lastCompatible, serverThreatRev)
 	if type(revision) ~= "number" then return end
 
 	if distribution == "RAID" or distribution == "PARTY" then
 		partyMemberAgents[sender] = useragent or "(Unknown agent)"
 		partyMemberRevisions[sender] = revision or "(Unknown)"
+		partyMemberServerThreatRevisions[sender] = serverThreatRev or "(None)"
 	end
 	self:PublishVersion("WHISPER", sender)
 	if useragent == self.userAgent then
@@ -499,21 +542,24 @@ function ThreatLib.OnCommReceive:REQUEST_CLIENT_INFO(sender, distribution, revis
 	end
 end
 
-function ThreatLib.OnCommReceive:CLIENT_INFO(sender, distribution, revision, useragent, lastCompatible)
+function ThreatLib.OnCommReceive:CLIENT_INFO(sender, distribution, revision, useragent, lastCompatible, serverThreatRev)
 	if type(revision) ~= "number" then return end
 	self:Debug("Received client info from %s: revision %s (last compatible %s)[distribution: %s]", sender, revision, lastCompatible, distribution)
 	partyMemberAgents[sender] = useragent or "(Unknown agent)"
 	partyMemberRevisions[sender] = revision or "(Unknown)"
+	partyMemberServerThreatRevisions[sender] = serverThreatRev or "(None)"
 	if useragent == self.userAgent then
 		self:CheckLatestRevision(revision, sender, lastCompatible)
 	end
 end
 
 function ThreatLib.OnCommReceive:ACTIVATE_NPC_MODULE(sender, distribution, module_id)
+	if self.serverThreatEnabled then return end
 	self:GetModule("NPCCore"):ActivateModule(module_id)
 end
 
 function ThreatLib.OnCommReceive:SET_NPC_MODULE_VALUE(sender, distribution, var_name, var_value)
+	if self.serverThreatEnabled then return end
 	if not partyUnits[sender] then return end
 	if self:IsGroupOfficer(partyUnits[sender]) then
 		self:GetModule("NPCCore"):SetModuleVar(var_name, var_value)
@@ -718,10 +764,11 @@ end
 function ThreatLib:PublishVersion(distribution, whisperTo)
 	partyMemberAgents[UnitName("player")] = self.userAgent
 	partyMemberRevisions[UnitName("player")] = self.MINOR_VERSION
+	partyMemberServerThreatRevisions[UnitName("player")] = self.serverThreatEnabled and self.B2B_MINOR or 0
 	if distribution == "WHISPER" and whisperTo ~= nil then
-		self:SendCommWhisper(distribution, whisperTo, "CLIENT_INFO", self.MINOR_VERSION, self.userAgent, LAST_BACKWARDS_COMPATIBLE_REVISION)
+		self:SendCommWhisper(distribution, whisperTo, "CLIENT_INFO", self.MINOR_VERSION, self.userAgent, LAST_BACKWARDS_COMPATIBLE_REVISION, self.serverThreatEnabled and self.B2B_MINOR or 0)
 	else
-		self:SendComm(distribution, "CLIENT_INFO", self.MINOR_VERSION, self.userAgent, LAST_BACKWARDS_COMPATIBLE_REVISION)
+		self:SendComm(distribution, "CLIENT_INFO", self.MINOR_VERSION, self.userAgent, LAST_BACKWARDS_COMPATIBLE_REVISION, self.serverThreatEnabled and self.B2B_MINOR or 0)
 	end
 end
 
@@ -1067,6 +1114,14 @@ end
 ------------------------------------------------------------------------
 function ThreatLib:IsActive()
 	return self.running or false
+end
+
+function ThreatLib:ToggleServerThreat(enable)
+	self.serverThreatEnabled = enable and true or false
+end
+
+function ThreatLib:IsServerThreatEnabled()
+	return self.serverThreatEnabled
 end
 
 end

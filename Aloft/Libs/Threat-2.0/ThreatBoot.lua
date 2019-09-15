@@ -33,6 +33,7 @@ LibStub.minors[MAJOR_VERSION] = MINOR_VERSION
 -- Run all those fun functions to actually start up ThreatLib
 _G.ThreatLib = ThreatLib
 _G.ThreatLib.MINOR_VERSION = MINOR_VERSION
+_G.ThreatLib.B2B_MINOR = MINOR_VERSION - 91000
 for i = 1, #_G.ThreatLib_funcs do
 	_G.ThreatLib_funcs[i]()
 end

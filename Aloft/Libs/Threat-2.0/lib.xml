@@ -6,6 +6,10 @@
 	<Script file="Threat-2.0.lua" />
 	<Script file="ThreatTPS.lua" />
 
+	<Script file="ServerThreatCore.lua" />
+	<Script file="ServerThreatPet.lua" />
+	<Script file="ServerThreatPlayer.lua" />
+<!--
 	<Script file="ThreatClassModuleCore.lua" />
 	<Script file="ClassModules\Rogue.lua" />
 	<Script file="ClassModules\Warrior.lua" />
@@ -36,6 +40,6 @@
 	<Script file="NPCModules\Outland\Doomwalker.lua" />
 	<Script file="NPCModules\TempestKeep\TheEye\Solarian.lua" />
 	<Script file="NPCModules\ZulAman\Zuljin.lua" />
-
+-->
 	<Script file="ThreatBoot.lua" />
 </Ui>

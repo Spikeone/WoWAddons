@@ -61,6 +61,11 @@ ThreatLib_funcs[#ThreatLib_funcs+1] = function()
 		end
 	end
 
+	function ThreatLib:Warn(msg, ...)
+		ThreatLib:Debug(msg, ...)
+		DEFAULT_CHAT_FRAME:AddMessage("|cffffcc00ThreatLib-Warn: |r" .. msg:format(...))
+	end
+
 	function ThreatLib:GroupDistribution()
 		if GetNumRaidMembers() > 0 then return "RAID"
 		else return "PARTY"

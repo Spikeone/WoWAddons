@@ -1,5 +1,5 @@
 local MAJOR_VERSION = "Threat-2.0"
-local MINOR_VERSION = tonumber(("$Revision: 68700 $"):match("%d+"))
+local MINOR_VERSION = tonumber(("$Revision: 90000 $"):match("%d+"))
 
 if MINOR_VERSION > _G.ThreatLib_MINOR_VERSION then _G.ThreatLib_MINOR_VERSION = MINOR_VERSION end
 
@@ -73,8 +73,9 @@ ThreatLib_funcs[#ThreatLib_funcs+1] = function()
 		-- Sunwell
 		[25214] = true,		-- Shadow Image, Eredar Twins
 		[25744] = true,		-- Dark Fiend, M'uru encounter
+		[25502] = true,		-- Shield Orb, Kil'jaeden encounter
 		
-		-- [22144] = true,		-- Test, comment out for production
+		-- [22144] = true,		-- Test, comment out for production 
 	}
 
 	-- Convert the IDs to hex for direct string matching in the GUID
