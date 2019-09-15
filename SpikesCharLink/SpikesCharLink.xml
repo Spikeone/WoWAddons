@@ -3,9 +3,6 @@
   <Script file="SpikesCharLink.lua"/>
   <Button name="SCL_InspectPaperDollItemSlotButtonTemplate" inherits="ItemButtonTemplate" virtual="true">
     <Scripts>
-      <OnLoad>
-        SCL_ItemSlotButton_OnLoad();
-      </OnLoad>
       <OnUpdate>
         CursorOnUpdate();
         if ( GameTooltip:IsOwned(this) ) then
@@ -33,7 +30,7 @@
       </Anchors>
     </NormalTexture>
   </Button>
-  <Frame name="SCL_InspectFrame" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="UIParent">
+  <Frame name="SCL_InspectFrame" toplevel="true" movable="true" enableMouse="true" hidden="true" parent="UIParent" clampedToScreen="true">
     <Size>
       <AbsDimension x="384" y="512"/>
     </Size>
@@ -268,7 +265,7 @@
         </Layers>
       </Frame>
 
-      <Frame name ="SCL_InspectMeleeAmorpen" relativeTo="SCL_InspectExpertise">
+      <Frame name ="SCL_InspectMeleeArmorpen" relativeTo="SCL_InspectExpertise">
         <Size>
           <AbsDimension x="104" y="13"/>
         </Size>
@@ -281,12 +278,12 @@
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND">
-            <FontString name="SCL_InspectMeleeAmorpenL" inherits="GameFontNormalSmall" text="Amorpen:">
+            <FontString name="SCL_InspectMeleeArmorpenL" inherits="GameFontNormalSmall" text="Armorpen.:">
               <Anchors>
                 <Anchor point="LEFT"/>
               </Anchors>
             </FontString>
-            <FontString name="SCL_InspectMeleeAmorpenR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+            <FontString name="SCL_InspectMeleeArmorpenR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
               <Anchors>
                 <Anchor point="RIGHT"/>
               </Anchors>
@@ -427,7 +424,7 @@
           </Layer>
         </Layers>
       </Frame>
-      <Frame name ="SCL_InspectRangedAmorpen" relativeTo="SCL_InspectRangedCrit">
+      <Frame name ="SCL_InspectRangedArmorpen" relativeTo="SCL_InspectRangedCrit">
         <Size>
           <AbsDimension x="104" y="13"/>
         </Size>
@@ -440,12 +437,12 @@
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND">
-            <FontString name="SCL_InspectRangedAmorpenL" inherits="GameFontNormalSmall" text="Amorpen:">
+            <FontString name="SCL_InspectRangedArmorpenL" inherits="GameFontNormalSmall" text="Armorpen.:">
               <Anchors>
                 <Anchor point="LEFT"/>
               </Anchors>
             </FontString>
-            <FontString name="SCL_InspectRangedAmorpenR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
+            <FontString name="SCL_InspectRangedArmorpenR" inherits="GameFontNormalSmall" justifyH="RIGHT" text="?">
               <Anchors>
                 <Anchor point="RIGHT"/>
               </Anchors>
@@ -454,12 +451,12 @@
           </Layer>
         </Layers>
       </Frame>
-      <Frame name ="SCL_InspectStatSpell" relativeTo="SCL_InspectMeleeAmorpen">
+      <Frame name ="SCL_InspectStatSpell" relativeTo="SCL_InspectMeleeArmorpen">
         <Size>
           <AbsDimension x="104" y="13"/>
         </Size>
         <Anchors>
-          <Anchor point="TOP" relativeTo="SCL_InspectMeleeAmorpen" relativePoint="BOTTOM">
+          <Anchor point="TOP" relativeTo="SCL_InspectMeleeArmorpen" relativePoint="BOTTOM">
             <Offset>
               <AbsDimension x="0" y="0"/>
             </Offset>
@@ -612,12 +609,12 @@
         </Layers>
       </Frame>
 
-      <Frame name ="SCL_InspectStatDefense" relativeTo="SCL_InspectRangedAmorpen">
+      <Frame name ="SCL_InspectStatDefense" relativeTo="SCL_InspectRangedArmorpen">
         <Size>
           <AbsDimension x="104" y="13"/>
         </Size>
         <Anchors>
-          <Anchor point="TOP" relativeTo="SCL_InspectRangedAmorpen" relativePoint="BOTTOM">
+          <Anchor point="TOP" relativeTo="SCL_InspectRangedArmorpen" relativePoint="BOTTOM">
             <Offset>
               <AbsDimension x="0" y="0"/>
             </Offset>
@@ -728,7 +725,7 @@
         </Anchors>
         <Layers>
           <Layer level="BACKGROUND">
-            <FontString name="SCL_InspectParryL" inherits="GameFontNormalSmall" text="Parrieren:">
+            <FontString name="SCL_InspectParryL" inherits="GameFontNormalSmall" text="Parieren:">
               <Anchors>
                 <Anchor point="LEFT"/>
               </Anchors>
@@ -1819,6 +1816,8 @@
     <Scripts>
       <OnLoad>
         SCL_OnLoad();
+		this:RegisterForDrag("LeftButton");
+		tinsert(UISpecialFrames, this:GetName())
       </OnLoad>
       <OnEvent>
         SCL_OnEvent(self, event, ...);
@@ -1829,6 +1828,17 @@
       <OnHide>
         SCL_OnHide();
       </OnHide>
+	  <OnEscapePressed>
+		this:Hide();
+	  </OnEscapePressed>
+	  <OnDragStart>
+         this:StartMoving();
+         this.isMoving = true;
+	  </OnDragStart>
+	   <OnDragStop>
+		this:StopMovingOrSizing();
+		this.isMoving = false;
+	   </OnDragStop>
     </Scripts>
   </Frame>
 </Ui>

@@ -1,5 +1,10 @@
 ﻿local SCL_CONSTS = {}
 
+-- version is only increased on link change
+SCL_CONSTS.VERSION = 8
+-- changes, minor bugfixed, features
+SCL_CONSTS.VERSION_MINOR = 9
+
 SCL_CONSTS.CLASSCOLOR = {}
 SCL_CONSTS.CLASSCOLOR["DRUID"]      = "ff7d0a"
 SCL_CONSTS.CLASSCOLOR["HUNTER"]     = "abd473"
@@ -21,16 +26,6 @@ SCL_CONSTS.CLASSICONS["ROGUE"]      = "Interface\\Addons\\SpikesCharLink\\Media\
 SCL_CONSTS.CLASSICONS["SHAMAN"]     = "Interface\\Addons\\SpikesCharLink\\Media\\Shaman"
 SCL_CONSTS.CLASSICONS["WARLOCK"]    = "Interface\\Addons\\SpikesCharLink\\Media\\Warlock"
 SCL_CONSTS.CLASSICONS["WARRIOR"]    = "Interface\\Addons\\SpikesCharLink\\Media\\Warrior"
-
-SCL_CONSTS.QUALITYCOLOR = {}
-SCL_CONSTS.QUALITYCOLOR["POOR"]         = "9d9d9d"
-SCL_CONSTS.QUALITYCOLOR["COMMON"]       = "ffffff"
-SCL_CONSTS.QUALITYCOLOR["UNCOMMON"]     = "1eff00"
-SCL_CONSTS.QUALITYCOLOR["RARE"]         = "0070dd"
-SCL_CONSTS.QUALITYCOLOR["EPIC"]         = "a335ee"
-SCL_CONSTS.QUALITYCOLOR["LEGENDARY"]    = "ff8000"
-SCL_CONSTS.QUALITYCOLOR["ARTIFACT"]     = "e6cc80"
-SCL_CONSTS.QUALITYCOLOR["HEIRLOOM"]     = "00ccff"
 
 SCL_CONSTS.SLOTIDSTRING = {}
 SCL_CONSTS.SLOTIDSTRING["1"]  = "HEADSLOT"
@@ -105,32 +100,40 @@ SCL_CONSTS.CLASSTOSTRINGID["SHAMAN"]    = "7"
 SCL_CONSTS.CLASSTOSTRINGID["HUNTER"]    = "8"
 
 SCL_CONSTS.STRINGIDTOCLASS = {}
-SCL_CONSTS.STRINGIDTOCLASS["0"]    = "PRIEST"
-SCL_CONSTS.STRINGIDTOCLASS["1"]      = "MAGE"
-SCL_CONSTS.STRINGIDTOCLASS["2"]     = "ROGUE"
-SCL_CONSTS.STRINGIDTOCLASS["3"]   = "WARRIOR"
-SCL_CONSTS.STRINGIDTOCLASS["4"]   = "WARLOCK"
-SCL_CONSTS.STRINGIDTOCLASS["5"]     = "DRUID"
-SCL_CONSTS.STRINGIDTOCLASS["6"]   = "PALADIN"
-SCL_CONSTS.STRINGIDTOCLASS["7"]    = "SHAMAN"
-SCL_CONSTS.STRINGIDTOCLASS["8"]    = "HUNTER"
+SCL_CONSTS.STRINGIDTOCLASS["0"] = "PRIEST"
+SCL_CONSTS.STRINGIDTOCLASS["1"] = "MAGE"
+SCL_CONSTS.STRINGIDTOCLASS["2"] = "ROGUE"
+SCL_CONSTS.STRINGIDTOCLASS["3"] = "WARRIOR"
+SCL_CONSTS.STRINGIDTOCLASS["4"] = "WARLOCK"
+SCL_CONSTS.STRINGIDTOCLASS["5"] = "DRUID"
+SCL_CONSTS.STRINGIDTOCLASS["6"] = "PALADIN"
+SCL_CONSTS.STRINGIDTOCLASS["7"] = "SHAMAN"
+SCL_CONSTS.STRINGIDTOCLASS["8"] = "HUNTER"
 
 SCL_CONSTS.RACETOSTRINGID = {}
 SCL_CONSTS.RACETOSTRINGID["Mensch"]     = "0"
+SCL_CONSTS.RACETOSTRINGID["Human"]      = "0"
 SCL_CONSTS.RACETOSTRINGID["Nachtelf"]   = "1"
 SCL_CONSTS.RACETOSTRINGID["Nachtelfe"]  = "1"
+SCL_CONSTS.RACETOSTRINGID["Night Elf"]  = "1"
 SCL_CONSTS.RACETOSTRINGID["Zwerg"]      = "2"
+SCL_CONSTS.RACETOSTRINGID["Dwarf"]      = "2"
 SCL_CONSTS.RACETOSTRINGID["Zwergin"]    = "2"
 SCL_CONSTS.RACETOSTRINGID["Gnom"]       = "3"
 SCL_CONSTS.RACETOSTRINGID["Gnomin"]     = "3"
+SCL_CONSTS.RACETOSTRINGID["Gnome"]      = "3"
 SCL_CONSTS.RACETOSTRINGID["Draenei"]    = "4"
 SCL_CONSTS.RACETOSTRINGID["Orc"]        = "5"
+SCL_CONSTS.RACETOSTRINGID["Taure"]      = "6"
+SCL_CONSTS.RACETOSTRINGID["Taurin"]     = "6"
 SCL_CONSTS.RACETOSTRINGID["Tauren"]     = "6"
 SCL_CONSTS.RACETOSTRINGID["Troll"]      = "7"
 SCL_CONSTS.RACETOSTRINGID["Untoter"]    = "8"
 SCL_CONSTS.RACETOSTRINGID["Untote"]     = "8"
+SCL_CONSTS.RACETOSTRINGID["Undead"]     = "8"
 SCL_CONSTS.RACETOSTRINGID["Blutelf"]    = "9"
 SCL_CONSTS.RACETOSTRINGID["Blutelfe"]   = "9"
+SCL_CONSTS.RACETOSTRINGID["Blood Elf"]  = "9"
 
 SCL_CONSTS.STRINGIDTORACE = {}
 SCL_CONSTS.STRINGIDTORACE["0"] = "Mensch"
@@ -213,39 +216,104 @@ SCL_CONSTS.CLASSTALENTSTRINGS["HUNTER"][1] = "Beast Mastery"
 SCL_CONSTS.CLASSTALENTSTRINGS["HUNTER"][2] = "Marksmanship"
 SCL_CONSTS.CLASSTALENTSTRINGS["HUNTER"][3] = "Survival"
 
+--SCL_CONSTS.OUTFITTER_HOOKED = false
+local isOutfitterHooked = false
 
+SCL_CONSTS.GLOWFRAMES = {
+	"SCL_InspectHeadSlot 1",
+	"SCL_InspectNeckSlot 2",
+	"SCL_InspectShoulderSlot 3",
+	"SCL_InspectBackSlot 4",
+	"SCL_InspectChestSlot 5",
+	"SCL_InspectShirtSlot 6",
+	"SCL_InspectTabardSlot 7",
+	"SCL_InspectWristSlot 8",
+	"SCL_InspectHandsSlot 9",
+	"SCL_InspectWaistSlot 10",
+	"SCL_InspectLegsSlot 11",
+	"SCL_InspectFeetSlot 12",
+	"SCL_InspectFinger0Slot 13",
+	"SCL_InspectFinger1Slot 14",
+	"SCL_InspectTrinket0Slot 15",
+	"SCL_InspectTrinket1Slot 16",
+	"SCL_InspectMainHandSlot 17",
+	"SCL_InspectSecondaryHandSlot 18",
+	"SCL_InspectRangedSlot 19",
+}
 
---["Human"] = "Mensch",
---["Night elf"] = "Nachtelf",
---["Dwarf"] = "Zwerg",
---["Gnome"] = "Gnom",
---["Draenei"] = "Draenei",
---
---["Orc"] = "Orc",
---["Tauren"] = "Tauren",
---["Troll"] = "Troll",
---["Undead"] = "Untoter",
---["Blood elf"] = "Blutelf",
+StaticPopupDialogs["SHIFT_ACCEPT_MSG"] = {
+  text = "Nachricht bei gehaltener [SHIFT]-Taste. {n} = Spielername",
+  button1 = "Annehmen",
+  button2 = "Abbrechen",
+  timeout = 0,
+  whileDead = true,
+  hideOnEscape = true,
+  preferredIndex = 3,
+  hasEditBox = true,
+  OnShow = function ()
+    getglobal(this:GetName().."EditBox"):SetText(SCL_SETTINGS["SHIFT_MSG"]);
+  end,
+  OnAccept = function ()
+      local text = getglobal(this:GetParent():GetName().."EditBox"):GetText();
+	  DEFAULT_CHAT_FRAME:AddMessage("New [SHIFT]-Message: " ..text)
+	  SCL_SETTINGS["SHIFT_MSG"] = text
+  end
+  
+}
 
+-- replace {cl} with the characters charlink
+local origSendMessage = SendChatMessage;
+SendChatMessage = function (...)
+    local msg, a, b, c, d, e, f, g = ...;
+    local strNewMsg = ""
 
+    if(string.match(string.lower(msg), "{cl}")) then
+        local strMsg = {string.split("\{cl\}", msg)}
 
-local SCL_PLAYER = {}
+        strNewMsg = string.gsub(msg, "{cl}", SCL_BuildPlayerString())
+        origSendMessage(strNewMsg, a, b, c, d, e, f, g);
+    else
+        return origSendMessage(...);
+    end
+end
 
 local origChatFrame_OnHyperlinkShow = ChatFrame_OnHyperlinkShow;
 ChatFrame_OnHyperlinkShow = function(...)
     local chatFrame, link, text, button = ...;
 
-    local r,g,b,itemID,linkType,simpleData,simpleTalents,simpleStats,F,G,H,name = link:match("^|cff(%x%x)(%x%x)(%x%x)|Hitem:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%-?%d+):(%d+)|h%[(.+)%]|h|r$")
+    local r,g,b,itemID,linkType,C,D,E,clVersion,G,H,name = link:match("^|cff(%x%x)(%x%x)(%x%x)|Hitem:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%-?%d+):(%d+)|h%[(.+)%]|h|r$")
 
-    -- linkType = flag (1 = player)
-    -- simpleData = Level, Race, Class etc.
     if(itemID == "1" and linkType == "1") then
 
-        SCL_DeserializeBaseinfoString(name, simpleData)
-        SCL_DeserializePlayerTalentsSimple(name, simpleTalents)
-        SCL_DeserializePlayerStatsSimple(name, simpleStats)
-
-        SendAddonMessage("SCLRI", "REQUEST_ITEMS", "WHISPER", name);
+        if(tonumber(clVersion) > SCL_CONSTS.VERSION) then -- sender VERSION is higher than local version
+            message("Your version is deprecated!\nYou have: " ..SCL_CONSTS.VERSION.. " Sender has: " ..clVersion.. "\nPlease update (see B2B Addons)!")
+            return
+        elseif(tonumber(clVersion) < SCL_CONSTS.VERSION) then -- receiver version is lower than sender
+            -- LV = low Version
+            SendAddonMessage("SCLLV", SCL_CONSTS.VERSION, "WHISPER", name);
+            message("Sender uses old Charlink version (" ..clVersion.. "). Can't open link, user has been notified!")
+            return
+        end
+    
+        --DEFAULT_CHAT_FRAME:AddMessage("Hash: " ..clEquipHash)
+    
+        if(IsShiftKeyDown()) then
+            SCL_AddCharacterLink(link)
+        else
+            if(SCL_PLAYER[name]) then
+                if(SCL_PLAYER[name]["E_HASH"]) then
+                    SCL_ShowCharacterFrame(name)
+                    SCL_SetStatsInFrame(name)
+                    SCL_SetBuffIconsInFrame(name)
+                    -- either the following triggers sending new data which will update the frame or not
+                    SendAddonMessage("SCLRC", tostring(SCL_PLAYER[name]["E_HASH"]), "WHISPER", name);
+                else
+                    SendAddonMessage("SCLRC", "0", "WHISPER", name);
+                end
+            else
+                SendAddonMessage("SCLRC", "0", "WHISPER", name);
+            end
+        end
 
         return;
     end
@@ -266,26 +334,53 @@ CharacterFrame_ShowSubFrame = function(...)
     return origCharacterFrame_ShowSubFrame(...);
 end
 
--- working
---local origDoEmote = DoEmote;
---DoEmote = function(...)
---    DEFAULT_CHAT_FRAME:AddMessage("EMOTE")
---    --local frameName = ...;
---    --
---    --if(frameName == "PaperDollFrame") then
---    --    SCL_CharWindowButtonFrame:Show()
---    --else
---    --    SCL_CharWindowButtonFrame:Hide()
---    --end
---
---    return origDoEmote(...);
---end
+function __genOrderedIndex( t )
+    local orderedIndex = {}
+    for key in pairs(t) do
+        table.insert( orderedIndex, key )
+    end
+    table.sort( orderedIndex )
+    return orderedIndex
+end
 
---local origSendChatMessage = SendChatMessage;
---SendChatMessage = function(...)
---    DEFAULT_CHAT_FRAME:AddMessage("CHATMESSAGE")
---    return origSendChatMessage
---end
+function SCL_GetVersionString()
+	return ("v" .. tostring(SCL_CONSTS.VERSION) .. "." .. tostring(SCL_CONSTS.VERSION_MINOR))
+end
+
+function orderedNext(t, state)
+    -- Equivalent of the next function, but returns the keys in the alphabetic
+    -- order. We use a temporary ordered key table that is stored in the
+    -- table being iterated.
+
+    local key = nil
+    --print("orderedNext: state = "..tostring(state) )
+    if state == nil then
+        -- the first time, generate the index
+        t.__orderedIndex = __genOrderedIndex( t )
+        key = t.__orderedIndex[1]
+    else
+        -- fetch the next value
+        for i = 1,table.getn(t.__orderedIndex) do
+            if t.__orderedIndex[i] == state then
+                key = t.__orderedIndex[i+1]
+            end
+        end
+    end
+
+    if key then
+        return key, t[key]
+    end
+
+    -- no more value to return, cleanup
+    t.__orderedIndex = nil
+    return
+end
+
+function orderedPairs(t)
+    -- Equivalent of the pairs() function on tables. Allows to iterate
+    -- in order
+    return orderedNext, t, nil
+end
 
 function SCL_DeserializePlayerStatsSimple(name, simpleData)
     if not (SCL_PLAYER[name]) then
@@ -304,27 +399,29 @@ function SCL_LTrim(strString, strTrimchar)
     return strString
 end
 
-function SCL_DeserializeBaseinfoString(name, simpleData)
+function SCL_DeserializeBaseinfoString(name, simpleData, charHash)
     if not (SCL_PLAYER[name]) then
         SCL_PLAYER[name] = {}
     end
+
+    SCL_PLAYER[name]["E_HASH"] = charHash
+    SCL_PLAYER[name]["HASH_DATE"] = tostring(date("%d.%m.%y %H:%M"))
 
     -- LLCRS
     -- LL = Level
     -- C  = Class
     -- R = Race
     -- S  = Sex
-    SCL_PLAYER[name]["LEVEL"] = string.sub(simpleData, 1, 2)
+    SCL_PLAYER[name]["LEVEL"] = SCL_LTrim(string.sub(simpleData, 1, 2), "0")
     SCL_PLAYER[name]["CLASS"] = SCL_CONSTS.STRINGIDTOCLASS[string.sub(simpleData, 3, 3)]
     SCL_PLAYER[name]["RACE"] = SCL_CONSTS.STRINGIDTORACE[string.sub(simpleData, 4, 4)]
     SCL_PLAYER[name]["SEX"] = string.sub(simpleData, 5, 5)
-
 end
 
 function SCL_OnLoad()
     this:RegisterEvent('VARIABLES_LOADED');
     this:RegisterEvent('CHAT_MSG_ADDON');
-    --this:RegisterEvent('CHAT_MSG_TEXT_EMOTE');
+    this:RegisterEvent('PLAYER_ENTERING_WORLD');
     
     SLASH_SPIKESCHARLINK1 = "/scl";
     SLASH_SPIKESCHARLINK2 = "/charlink";
@@ -336,8 +433,6 @@ function SCL_OnLoad()
     SlashCmdList["SPIKESCHARLINK2"] = function(msg)
         SCL_SlashCommandHandlerW(msg);
     end
-
-    DEFAULT_CHAT_FRAME:AddMessage("SpikesCharLink loaded!");
 end
 
 function SCL_SlashCommandHandlerW(msg)
@@ -345,22 +440,17 @@ function SCL_SlashCommandHandlerW(msg)
     DoEmote("wave", "target")
 
     if(UnitIsPlayer("target")) then
-        targetplayer, realm = UnitName("target")
-
-        DEFAULT_CHAT_FRAME:AddMessage("Target: " ..targetplayer)
+        local targetplayer, realm = UnitName("target")
 
         if(targetplayer) then
             SendChatMessage("Charlink: " ..SCL_BuildPlayerString(), "WHISPER", nil, targetplayer);
         end
     end
 
-    --DEFAULT_CHAT_FRAME:AddMessage("W");
 end
 
 function SCL_SlashCommandHandler(msg)
     local a, b, command = string.find( msg, "(%w+)" );
-
-    --DEFAULT_CHAT_FRAME:AddMessage(msg .. " ")
 
     if( command == nil ) then
         return;
@@ -368,29 +458,17 @@ function SCL_SlashCommandHandler(msg)
         command = string.lower( msg );
     end
 
-    if (command == "ser") then
-        SCL_SerializePlayerStatsDefense()
-        SCL_SerializePlayerStatsSpell()
-        SCL_SerializePlayerStatsRange()
-        SCL_SerializePlayerStatsMelee()
-        SCL_SerializePlayerStats()
+    if (command == "version") then
+        DEFAULT_CHAT_FRAME:AddMessage("SCL Version: " .. SCL_GetVersionString())
+    elseif (command == "list") then
+        if (SCL_CharlinkListFrame:IsVisible()) then
+            SCL_CharlinkListFrame:Hide()
+        else
+            SCL_CharlinkListFrame:Show()
+        end
+	elseif (command == "shift") then
+		StaticPopup_Show("SHIFT_ACCEPT_MSG")
     end
-
-    --if (command == "guild") then
-    --    SendChatMessage("Invite me: " ..SCL_BuildPlayerString(), "GUILD");
-    --elseif (command == "party") then
-    --    SendChatMessage("Invite me: " ..SCL_BuildPlayerString(), "PARTY");
-    --elseif(command == "window") then
-    --    SCL_ShowCharWindow()
-    --elseif(command == "hide") then
-    --    SCL_InspectFrame:Hide()
-    --elseif(command == "serialize" or command == "ser") then
-    --    SCL_SerializePlayer()
-    --elseif(command == "talents") then
-    --    SCL_SerializePlayerTalentsSimple()
-    --elseif(command == "ti") then
-    --    SCL_DeserializePlayerTalentsSimple(SCL_SerializePlayerTalentsSimple())
-    --end
 
 end
 
@@ -407,19 +485,10 @@ function SCL_SerializeBuffs()
     local strReturnString = ""
 
     for i = 1, 40 do
-        name, rank, icon, count, duration, expirationTime, _, _, _, _, _ = UnitBuff("player", i)
-
-        --DEFAULT_CHAT_FRAME:AddMessage("name: " ..name.. " test: " ..icon)
+        local name, rank, icon, count, duration, expirationTime, _, _, _, _, _ = UnitBuff("player", i)
 
         if(icon ~= "" and icon ~= nil) then
-            --DEFAULT_CHAT_FRAME:AddMessage("name: " ..name.. " spellid: " ..spellId)
-            --DEFAULT_CHAT_FRAME:AddMessage("name: " ..name.. " test: " ..icon)
-
             local buffIcon = {string.split("\\", icon)}
-
-            --for i = 1, table.getn(statStrings) do
-            --    SCL_GetStats(statStrings[i], i, strPlayer)
-            --end
 
             if(strReturnString =="") then
                 strReturnString = buffIcon[3]
@@ -432,52 +501,50 @@ function SCL_SerializeBuffs()
     return strReturnString
 end
 
-function SCL_SerializePlayerStats()
-    base, strength, posBuff, negBuff = UnitStat("player", 1);
-    base, agility, posBuff, negBuff = UnitStat("player", 2);
-    base, stamina, posBuff, negBuff = UnitStat("player", 3);
-    base, intellect, posBuff, negBuff = UnitStat("player", 4);
-    base, spirit, posBuff, negBuff = UnitStat("player", 5);
-
-    DEFAULT_CHAT_FRAME:AddMessage("strength: " .. strength)
-    DEFAULT_CHAT_FRAME:AddMessage("agility: " .. agility)
-    DEFAULT_CHAT_FRAME:AddMessage("stamina: " .. stamina)
-    DEFAULT_CHAT_FRAME:AddMessage("intellect: " .. intellect)
-    DEFAULT_CHAT_FRAME:AddMessage("spirit: " .. spirit)
-end
-
 function SCL_SerializePlayerStatsMelee()
 
     local strReturnString = ""
 
-    meleeHaste = GetCombatRating(18)
-    --DEFAULT_CHAT_FRAME:AddMessage("meleHaste: " .. meleHaste)
+    local meleeHaste = GetCombatRating(18)
     strReturnString = meleeHaste
 
 
-    baseAttackpower, posBuff, negBuff = UnitAttackPower("player");
-    --DEFAULT_CHAT_FRAME:AddMessage("baseAttackpower: " .. (baseAttackpower + posBuff))
+    local baseAttackpower, posBuff, negBuff = UnitAttackPower("player");
     strReturnString = strReturnString .. "," .. (baseAttackpower + posBuff)
 
-    meleeHit = GetCombatRating(6)
-    --DEFAULT_CHAT_FRAME:AddMessage("meleeHit: " .. meleeHit)
+    local meleeHit = GetCombatRating(6)
     strReturnString = strReturnString .. "," .. meleeHit
 
-    meleeCrit = GetCritChance()
-    --DEFAULT_CHAT_FRAME:AddMessage("meleeCrit: " .. SCL_Round(meleeCrit, 0.01))
+    local meleeCrit = GetCritChance()
     strReturnString = strReturnString .. "," .. SCL_Round(meleeCrit, 0.01)
 
-    expertise, offhandExpertise = GetExpertise();
-    --DEFAULT_CHAT_FRAME:AddMessage("expertise: " .. expertise .. " offhandExpertise: " ..offhandExpertise)
+    local expertise, offhandExpertise = GetExpertise();
+    local linkMH = GetInventoryItemLink("player", 16)
+    local linkOH = GetInventoryItemLink("player", 17)
 
-    if(offhandExpertise == 0 or offhandExpertise == nil) then
-        strReturnString = strReturnString .. "," .. expertise
+    local strExpertise = ""
+    if(linkMH) then
+        if(expertise) then
+            strExpertise = tostring(expertise)
+        else
+            strExpertise = "0"
+        end
     else
-        strReturnString = strReturnString .. "," .. expertise .. "/" .. offhandExpertise
+        strExpertise = "0"
     end
 
-    armorPen = GetArmorPenetration()
-    --DEFAULT_CHAT_FRAME:AddMessage("armorPen: " .. armorPen)
+    -- if there is no mainhand but an offhand equiped its still shown as 0/nn as just showing the value would be iconsistent
+    if(linkOH) then
+        if(offhandExpertise) then
+            strExpertise = strExpertise .."/".. tostring(offhandExpertise)
+        else
+            strExpertise = strExpertise .."/0"
+        end
+    end
+
+    strReturnString = strReturnString .. "," .. strExpertise
+
+    local armorPen = GetArmorPenetration()
     strReturnString = strReturnString .. "," .. armorPen
 
     return strReturnString
@@ -487,24 +554,19 @@ function SCL_SerializePlayerStatsRange()
 
     local strReturnString
 
-    speed, lowDmg, hiDmg, posBuff, negBuff, percent = UnitRangedDamage("player");
-    --DEFAULT_CHAT_FRAME:AddMessage("speed: " .. SCL_Round(speed, 0.01))
+    local speed, lowDmg, hiDmg, posBuff, negBuff, percent = UnitRangedDamage("player");
     strReturnString = speed
 
-    rangedbase, posBuff, negBuff = UnitRangedAttackPower("player");
-    --DEFAULT_CHAT_FRAME:AddMessage("rangedbase: " .. (rangedbase + posBuff))
+    local rangedbase, posBuff, negBuff = UnitRangedAttackPower("player");
     strReturnString = strReturnString .. "," .. (rangedbase + posBuff)
 
-    armorPen = GetArmorPenetration()
-    --DEFAULT_CHAT_FRAME:AddMessage("armorPen: " .. armorPen)
+    local armorPen = GetArmorPenetration()
     strReturnString = strReturnString .. "," .. armorPen
 
-    rangedHit = GetCombatRating(7)
-    --DEFAULT_CHAT_FRAME:AddMessage("rangedHit: " .. rangedHit)
+    local rangedHit = GetCombatRating(7)
     strReturnString = strReturnString .. "," .. rangedHit
 
-    rangedCrit = GetRangedCritChance() 
-    --DEFAULT_CHAT_FRAME:AddMessage("rangedCrit: " .. SCL_Round(rangedCrit, 0.01))
+    local rangedCrit = GetRangedCritChance() 
     strReturnString = strReturnString .. "," .. SCL_Round(rangedCrit, 0.01)
 
     return strReturnString
@@ -517,14 +579,12 @@ function SCL_SerializePlayerStatsSpell()
     local spell = 0
 
     for i = 1, 7 do
-        spellDmg = GetSpellBonusDamage(i);
+        local spellDmg = GetSpellBonusDamage(i);
 
         if (spell < spellDmg) then
             spell = spellDmg
         end
-        --DEFAULT_CHAT_FRAME:AddMessage("spellDmg(" .. i .. "): " .. spellDmg)
     end
-    --DEFAULT_CHAT_FRAME:AddMessage("spell: " .. spell)
 
     strReturnString = spell
 
@@ -535,24 +595,18 @@ function SCL_SerializePlayerStatsSpell()
         if (spellcrit < theCritChance) then
             spellcrit = theCritChance
         end
-        --DEFAULT_CHAT_FRAME:AddMessage("theCritChance(" .. i .. "): " .. theCritChance)
     end
-    --DEFAULT_CHAT_FRAME:AddMessage("spellcrit: " .. SCL_Round(spellcrit, 0.01))
+
     strReturnString = strReturnString .. "," .. SCL_Round(spellcrit, 0.01)
 
-    bonusHeal = GetSpellBonusHealing()
-    --DEFAULT_CHAT_FRAME:AddMessage("bonusHeal: " .. bonusHeal)
+    local bonusHeal = GetSpellBonusHealing()
+
     strReturnString = strReturnString .. "," .. bonusHeal
 
-    hitSpell = GetCombatRating(8)
-    --DEFAULT_CHAT_FRAME:AddMessage("hitSpell: " .. hitSpell)
+    local hitSpell = GetCombatRating(8)
     strReturnString = strReturnString .. "," .. hitSpell
 
-    --critSpell = GetCombatRating(11)
-    --DEFAULT_CHAT_FRAME:AddMessage("critSpell: " .. critSpell)
-
-    hasteSpell = GetCombatRating(20)
-    --DEFAULT_CHAT_FRAME:AddMessage("hasteSpell: " .. hasteSpell)
+    local hasteSpell = GetCombatRating(20)
     strReturnString = strReturnString .. "," .. hasteSpell
 
     return strReturnString
@@ -560,28 +614,22 @@ end
 
 function SCL_SerializePlayerStatsDefense()
     local strReturnString = ""
-    base, effectiveArmor, armor, posBuff, negBuff = UnitArmor("player");
-    --DEFAULT_CHAT_FRAME:AddMessage("effectiveArmor: " ..  effectiveArmor)
+    local base, effectiveArmor, armor, posBuff, negBuff = UnitArmor("player");
     strReturnString = effectiveArmor
 
-    baseDefense, armorDefense = UnitDefense("player");
-    --DEFAULT_CHAT_FRAME:AddMessage("baseDefense: " .. baseDefense .. " armorDefense: " ..armorDefense)
+    local baseDefense, armorDefense = UnitDefense("player");
     strReturnString = strReturnString .. "," .. (baseDefense + armorDefense)
 
-    chanceDodge = GetDodgeChance()
-    --DEFAULT_CHAT_FRAME:AddMessage("chanceDodge: " .. SCL_Round(chanceDodge, 0.01))
+    local chanceDodge = GetDodgeChance()
     strReturnString = strReturnString .. "," ..  SCL_Round(chanceDodge, 0.01)
 
-    chanceParry = GetParryChance()
-    --DEFAULT_CHAT_FRAME:AddMessage("chanceParry: " .. SCL_Round(chanceParry, 0.01))
+    local chanceParry = GetParryChance()
     strReturnString = strReturnString .. "," ..  SCL_Round(chanceParry, 0.01)
 
-    chanceBlock = GetBlockChance()
-    --DEFAULT_CHAT_FRAME:AddMessage("chanceBlock: " .. SCL_Round(chanceBlock, 0.01))
+    local chanceBlock = GetBlockChance()
     strReturnString = strReturnString .. "," ..  SCL_Round(chanceBlock, 0.01)
 
-    baseResilence = GetCombatRating(15)
-    --DEFAULT_CHAT_FRAME:AddMessage("baseResilence: " .. baseResilence)
+    local baseResilence = GetCombatRating(15)
     strReturnString = strReturnString .. "," ..  baseResilence
 
     return strReturnString
@@ -597,7 +645,7 @@ function SCL_SerializePlayerTalentsSimple()
     numTalentsTab2 = SCL_LPad(tostring(numTalentsTab2), "0", 2)
     numTalentsTab3 = SCL_LPad(tostring(numTalentsTab3), "0", 2)
 
-    return numTalentsTab1 .. numTalentsTab2 .. numTalentsTab3
+    return (numTalentsTab1 .. numTalentsTab2 .. numTalentsTab3), tonumber("1" .. (numTalentsTab1 .. numTalentsTab2 .. numTalentsTab3))
 end
 
 function SCL_DeserializePlayerTalentsSimple(strPlayer, strTalentString)
@@ -630,7 +678,7 @@ function SCL_BuildTalentString(strName)
     local percentTalents2 = tonumber(SCL_PLAYER[strName]["TALENTS2"]) / numTalentPoints
     local percentTalents3 = tonumber(SCL_PLAYER[strName]["TALENTS3"]) / numTalentPoints
 
-    strStringTalents = ""
+    local strStringTalents = ""
     
     if(percentTalents1 > 0.7) then
         strStringTalents = "Deep " .. SCL_CONSTS.CLASSTALENTSTRINGS[SCL_PLAYER[strName]["CLASS"]][1]
@@ -674,11 +722,9 @@ function SCL_GetNumTalentPoints(iTab)
     local numTalentCount = 0
 
     for i = 1, (numTalentsInTab + 1) do
-        name, iconPath, tier, column, currentRank, maxRank, isExceptional, meetsPrereq = GetTalentInfo(iTab, i);
+        local name, iconPath, tier, column, currentRank, maxRank, isExceptional, meetsPrereq = GetTalentInfo(iTab, i);
         numTalentCount = numTalentCount + currentRank
     end
-
-    --DEFAULT_CHAT_FRAME:AddMessage("Tab: " ..iTab.. " Talents: " ..numTalentCount)
 
     return numTalentCount;
 end
@@ -686,18 +732,54 @@ end
 function SCL_OnEvent(self, event, ...)
 
     if (event == 'CHAT_MSG_ADDON') then
-        if(arg1 == 'SCLRI') then
-            SendAddonMessage("SCLII", SCL_SerializePlayer(), "WHISPER", arg4);
+        if(arg1 == 'SCLRC') then -- request char
+            local strSerializedBaseinfo, baseInfoHash = SCL_SerializePlayerBaseinfo()
+            local strSerializedTalents, talentsHash = SCL_SerializePlayerTalentsSimple()
+            local strSerializedStats = SCL_SerializePlayerStatsSimple()
+            local strSerializedPlayer, equipHash = SCL_SerializePlayer()
+            
+            local charHash = tostring(baseInfoHash) .. tostring(talentsHash) .. tostring(equipHash)
+
+            if(charHash == tostring(arg2)) then
+                SendAddonMessage("SCLSH", charHash, "WHISPER", arg4);
+                return;
+            end
+
+            SendAddonMessage("SCLST", (tostring(charHash) ..",".. strSerializedBaseinfo ..",".. strSerializedTalents ..","..  strSerializedStats), "WHISPER", arg4);
+            SendAddonMessage("SCLII", strSerializedPlayer, "WHISPER", arg4);
             SendAddonMessage("SCLIS", SCL_SerializePlayerStats(), "WHISPER", arg4);
             SendAddonMessage("SCLIB", SCL_SerializeBuffs(), "WHISPER", arg4);
         elseif(arg1 == "SCLII") then
             SCL_DeserializePlayerItemsStringShort(arg2, arg4)
             SCL_ShowCharacterFrame(arg4)
+            SCL_CharList_FillButtons()
         elseif(arg1 == "SCLIS") then
             SCL_DeserializePlayerStats(arg2, arg4)
         elseif(arg1 == "SCLIB") then
             SCL_DeserializePlayerBuffs(arg2, arg4)
+        elseif(arg1 == "SCLLV") then
+            message("Your version is deprecated!\nYou have: " ..SCL_CONSTS.VERSION.. " Sender has: " ..arg2.. "\nPlease update (see B2B Addons)!")
+        elseif(arg1 == "SCLST") then
+            -- arg2 data: "hash,simpleData,simpleTalents,simpleStats"
+            local dataStrings = {string.split(",", arg2)}
+            
+            SCL_DeserializeBaseinfoString(arg4, dataStrings[2], dataStrings[1])
+            SCL_DeserializePlayerTalentsSimple(arg4, dataStrings[3])
+            SCL_DeserializePlayerStatsSimple(arg4, dataStrings[4])
+        elseif(arg1 == "SCLSH") then
+            SCL_PLAYER[arg4]["HASH_DATE"] = tostring(date("%d.%m.%y %H:%M"))
+            SCL_CharList_FillButtons()
         end
+    elseif(event == 'VARIABLES_LOADED') then
+        if not(SCL_PLAYER) then
+            SCL_PLAYER = {}
+        end
+		if not(SCL_SETTINGS) then
+			SCL_SETTINGS = {}
+			SCL_SETTINGS["SHIFT_MSG"] = "Hallo {n}, du bist dabei! Bitte sei pünktlich zum Raid online und whispere mich an!"
+		end
+    elseif(event == 'PLAYER_ENTERING_WORLD') then
+        SCL_HookOutfitter()
     end
 end
 
@@ -709,7 +791,6 @@ function SCL_DeserializePlayerBuffs(strDataString, strPlayer)
     end
     
     for i = 1, table.getn(buffStrings) do
-        --SCL_GetStats(statStrings[i], i, strPlayer)
         SCL_PLAYER[strPlayer][("BUFF" .. i)] = buffStrings[i]
     end
 
@@ -722,14 +803,12 @@ end
 
 function SCL_SetBuffIconsInFrame(strPlayer)
     for i = 1, 40 do
-        if(SCL_PLAYER[strPlayer][("BUFF" .. i)] == nil) then
+        if(SCL_PLAYER[strPlayer][("BUFF" .. i)] == nil or SCL_PLAYER[strPlayer][("BUFF" .. i)] == "") then
             getglobal("SCL_BUFF"..i):Hide()
         else
             getglobal("SCL_BUFF"..i):SetNormalTexture("Interface\\Icons\\" .. SCL_PLAYER[strPlayer][("BUFF" .. i)])
             getglobal("SCL_BUFF"..i):Show()
         end
-
-        --DEFAULT_CHAT_FRAME:AddMessage(SCL_PLAYER[strPlayer][("BUFF" .. i)])
     end
 end
 
@@ -754,8 +833,6 @@ function SCL_GetStats(strStatString, iIndex, strPlayer)
     local statInfoStrings = {string.split(",", strStatString)}
 
     if(iIndex==1) then
-        --DEFAULT_CHAT_FRAME:AddMessage("Value1: " .. statInfoStrings[1])
-
         if(statInfoStrings[1] == nil or statInfoStrings[1] == "") then
             SCL_PLAYER[strPlayer]["M_HASTE"] = "0"
         else
@@ -821,7 +898,6 @@ function SCL_GetStats(strStatString, iIndex, strPlayer)
         else
             SCL_PLAYER[strPlayer]["S_HASTE"] = statInfoStrings[5]
         end
-
     elseif(iIndex==3) then
         if(statInfoStrings[1] == nil or statInfoStrings[1] == "") then
             SCL_PLAYER[strPlayer]["R_HASTE"] = "0"
@@ -836,23 +912,22 @@ function SCL_GetStats(strStatString, iIndex, strPlayer)
         end
 
         if(statInfoStrings[3] == nil or statInfoStrings[3] == "") then
-            SCL_PLAYER[strPlayer]["R_HIT"] = "0"
+            SCL_PLAYER[strPlayer]["R_ARP"] = "0"
         else
-            SCL_PLAYER[strPlayer]["R_HIT"] = statInfoStrings[3]
+            SCL_PLAYER[strPlayer]["R_ARP"] = statInfoStrings[3]
         end
 
         if(statInfoStrings[4] == nil or statInfoStrings[4] == "") then
-            SCL_PLAYER[strPlayer]["R_CRIT"] = "0"
+            SCL_PLAYER[strPlayer]["R_HIT"] = "0"
         else
-            SCL_PLAYER[strPlayer]["R_CRIT"] = statInfoStrings[4]
+            SCL_PLAYER[strPlayer]["R_HIT"] = statInfoStrings[4]
         end
 
         if(statInfoStrings[5] == nil or statInfoStrings[5] == "") then
-            SCL_PLAYER[strPlayer]["R_ARP"] = "0"
+            SCL_PLAYER[strPlayer]["R_CRIT"] = "0"
         else
-            SCL_PLAYER[strPlayer]["R_ARP"] = statInfoStrings[5]
+            SCL_PLAYER[strPlayer]["R_CRIT"] = statInfoStrings[5]
         end
-
     elseif(iIndex==4) then
         if(statInfoStrings[1] == nil or statInfoStrings[1] == "") then
             SCL_PLAYER[strPlayer]["D_AMOR"] = "0"
@@ -898,20 +973,18 @@ function SCL_GetStats(strStatString, iIndex, strPlayer)
 end
 
 function SCL_SetStatsInFrame(name)
-    --DEFAULT_CHAT_FRAME:AddMessage("Haste: " .. SCL_PLAYER[name]["M_HASTE"])
-    
     SCL_InspectStatHasteR:SetText(SCL_PLAYER[name]["M_HASTE"])
     SCL_InspectStatAttackpowerR:SetText(SCL_PLAYER[name]["M_AP"])
     SCL_InspectMeleeHitR:SetText(SCL_PLAYER[name]["M_HIT"])
     SCL_InspectMeleeCritR:SetText(SCL_PLAYER[name]["M_CRIT"])
     SCL_InspectExpertiseR:SetText(SCL_PLAYER[name]["M_EXP"])
-    SCL_InspectMeleeAmorpenR:SetText(SCL_PLAYER[name]["M_ARP"])
+    SCL_InspectMeleeArmorpenR:SetText(SCL_PLAYER[name]["M_ARP"])
 
     SCL_InspectRangedHasteR:SetText(SCL_PLAYER[name]["R_HASTE"])
     SCL_InspectRangedAttackpowerR:SetText(SCL_PLAYER[name]["R_AP"])
     SCL_InspectRangedHitR:SetText(SCL_PLAYER[name]["R_HIT"])
     SCL_InspectRangedCritR:SetText(SCL_PLAYER[name]["R_CRIT"])
-    SCL_InspectRangedAmorpenR:SetText(SCL_PLAYER[name]["R_ARP"])
+    SCL_InspectRangedArmorpenR:SetText(SCL_PLAYER[name]["R_ARP"])
 
     SCL_InspectSpellDamageR:SetText(SCL_PLAYER[name]["S_DMG"])
     SCL_InspectSpellHealR:SetText(SCL_PLAYER[name]["S_HEAL"])
@@ -959,24 +1032,6 @@ function SCL_DeserializePlayerItemsStringShort(strItemsString, strPlayer)
     
 end
 
-function SCL_DeserializePlayerItemString(strItemString, strPlayer)
-
-    for i = 0, 16 do
-        currentInfo = string.sub(strItemString, i * 25 + 1, (i + 1) * 25)
-
-        local strRebuiltItemstring = SCL_RebuildItemString(currentInfo)
-
-        if not (SCL_PLAYER[strPlayer]) then
-            SCL_PLAYER[strPlayer] = {}
-        end
-
-        DEFAULT_CHAT_FRAME:AddMessage("I: " ..tostring(i))
-
-        SCL_PLAYER[strPlayer][SCL_CONSTS.SLOTIDSTRING[tostring(i)]] = strRebuiltItemstring
-    end
-
-end
-
 function SCL_RebuildItemString(strItemString)
 
     local ItemInfoStrings = {string.split(",", strItemString)}
@@ -1017,7 +1072,13 @@ function SCL_RebuildItemString(strItemString)
         gem4 = ItemInfoStrings[6]
     end
 
-    local strNewItemString = "item:" ..itemID.. ":" ..enchantID.. ":" ..gem1.. ":" ..gem2.. ":" ..gem3.. ":"..gem4.. ":0:0"
+    if(ItemInfoStrings[7] == nil or ItemInfoStrings[7] == "") then
+        rndID = "0"
+    else
+        rndID = ItemInfoStrings[7]
+    end
+
+    local strNewItemString = "item:" ..itemID.. ":" ..enchantID.. ":" ..gem1.. ":" ..gem2.. ":" ..gem3.. ":"..gem4.. ":" ..rndID.. ":0"
     
     return strNewItemString
 end
@@ -1026,25 +1087,13 @@ function SCL_OnUpdate(self, elapsed)
 
 end
 
-function SCL_ShowCharWindow()
-    MyFrame = CreateFrame("Frame")
-    MyFrame:ClearAllPoints()
-    MyFrame:SetBackdrop(StaticPopup1:GetBackdrop())
-    MyFrame:SetHeight(300)
-    MyFrame:SetWidth(300)
-    
-    MyFrame.text = MyFrame:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-    MyFrame.text:SetAllPoints()
-    MyFrame.text:SetText("YOUR HELP TEXT HERE")
-    MyFrame:SetPoint("CENTER", 0, 0)
-end
-
 function SCL_SetFrameInfo(strUnitName)
+
     SCL_InspectNameText:SetText(strUnitName);
+
     SCL_InspectLevelText:SetText("Level: " .. SCL_PLAYER[strUnitName]["LEVEL"] .. " " .. SCL_PLAYER[strUnitName]["CLASS"] .. " " .. SCL_PLAYER[strUnitName]["RACE"]);
     SCL_InspectTitleText:SetText("Skillung: " .. SCL_PLAYER[strUnitName]["TALENTSSTRINGNAME"] .. " (" .. SCL_PLAYER[strUnitName]["TALENTSSTRING"] .. ")");
     CharLinkRejectPlayerClass:SetNormalTexture(SCL_CONSTS.CLASSICONS[SCL_PLAYER[strUnitName]["CLASS"]])
-    CharLinkRejectPlayerClass:SetPushedTexture(SCL_CONSTS.CLASSICONS[SCL_PLAYER[strUnitName]["CLASS"]])
 
     if(SCL_PLAYER[strUnitName]["CLASS"] == "ROGUE") then
         SCL_PlayerMana:SetStatusBarColor(1,1,0)
@@ -1059,7 +1108,6 @@ function SCL_SetFrameInfo(strUnitName)
     -- portrait is set depending on race+sex
     -- e.g. Draenei1 = male
     --      Draenei2 = female
-    --SCL_CONSTS.RACESEXTOTEXTURE["DEFAULT"]
 
     if(SCL_CONSTS.RACESEXTOTEXTURE[SCL_PLAYER[strUnitName]["RACE"] .. SCL_PLAYER[strUnitName]["SEX"]]) then
         SetPortraitToTexture(SCL_InspectFramePortrait, SCL_CONSTS.RACESEXTOTEXTURE[SCL_PLAYER[strUnitName]["RACE"] .. SCL_PLAYER[strUnitName]["SEX"]]);
@@ -1074,8 +1122,6 @@ function SCL_ShowCharacterFrame(strPlayer)
         return
     end
 
-    PlaySound("igCharacterInfoOpen");
-    --SetPortraitTexture(SCL_InspectFramePortrait, "player");
     SCL_SetFrameInfo(strPlayer);
 
     SCL_ItemSlotButton_Update(SCL_InspectHeadSlot);
@@ -1098,11 +1144,90 @@ function SCL_ShowCharacterFrame(strPlayer)
     SCL_ItemSlotButton_Update(SCL_InspectSecondaryHandSlot);
     SCL_ItemSlotButton_Update(SCL_InspectRangedSlot);
 
+	SCL_SetGlow(strPlayer);
+	
     SCL_InspectFrame:Show()
 end
 
-function SCL_AddCharacterLink()
+-- thanks to 'Haste', author of oGlow
+-- Author-eMail: troeks@gmail.com
+-- Author-Website: http://fuxsake.net/
 
+function SCL_SetGlow(strPlayer)
+	for i, value in pairs(SCL_CONSTS.GLOWFRAMES) do
+		local key, index = string.split(" ", value)
+	
+		local tmpFrame = getglobal(key)
+		
+		if(not tmpFrame.bc) then SCL_CreateGlowBorder(tmpFrame, point) end
+	
+		local linkItem = SCL_PLAYER[strPlayer][SCL_CONSTS.SLOTIDSTRING[tostring(index)]]
+		
+		if (linkItem) then
+			local q = select(3, GetItemInfo(linkItem))
+			if (q) then
+				SCL_SetGlowBorderColor(tmpFrame, q)
+			else
+				SCL_SetGlowBorderColor(tmpFrame, 0)
+			end
+		else
+			SCL_SetGlowBorderColor(tmpFrame, 0)
+		end
+	end
+end
+
+function SCL_SetGlowBorderColor(frame, q)
+	if(q > 1) then
+		border = frame.bc
+		if(border) then
+			r, g, b = GetItemQualityColor(q)
+			border:SetVertexColor(r, g, b)
+			border:Show()
+		end
+	elseif(frame.bc) then
+		frame.bc:Hide()
+	end
+end
+
+function SCL_CreateGlowBorder(frame)
+	local bc = frame:CreateTexture(nil, "OVERLAY")
+	bc:SetTexture"Interface\\Buttons\\UI-ActionButton-Border"
+	bc:SetBlendMode"ADD"
+	bc:SetAlpha(.8)
+
+	bc:SetWidth(70)
+	bc:SetHeight(70)
+
+	bc:SetPoint("CENTER", frame)
+
+	frame.bc = bc
+end
+
+function SCL_HookOutfitter()
+    if(not IsAddOnLoaded("Outfitter")) then 
+        return 
+    end
+
+    if(getglobal("PaperDollFrame")) then
+        getglobal("PaperDollFrame"):HookScript("OnShow", SCL_HookPaperdoll)
+    end
+end
+
+function SCL_HookPaperdoll()
+    if(isOutfitterHooked) then return end
+
+    if(getglobal("OutfitterQuickSlots")) then
+        getglobal("OutfitterQuickSlots"):HookScript("OnShow", SCL_HookOutfitterQuickslotsShow)
+    end
+end
+
+-- this function is only called if the Quickslots frame exists, no getglobal needed
+function SCL_HookOutfitterQuickslotsShow()
+    getglobal("OutfitterQuickSlots"):SetFrameLevel(getglobal("SCL_CharWindowButtonFrame"):GetFrameLevel() + 10)
+    isOutfitterHooked = true
+end
+
+function SCL_AddCharacterLink(link)
     -- This is for WIM compatibility
     -- Step 1: Check if WIM is loaded
     if(IsAddOnLoaded("WIM")) then
@@ -1127,9 +1252,11 @@ function SCL_AddCharacterLink()
                             if(wim_messageframe_edit:HasFocus()) then
                                 -- Step 6: add message
                                 if(wim_messageframe_edit:GetText() ~= "") then
-                                    wim_messageframe_edit:SetText(wim_messageframe_edit:GetText() .. SCL_BuildPlayerString() .. " ")
+                                    if(not string.match(string.lower(wim_messageframe_edit:GetText()), " anal")) then
+                                        wim_messageframe_edit:SetText(wim_messageframe_edit:GetText() .. " " .. link .. " ");
+                                    end
                                 else
-                                    wim_messageframe_edit:SetText(SCL_BuildPlayerString() .. " ")
+                                    wim_messageframe_edit:SetText(link .. " ")
                                 end
 
                                 return
@@ -1143,24 +1270,48 @@ function SCL_AddCharacterLink()
     end
 
     -- this is called if no WIM window has been found
-    chatFrame = DEFAULT_CHAT_FRAME;
+    local chatFrame = DEFAULT_CHAT_FRAME;
 
     chatFrame.editBox:Show();
     chatFrame.editBox.setText = 1;
 
     if(chatFrame.editBox:GetText() ~= "") then
-        chatFrame.editBox.text = chatFrame.editBox:GetText() .. " " .. SCL_BuildPlayerString() .. " ";
+        if(not string.match(string.lower(chatFrame.editBox:GetText()), " anal")) then
+            chatFrame.editBox.text = chatFrame.editBox:GetText() .. " " .. link .. " ";
+        end
     else
-        chatFrame.editBox.text = SCL_BuildPlayerString() .. " ";
+        chatFrame.editBox.text = link .. " ";
     end
 end
 
 function SCL_OnShow()
-
+    PlaySound("igCharacterInfoOpen");
 end
  
 function SCL_OnHide()
   PlaySound("igCharacterInfoClose");
+end
+
+function SCL_RebuildPlayerString(strName)
+    if (not SCL_PLAYER[strName]) then
+        return
+    end
+
+    local strPlayerItemString = "|cff"
+
+    strPlayerItemString = strPlayerItemString .. SCL_CONSTS.CLASSCOLOR[SCL_PLAYER[strName]["CLASS"]]
+
+    strPlayerItemString = strPlayerItemString .. "|Hitem:1:1:0:0:0:"
+
+    strPlayerItemString = strPlayerItemString .. SCL_CONSTS.VERSION
+    
+    strPlayerItemString = strPlayerItemString .. ":0:0|h["
+
+    strPlayerItemString = strPlayerItemString .. strName
+
+    strPlayerItemString = strPlayerItemString .. "]|h|r"
+
+    return strPlayerItemString
 end
 
 function SCL_BuildPlayerString()
@@ -1170,21 +1321,27 @@ function SCL_BuildPlayerString()
 
     strPlayerItemString = strPlayerItemString .. SCL_CONSTS.CLASSCOLOR[englishClass]
 
-    -- "|Hitem:1:1:0:0:0:0:0:0|h[asdf]h|r"
-
     strPlayerItemString = strPlayerItemString .. "|Hitem:1:1:"
 
-    strPlayerItemString = strPlayerItemString .. SCL_SerializePlayerBaseinfo() -- contains level, race, class, sex
+    strPlayerItemString = strPlayerItemString .. "0"
     
     strPlayerItemString = strPlayerItemString .. ":"
     
-    strPlayerItemString = strPlayerItemString .. SCL_SerializePlayerTalentsSimple() -- contains talents for each tab
+    strPlayerItemString = strPlayerItemString .. "0"
 
     strPlayerItemString = strPlayerItemString ..":"
     
-    strPlayerItemString = strPlayerItemString .. SCL_SerializePlayerStatsSimple() -- contains maxmana / maxhp
+    strPlayerItemString = strPlayerItemString .. "0"
 
-    strPlayerItemString = strPlayerItemString .. ":0:0:0|h["
+    strPlayerItemString = strPlayerItemString .. ":"
+    
+    strPlayerItemString = strPlayerItemString .. SCL_CONSTS.VERSION
+    
+    strPlayerItemString = strPlayerItemString .. ":"
+
+    strPlayerItemString = strPlayerItemString .. "0"
+    
+    strPlayerItemString = strPlayerItemString .. ":0|h["
 
     strPlayerItemString = strPlayerItemString .. UnitName("player")
 
@@ -1194,8 +1351,8 @@ function SCL_BuildPlayerString()
 end
 
 function SCL_SerializePlayerStatsSimple()
-    mana = UnitManaMax("player")
-    health = UnitHealthMax("player")
+    local mana = UnitManaMax("player")
+    local health = UnitHealthMax("player")
 
     return (SCL_LPad(mana, "0", 5) .. SCL_LPad(health, "0", 5))
 end
@@ -1207,24 +1364,24 @@ function SCL_SerializePlayerBaseinfo()
     -- R = Race
     -- S  = Sex
 
-    strPlayerBaseInfo = SCL_BaseInfo_Level()
+    local strPlayerBaseInfo = SCL_BaseInfo_Level()
     strPlayerBaseInfo = strPlayerBaseInfo .. SCL_BaseInfo_Class()
     strPlayerBaseInfo = strPlayerBaseInfo .. SCL_BaseInfo_Race()
     strPlayerBaseInfo = strPlayerBaseInfo .. SCL_BaseInfo_Sex()
-    return strPlayerBaseInfo
+    return strPlayerBaseInfo, (tonumber(UnitLevel("player")))
 
 end
 
 function SCL_BaseInfo_Level()
     if(UnitLevel("player") < 10) then
-        return "0" + UnitLevel("player")
+        return ("0" .. UnitLevel("player"))
     else
         return UnitLevel("player")
     end
 end
 
 function SCL_BaseInfo_Class()
-    localizedClass, englishClass, classIndex = UnitClass("player");
+    local localizedClass, englishClass, classIndex = UnitClass("player");
 
     return SCL_CONSTS.CLASSTOSTRINGID[englishClass]
 end
@@ -1239,28 +1396,24 @@ end
 
 function SCL_SerializePlayer()
     local strSerializedPlayerShort = ""
+    local statSum = 0
+    local itemLevelSum = 0
 
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("HEADSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("NECKSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("SHOULDERSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("BACKSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("CHESTSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("SHIRTSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("TABARDSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("WRISTSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("HANDSSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("WaistSlot") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("LEGSSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("FEETSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("FINGER0SLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("FINGER1SLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("TRINKET0SLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("TRINKET1SLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("MAINHANDSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("SECONDARYHANDSLOT") .. ":"
-    strSerializedPlayerShort = strSerializedPlayerShort .. SCL_SerializeSlotShort("RANGEDSLOT")
+    for i = 1, 19 do
+        local strData, sum_stat, level = SCL_SerializeSlotShort(SCL_CONSTS.SLOTIDSTRING[tostring(i)])
 
-    return strSerializedPlayerShort
+        statSum = statSum + sum_stat
+        itemLevelSum = itemLevelSum + level
+        
+        if (strSerializedPlayerShort == "") then
+            strSerializedPlayerShort = strData
+        else
+            strSerializedPlayerShort = strSerializedPlayerShort ..":" .. strData
+        end
+        
+    end
+
+    return strSerializedPlayerShort, tonumber((tostring(statSum) .. tostring(itemLevelSum)))
 end
 
 
@@ -1268,7 +1421,7 @@ function SCL_SerializeSlotShort(strSlotName)
     local strReturnString = ""
     
     if(strSlotName == "") then
-        return strReturnString
+        return "0", 0, 0;
     end
 
     -- return strReturnString
@@ -1277,7 +1430,7 @@ function SCL_SerializeSlotShort(strSlotName)
     
     -- no slot id? something went wrong
     if not (slotId) then
-        return strReturnString;
+        return "0", 0, 0;
     end
     
     -- step 2: get item link of slot
@@ -1285,43 +1438,63 @@ function SCL_SerializeSlotShort(strSlotName)
     
     -- no link? something went wrong
     if not (link) then
-        return strReturnString;
+        return "0", 0, 0;
     end
 
     -- step 3: analyze link
-    local r,g,b,itemID,enchant,gem1,gem2,gem3,gem4,G,H,name = link:match("^|cff(%x%x)(%x%x)(%x%x)|Hitem:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%-?%d+):(%d+)|h%[(.+)%]|h|r$")
-
+    local r,g,b,itemID,enchant,gem1,gem2,gem3,gem4,rndID,H,name = link:match("^|cff(%x%x)(%x%x)(%x%x)|Hitem:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%-?%d+):(%d+)|h%[(.+)%]|h|r$")
+    local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemID)
+    
     -- no item?
-    if(itemID == "0" or itemID == nil) then
-        return strReturnString;
+    if (itemID == "0" or itemID == nil) then
+        return "0", 0, 0;
     end
-
-    if (itemID == nil or itemID == "0") then
-        itemID = ""
+    
+    local itemStatSum = 0
+    
+    if (itemLevel == nil or itemLevel == "0") then
+        itemLevel = ""
     end
 
     if (enchant == nil or enchant == "0") then
         enchant = ""
+    else
+        itemStatSum = itemStatSum + tonumber(enchant)
     end
 
     if (gem1 == nil or gem1 == "0") then
         gem1 = ""
+    else
+        itemStatSum = itemStatSum + tonumber(gem1)
     end
 
     if (gem2 == nil or gem2 == "0") then
         gem2 = ""
+    else
+        itemStatSum = itemStatSum + tonumber(gem2)
     end
 
     if (gem3 == nil or gem3 == "0") then
         gem3 = ""
+    else
+        itemStatSum = itemStatSum + tonumber(gem3)
     end
 
     if (gem4 == nil or gem4 == "0") then
         gem4 = ""
+    else
+        itemStatSum = itemStatSum + tonumber(gem4)
     end
 
-    strReturnString = itemID .. "," .. enchant .. "," .. gem1 .. "," .. gem2 .. "," .. gem3 .. "," .. gem4
-    return strReturnString;
+    if (rndID == nil or rndID == "0") then
+        rndID = ""
+    else
+        itemStatSum = itemStatSum + tonumber(rndID)
+    end
+
+    strReturnString = itemID .. "," ..enchant.. "," ..gem1.. "," ..gem2.. "," ..gem3.. "," ..gem4.. "," ..rndID
+
+    return strReturnString, itemStatSum, itemLevel
 end
 
 function SCL_LPad(strValue, strPadChar, iPadLength)
@@ -1345,26 +1518,24 @@ function SCL_LPad(strValue, strPadChar, iPadLength)
     return tostring(strReturnString)
 end
 
-function SCL_ItemSlotButton_OnLoad()
-    local slotName = this:GetName();
-    local id;
-    local textureName;
-    local checkRelic;
-    -- TODO
-    --id, textureName, checkRelic = GetInventorySlotInfo(strsub(slotName,8));
-    --this:SetID(id);
-    --local texture = getglobal(slotName.."IconTexture");
-    --texture:SetTexture(textureName);
-    --this.backgroundTextureName = textureName;
-    --this.checkRelic = checkRelic;
-end
-
 function SCL_InvitePlayer()
-    --SCL_InspectNameText:GetText()
-
-    SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", du bist dabei!", "WHISPER", nil, SCL_InspectNameText:GetText())
-    InviteUnit(SCL_InspectNameText:GetText())
-    SCL_InspectFrame:Hide()
+    if(IsShiftKeyDown()) then
+	
+		strMsg = SCL_SETTINGS["SHIFT_MSG"]
+	
+		if(string.match(string.lower(strMsg), "{n}")) then
+			local strSplitMsg = {string.split("\{n\}", strMsg)}
+	
+			strMsg = string.gsub(strMsg, "{n}", SCL_InspectNameText:GetText())
+		end
+	
+        SendChatMessage(strMsg, "WHISPER", nil, SCL_InspectNameText:GetText())
+        SCL_InspectFrame:Hide()
+    else
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", du bist dabei!", "WHISPER", nil, SCL_InspectNameText:GetText())
+        InviteUnit(SCL_InspectNameText:GetText())
+        SCL_InspectFrame:Hide()
+    end
 end
 
 function SCL_RejectPlayer(strReason)
@@ -1397,7 +1568,7 @@ end
 -- 
 function SCL_ItemSlotButton_Update(button)
 
-  local text = strupper(strsub(button:GetName(), 12));
+    local text = strupper(strsub(button:GetName(), 12));
 
     -- set default in case
     SetItemButtonTexture(button, SCL_CONSTS.SLOTSTRINGICON[text]);
@@ -1416,7 +1587,7 @@ function SCL_ItemSlotButton_Update(button)
         button.hasItem = 1;
     end
 
-  itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemID) 
+    local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemID) 
 
     if ( GameTooltip:IsOwned(button) ) then
         if ( texture ) then

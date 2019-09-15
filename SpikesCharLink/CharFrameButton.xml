@@ -21,14 +21,43 @@
           <Anchor point="TOPLEFT" relativeTo="CharacterModelFrameRotateLeftButton" relativePoint="BOTTOMLEFT"/>
         </Anchors>
         <Scripts>
-          <OnLoad>
-          </OnLoad>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+            GameTooltip:SetText("Characterlink erzeugen", 1.0,1.0,1.0 );
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
           <OnClick>
-            SCL_AddCharacterLink();
+            SCL_AddCharacterLink(SCL_BuildPlayerString());
           </OnClick>
         </Scripts>
         <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Up"/>
         <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Down"/>
+        <HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
+      </Button>
+	  
+	  <Button name="SCL_CharWindowListButton">
+        <Size>
+          <AbsDimension x="35" y="35"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="SCL_CharWindowButton" relativePoint="TOPRIGHT"/>
+        </Anchors>
+        <Scripts>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+            GameTooltip:SetText("Gespeicherte Characterlinks", 1.0,1.0,1.0 );
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+          <OnClick>
+            SCL_CharlinkListFrame:Show();
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Up"/>
+        <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Down"/>
         <HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
       </Button>
     </Frames>
