@@ -660,7 +660,7 @@
         <DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled" />
       </CheckButton>
 
-      <CheckButton name="SWConfigButtonEnableModule10" parent="SWConfigEnableModuleLabel">
+      <CheckButton name="SWConfigButtonEnableModule11" parent="SWConfigEnableModuleLabel">
         <Size>
           <AbsDimension x="32" y="32" />
         </Size>
@@ -3186,7 +3186,7 @@
         </Layers>
       </Frame>
 
-      <Frame name="SWConfigRitualOfSummoningModuleLabel" parent="SWConfigModuleLabel">
+      <Frame name="SWConfigConjureTableModuleLabel" parent="SWConfigModuleLabel">
         <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508885-59c2-4f83-ae10-27aaad48391b" />-->
         <Size>
           <AbsDimension x="200" y="50" />
@@ -3201,6 +3201,74 @@
         <Layers>
           <Layer>
             <FontString name="$parentLabel" inherits="GameFontNormal" text="[ALL] Conjure Refreshment Table" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="TOPLEFT" />
+                <Anchor point="BOTTOMRIGHT" />
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+
+      <Frame name="SWConfigFeignDeathLabel" parent="SWConfigModuleLabel">
+        <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508885-59c2-4f83-ae10-27aaad48391b" />-->
+        <Size>
+          <AbsDimension x="200" y="50" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-350" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentLabel" inherits="GameFontNormal" text="[ALL] Feign Death" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="TOPLEFT" />
+                <Anchor point="BOTTOMRIGHT" />
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+
+      <Frame name="SWConfigChaoticChargeFailLabel" parent="SWConfigModuleLabel">
+        <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508885-59c2-4f83-ae10-27aaad48391b" />-->
+        <Size>
+          <AbsDimension x="200" y="50" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="0" y="-380" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentLabel" inherits="GameFontNormal" text="[BT] Chaotic Charge Fail" justifyH="LEFT">
               <Anchors>
                 <Anchor point="TOPLEFT" />
                 <Anchor point="BOTTOMRIGHT" />

@@ -71,9 +71,6 @@ function SWConfigButtonOnlyInstances_OnClick()
         SW_SETTINGS["GENERAL_INSTANCE"] = 0;
     end
 end
-
-
-
 -- close frame
 function SWConfigButtonClose_OnClick()
     SWConfig:Hide();

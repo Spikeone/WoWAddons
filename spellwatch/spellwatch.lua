@@ -40,8 +40,8 @@ end
 --    this:UnregisterEvent("PLAYER_REGEN_DISABLED");
 --end
 
-isInfight = false;
-lastUnitFalling = nil;
+local isInfight = false;
+local lastUnitFalling = nil;
 
 function SW_SlashCommandHandler(msg)
 
@@ -134,12 +134,55 @@ function SW_OnEvent(self, event, ...)
             end
         end
 
+        if (arg2=="SPELL_MISSED") then
+            if (arg9==5384 and SW_SETTINGS["FEIGNDEATH"] == 1) then
+
+                SW_DisplayMessageInOrder("Spell missed: "..arg4.." failed using "..arg10.." at "..arg7.." ("..arg12..")", "FEIGNDEATH")
+
+            end
+        end
+
+		if(arg2 == "SPELL_CAST_SUCCESS") then
+			if(arg9 == 38652 and SW_SETTINGS["TKFUNGUS"] == 1) then
+				SW_DisplayMessageInOrder("" ..arg7.. " casts " ..arg10 .. ", move!", "TKFUNGUS")
+			end
+		end
+		
+		if(arg2 == "SPELL_CAST_SUCCESS") then
+			if(arg9 == 41099 and SW_SETTINGS["BTCOMBATSTANCE"] == 1) then
+				SW_DisplayMessageInOrder("" ..arg10 .. " active, TAUNT NOW!", "BTCOMBATSTANCE")
+			end
+		end
+		
+		
+		if (arg2 == "SPELL_SUMMON") then
+			if(arg9 == 38624 and SW_SETTINGS["TKTOTEM"] == 1) then
+				SW_DisplayMessageInOrder("" ..arg7.. " summoned!", "TKTOTEM")
+			end
+		end
+		
+		
+        -- Haescher Aufladung (failor)
+		if(arg2=="SPELL_MISSED") then
+        --if(arg2=="SPELL_MISSED" or arg2=="SPELL_PERIODIC_MISSED") then
+            if(arg12=="ABSORB") then
+                SW_strLastAbsorbSpell = arg10
+                SW_strLastAbsorbPlayer = arg4
+            end
+        end
+
         -- Haescher Aufladungen (erste)
         if (arg2=="SPELL_AURA_APPLIED") then
             if(arg9 == 41033 and SW_SETTINGS["BTCHAOTICCHARGE"] == 1) then
 
-                SW_DisplayMessageInOrder("Chaotic Charge (1)!", "BTCHAOTICCHARGE")
-
+                if(SW_strLastAbsorbPlayer ~= "" and SW_strLastAbsorbSpell ~= "" and SW_SETTINGS["BTCHAOTICCHARGEFAIL"] == 1) then
+                    SW_DisplayMessageInOrder("Chaotic Charge (1)! " ..SW_strLastAbsorbPlayer.. " stop casting " ..SW_strLastAbsorbSpell.. "!", "BTCHAOTICCHARGE")
+                elseif(SW_strLastAbsorbPlayer ~= "" and SW_SETTINGS["BTCHAOTICCHARGEFAIL"] == 1) then
+                    SW_DisplayMessageInOrder("Chaotic Charge (1)! " ..SW_strLastAbsorbPlayer.. " stop casting!" , "BTCHAOTICCHARGE")
+                else
+                    SW_DisplayMessageInOrder("Chaotic Charge (1)!", "BTCHAOTICCHARGE")
+                end
+                
             end
         end
 
@@ -147,7 +190,13 @@ function SW_OnEvent(self, event, ...)
         if (arg2=="SPELL_AURA_APPLIED_DOSE" and SW_SETTINGS["BTCHAOTICCHARGE"] == 1) then
             if(arg9 == 41033) then
 
-                SW_DisplayMessageInOrder("Chaotic Charge ("..arg13..")!", "BTCHAOTICCHARGE")
+                if(SW_strLastAbsorbPlayer ~= "" and SW_strLastAbsorbSpell ~= "" and SW_SETTINGS["BTCHAOTICCHARGEFAIL"] == 1) then
+                    SW_DisplayMessageInOrder("Chaotic Charge ("..arg13..")! " ..SW_strLastAbsorbPlayer.. " stop casting " ..SW_strLastAbsorbSpell.. "!", "BTCHAOTICCHARGE")
+                elseif(SW_strLastAbsorbPlayer ~= "" and SW_SETTINGS["BTCHAOTICCHARGEFAIL"] == 1) then
+                    SW_DisplayMessageInOrder("Chaotic Charge ("..arg13..")! " ..SW_strLastAbsorbPlayer.. " stop casting!" , "BTCHAOTICCHARGE")
+                else
+                    SW_DisplayMessageInOrder("Chaotic Charge ("..arg13..")!", "BTCHAOTICCHARGE")
+                end
 
             end
         end
@@ -188,12 +237,6 @@ function SW_OnEvent(self, event, ...)
                 --         -- aktuelles target vom mob auslesen und dazu schreiben
                 --         addInfo = "("..playertargettarget..")"
                 --     end
-                -- end
-                -- 
-                -- if(IsRaidLeader() or IsRaidOfficer())then
-                --     SendChatMessage("Arcane Charge "..addInfo.."!", "RAID_WARNING");
-                -- else
-                --     SendChatMessage("Arcane Charge "..addInfo.."!", "RAID");
                 -- end
             end
         end
@@ -449,10 +492,53 @@ function SW_OnVariablesLoaded()
     if (not SW_SETTINGS["TABLE_RAID"])           then SW_SETTINGS["TABLE_RAID"] = 1 end
     if (not SW_SETTINGS["TABLE_RAIDWARNING"])    then SW_SETTINGS["TABLE_RAIDWARNING"] = 1 end
 
-    --if(SW_SETTINGS["GENERAL_ENABLE"] == 1) then
-    --    DEFAULT_CHAT_FRAME:AddMessage("call SW_RegisterEvents");
-    --    SW_RegisterEvents()
-    --end
+    -- module 12 (feign death)
+    if (not SW_SETTINGS["FEIGNDEATH"])                then SW_SETTINGS["FEIGNDEATH"] = 1 end
+    if (not SW_SETTINGS["FEIGNDEATH_SYSTEM"])         then SW_SETTINGS["FEIGNDEATH_SYSTEM"] = 0 end
+    if (not SW_SETTINGS["FEIGNDEATH_SELF"])           then SW_SETTINGS["FEIGNDEATH_SELF"] = 1 end
+    if (not SW_SETTINGS["FEIGNDEATH_YELL"])           then SW_SETTINGS["FEIGNDEATH_YELL"] = 0 end
+    if (not SW_SETTINGS["FEIGNDEATH_PARTY"])          then SW_SETTINGS["FEIGNDEATH_PARTY"] = 0 end
+    if (not SW_SETTINGS["FEIGNDEATH_RAID"])           then SW_SETTINGS["FEIGNDEATH_RAID"] = 1 end
+    if (not SW_SETTINGS["FEIGNDEATH_RAIDWARNING"])    then SW_SETTINGS["FEIGNDEATH_RAIDWARNING"] = 1 end
+
+    -- module 13 (btchaoticchargefail)
+    if (not SW_SETTINGS["BTCHAOTICCHARGEFAIL"])                then SW_SETTINGS["BTCHAOTICCHARGEFAIL"] = 1 end
+    if (not SW_SETTINGS["BTCHAOTICCHARGEFAIL_SYSTEM"])         then SW_SETTINGS["BTCHAOTICCHARGEFAIL_SYSTEM"] = 0 end
+    if (not SW_SETTINGS["BTCHAOTICCHARGEFAIL_SELF"])           then SW_SETTINGS["BTCHAOTICCHARGEFAIL_SELF"] = 0 end
+    if (not SW_SETTINGS["BTCHAOTICCHARGEFAIL_YELL"])           then SW_SETTINGS["BTCHAOTICCHARGEFAIL_YELL"] = 0 end
+    if (not SW_SETTINGS["BTCHAOTICCHARGEFAIL_PARTY"])          then SW_SETTINGS["BTCHAOTICCHARGEFAIL_PARTY"] = 0 end
+    if (not SW_SETTINGS["BTCHAOTICCHARGEFAIL_RAID"])           then SW_SETTINGS["BTCHAOTICCHARGEFAIL_RAID"] = 1 end
+    if (not SW_SETTINGS["BTCHAOTICCHARGEFAIL_RAIDWARNING"])    then SW_SETTINGS["BTCHAOTICCHARGEFAIL_RAIDWARNING"] = 1 end
+	
+	-- module 14 (tk totem)
+    if (not SW_SETTINGS["TKTOTEM"])                then SW_SETTINGS["TKTOTEM"] = 1 end
+    if (not SW_SETTINGS["TKTOTEM_SYSTEM"])         then SW_SETTINGS["TKTOTEM_SYSTEM"] = 0 end
+    if (not SW_SETTINGS["TKTOTEM_SELF"])           then SW_SETTINGS["TKTOTEM_SELF"] = 0 end
+    if (not SW_SETTINGS["TKTOTEM_YELL"])           then SW_SETTINGS["TKTOTEM_YELL"] = 0 end
+    if (not SW_SETTINGS["TKTOTEM_PARTY"])          then SW_SETTINGS["TKTOTEM_PARTY"] = 0 end
+    if (not SW_SETTINGS["TKTOTEM_RAID"])           then SW_SETTINGS["TKTOTEM_RAID"] = 1 end
+    if (not SW_SETTINGS["TKTOTEM_RAIDWARNING"])    then SW_SETTINGS["TKTOTEM_RAIDWARNING"] = 1 end
+    if (not SW_SETTINGS["TKTOTEM_MARKS"])          then SW_SETTINGS["TKTOTEM_MARKS"] = 1 end
+	
+	-- module 15 (tk fungus)
+    if (not SW_SETTINGS["TKFUNGUS"])                then SW_SETTINGS["TKFUNGUS"] = 1 end
+    if (not SW_SETTINGS["TKFUNGUS_SYSTEM"])         then SW_SETTINGS["TKFUNGUS_SYSTEM"] = 0 end
+    if (not SW_SETTINGS["TKFUNGUS_SELF"])           then SW_SETTINGS["TKFUNGUS_SELF"] = 0 end
+    if (not SW_SETTINGS["TKFUNGUS_YELL"])           then SW_SETTINGS["TKFUNGUS_YELL"] = 0 end
+    if (not SW_SETTINGS["TKFUNGUS_PARTY"])          then SW_SETTINGS["TKFUNGUS_PARTY"] = 0 end
+    if (not SW_SETTINGS["TKFUNGUS_RAID"])           then SW_SETTINGS["TKFUNGUS_RAID"] = 1 end
+    if (not SW_SETTINGS["TKFUNGUS_RAIDWARNING"])    then SW_SETTINGS["TKFUNGUS_RAIDWARNING"] = 1 end
+	
+	-- module 16 (bt combat aura)
+    if (not SW_SETTINGS["BTCOMBATSTANCE"])                then SW_SETTINGS["BTCOMBATSTANCE"] = 1 end
+    if (not SW_SETTINGS["BTCOMBATSTANCE_SYSTEM"])         then SW_SETTINGS["BTCOMBATSTANCE_SYSTEM"] = 0 end
+    if (not SW_SETTINGS["BTCOMBATSTANCE_SELF"])           then SW_SETTINGS["BTCOMBATSTANCE_SELF"] = 0 end
+    if (not SW_SETTINGS["BTCOMBATSTANCE_YELL"])           then SW_SETTINGS["BTCOMBATSTANCE_YELL"] = 0 end
+    if (not SW_SETTINGS["BTCOMBATSTANCE_PARTY"])          then SW_SETTINGS["BTCOMBATSTANCE_PARTY"] = 0 end
+    if (not SW_SETTINGS["BTCOMBATSTANCE_RAID"])           then SW_SETTINGS["BTCOMBATSTANCE_RAID"] = 1 end
+    if (not SW_SETTINGS["BTCOMBATSTANCE_RAIDWARNING"])    then SW_SETTINGS["BTCOMBATSTANCE_RAIDWARNING"] = 1 end
+
+
 end
 
 function SW_IsInRaid()
