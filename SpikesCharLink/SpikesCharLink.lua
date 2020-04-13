@@ -401,45 +401,7 @@ function __genOrderedIndex( t )
     for key in pairs(t) do
         table.insert( orderedIndex, key )
     end
-    table.sort( orderedIndex , function (lhs,rhs) 
-        if(lhs == nil) then
-          return rhs ~= nil;
-        end
-        if(rhs == nil) then
-          return false;
-        end
-        
-        local lhsOwn = t[lhs]['IS_OWN'];
-        local rhsOwn = t[rhs]['IS_OWN'];
-        local lhsDate = t[lhs]['HASH_DATE'];
-        local rhsDate = t[rhs]['HASH_DATE'];
-        
-        if(lhsOwn == nil) then
-          lhsOwn = '0';
-        end
-        if(rhsOwn == nil) then
-          rhsOwn = '0';
-        end
-        if(lhsDate == nil) then
-          lhsDate = '0';
-        end
-        if(rhsDate == nil) then
-          rhsDate = '0';
-        end
-        
-        if(lhsOwn ~= rhsOwn) then
-          if(lhsOwn ~= nil and rhsOwn ~= nil) then
-            return lhsOwn > rhsOwn;
-          end
-          return lhsOwn == '1';
-        end
-        
-        if(lhsDate ~= nil and rhsDate ~= nil) then
-          return lhsDate > rhsDate;
-        end
-        
-        return lhs < rhs;
-      end)
+    table.sort( orderedIndex )
     return orderedIndex
 end
 
@@ -939,14 +901,12 @@ function SCL_OnEvent(self, event, ...)
     elseif(arg1 == "SCLII") then
       -- arg2 := data(:data){19}[:character name]
       local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 20, arg4);
-      DEFAULT_CHAT_FRAME:AddMessage("SCLII:CHNAME: ".. characterName);
       SCL_DeserializePlayerItemsStringShort(arg2, characterName);
       SCL_ShowCharacterFrame(characterName, eventSource);
       SCL_CharList_FillButtons();
     elseif(arg1 == "SCLIS") then
       -- arg2 := data(:data){21}[:encoded character name]
       local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 5, arg4);
-      DEFAULT_CHAT_FRAME:AddMessage("SCLIS:CHNAME: ".. characterName);
       
       SCL_DeserializePlayerStats(arg2, characterName)
     elseif(arg1 == "SCLIB") then
@@ -954,7 +914,6 @@ function SCL_OnEvent(self, event, ...)
       local segments = {string.split(':', arg2)};
       local buffs = segments[1];
       local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 2, arg4);
-      DEFAULT_CHAT_FRAME:AddMessage("SCLIB:CHNAME: ".. characterName);
       
       SCL_DeserializePlayerBuffs(buffs, characterName)
     elseif(arg1 == "SCLLV") then
