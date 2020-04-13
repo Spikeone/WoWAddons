@@ -53,7 +53,7 @@ function SCL_CharList_BuildButtons(frame)
     hasButtons = getglobal("SCL_CharList_CharButton_1")
 
     if(hasButtons == nil) then
-        for i = 1, 25 do
+        for i = 1, SCL_CHARLISTCONSTS.MAXLIST do
             pButton = CreateFrame("Button","SCL_CharList_CharButton_" .. i, frame, "SCL_CharList_CharButton_Template")
             pButton:SetPoint("TOPLEFT", "SCL_ColumnTitle_Character", 0, i * -16);
             pButton:Hide()
@@ -92,7 +92,7 @@ function SCL_CharList_FillButtons()
 		return
 	end
 
-    for i = 1, 25 do
+    for i = 1, SCL_CHARLISTCONSTS.MAXLIST do
         getglobal("SCL_CharList_CharButton_"..i):Hide()
         getglobal("SCL_CharList_CharButtonDelete_"..i):Hide()
     end
@@ -138,7 +138,11 @@ function SCL_CharLinkList_Open(fName)
     local name = lLabel:GetText():match("^%[(.+)%]$")
 
     if(SCL_PLAYER[name]) then
-        if(SCL_PLAYER[name]["E_HASH"]) then
+        if(IsShiftKeyDown()) then
+          if(SCL_PLAYER[name]["IS_OWN"] == "1") then
+            SCL_AddCharacterLink(SCL_BuildPlayerString(name));
+          end
+        elseif(SCL_PLAYER[name]["E_HASH"]) then
             SCL_ShowCharacterFrame(name)
             SCL_SetStatsInFrame(name)
             SCL_SetBuffIconsInFrame(name)
@@ -162,7 +166,7 @@ function SCL_CharLinkList_Delete(fName)
     local iElementCount = SCL_CharLinkList_GetCountLinksSaved()
 
     if(listOffset >= iElementCount) then
-        listOffset = listOffset - 25
+        listOffset = listOffset - SCL_CHARLISTCONSTS.MAXLIST
     end
 
     if(iElementCount) then

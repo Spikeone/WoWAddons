@@ -28,25 +28,25 @@ SCL_CONSTS.CLASSICONS["WARLOCK"]    = "Interface\\Addons\\SpikesCharLink\\Media\
 SCL_CONSTS.CLASSICONS["WARRIOR"]    = "Interface\\Addons\\SpikesCharLink\\Media\\Warrior"
 
 SCL_CONSTS.SLOTIDSTRING = {}
-SCL_CONSTS.SLOTIDSTRING["1"]  = "HEADSLOT"
-SCL_CONSTS.SLOTIDSTRING["2"]  = "NECKSLOT"
-SCL_CONSTS.SLOTIDSTRING["3"]  = "SHOULDERSLOT"
-SCL_CONSTS.SLOTIDSTRING["4"]  = "BACKSLOT"
-SCL_CONSTS.SLOTIDSTRING["5"]  = "CHESTSLOT"
-SCL_CONSTS.SLOTIDSTRING["6"]  = "SHIRTSLOT"
-SCL_CONSTS.SLOTIDSTRING["7"]  = "TABARDSLOT"
-SCL_CONSTS.SLOTIDSTRING["8"]  = "WRISTSLOT"
-SCL_CONSTS.SLOTIDSTRING["9"]  = "HANDSSLOT"
-SCL_CONSTS.SLOTIDSTRING["10"] = "WAISTSLOT"
-SCL_CONSTS.SLOTIDSTRING["11"] = "LEGSSLOT"
-SCL_CONSTS.SLOTIDSTRING["12"] = "FEETSLOT"
-SCL_CONSTS.SLOTIDSTRING["13"] = "FINGER0SLOT"
-SCL_CONSTS.SLOTIDSTRING["14"] = "FINGER1SLOT"
-SCL_CONSTS.SLOTIDSTRING["15"] = "TRINKET0SLOT"
-SCL_CONSTS.SLOTIDSTRING["16"] = "TRINKET1SLOT"
-SCL_CONSTS.SLOTIDSTRING["17"] = "MAINHANDSLOT"
-SCL_CONSTS.SLOTIDSTRING["18"] = "SECONDARYHANDSLOT"
-SCL_CONSTS.SLOTIDSTRING["19"] = "RANGEDSLOT"
+SCL_CONSTS.SLOTIDSTRING[1]  = "HEADSLOT"
+SCL_CONSTS.SLOTIDSTRING[2]  = "NECKSLOT"
+SCL_CONSTS.SLOTIDSTRING[3]  = "SHOULDERSLOT"
+SCL_CONSTS.SLOTIDSTRING[4]  = "BACKSLOT"
+SCL_CONSTS.SLOTIDSTRING[5]  = "CHESTSLOT"
+SCL_CONSTS.SLOTIDSTRING[6]  = "SHIRTSLOT"
+SCL_CONSTS.SLOTIDSTRING[7]  = "TABARDSLOT"
+SCL_CONSTS.SLOTIDSTRING[8]  = "WRISTSLOT"
+SCL_CONSTS.SLOTIDSTRING[9]  = "HANDSSLOT"
+SCL_CONSTS.SLOTIDSTRING[10] = "WAISTSLOT"
+SCL_CONSTS.SLOTIDSTRING[11] = "LEGSSLOT"
+SCL_CONSTS.SLOTIDSTRING[12] = "FEETSLOT"
+SCL_CONSTS.SLOTIDSTRING[13] = "FINGER0SLOT"
+SCL_CONSTS.SLOTIDSTRING[14] = "FINGER1SLOT"
+SCL_CONSTS.SLOTIDSTRING[15] = "TRINKET0SLOT"
+SCL_CONSTS.SLOTIDSTRING[16] = "TRINKET1SLOT"
+SCL_CONSTS.SLOTIDSTRING[17] = "MAINHANDSLOT"
+SCL_CONSTS.SLOTIDSTRING[18] = "SECONDARYHANDSLOT"
+SCL_CONSTS.SLOTIDSTRING[19] = "RANGEDSLOT"
 
 SCL_CONSTS.SLOTIDICON = {}
 SCL_CONSTS.SLOTIDICON["0"]  = "Interface\\PaperDoll\\UI-PaperDoll-Slot-Head"
@@ -216,6 +216,35 @@ SCL_CONSTS.CLASSTALENTSTRINGS["HUNTER"][1] = "Beast Mastery"
 SCL_CONSTS.CLASSTALENTSTRINGS["HUNTER"][2] = "Marksmanship"
 SCL_CONSTS.CLASSTALENTSTRINGS["HUNTER"][3] = "Survival"
 
+SCL_CONSTS.STATSORDERTABLE = {}
+SCL_CONSTS.STATSORDERTABLE[1] = {}
+SCL_CONSTS.STATSORDERTABLE[2] = {}
+SCL_CONSTS.STATSORDERTABLE[3] = {}
+SCL_CONSTS.STATSORDERTABLE[4] = {}
+
+SCL_CONSTS.STATSORDERTABLE[1][1] = "M_HASTE"
+SCL_CONSTS.STATSORDERTABLE[1][2] = "M_AP"
+SCL_CONSTS.STATSORDERTABLE[1][3] = "M_HIT"
+SCL_CONSTS.STATSORDERTABLE[1][4] = "M_CRIT"
+SCL_CONSTS.STATSORDERTABLE[1][5] = "M_EXP"
+SCL_CONSTS.STATSORDERTABLE[1][6] = "M_ARP"
+SCL_CONSTS.STATSORDERTABLE[2][1] = "R_HASTE"
+SCL_CONSTS.STATSORDERTABLE[2][2] = "R_AP"
+SCL_CONSTS.STATSORDERTABLE[2][3] = "R_HIT"
+SCL_CONSTS.STATSORDERTABLE[2][4] = "R_CRIT"
+SCL_CONSTS.STATSORDERTABLE[2][5] = "R_ARP"
+SCL_CONSTS.STATSORDERTABLE[3][1] = "S_DMG"
+SCL_CONSTS.STATSORDERTABLE[3][2] = "S_HEAL"
+SCL_CONSTS.STATSORDERTABLE[3][3] = "S_HIT"
+SCL_CONSTS.STATSORDERTABLE[3][4] = "S_CRIT"
+SCL_CONSTS.STATSORDERTABLE[3][5] = "S_HASTE"
+SCL_CONSTS.STATSORDERTABLE[4][1] = "D_AMOR"
+SCL_CONSTS.STATSORDERTABLE[4][2] = "D_DEFF"
+SCL_CONSTS.STATSORDERTABLE[4][3] = "D_DODGE"
+SCL_CONSTS.STATSORDERTABLE[4][4] = "D_PARRY"
+SCL_CONSTS.STATSORDERTABLE[4][5] = "D_BLOCK"
+SCL_CONSTS.STATSORDERTABLE[4][6] = "D_RES"
+
 --SCL_CONSTS.OUTFITTER_HOOKED = false
 local isOutfitterHooked = false
 
@@ -258,8 +287,25 @@ StaticPopupDialogs["SHIFT_ACCEPT_MSG"] = {
 	  DEFAULT_CHAT_FRAME:AddMessage("New [SHIFT]-Message: " ..text)
 	  SCL_SETTINGS["SHIFT_MSG"] = text
   end
-  
 }
+  
+function StringToDecString(text)
+  if (text == nil) then
+    return "";
+  end
+  return (text:gsub('.', function (c)
+        return string.format('%03d', string.byte(c))
+  end))
+end
+
+function StringFromDecString(decString)
+  if (decString == nil) then
+    return "";
+  end
+  return (decString:gsub('...', function (ccc)
+    return string.char(tonumber(ccc, 10))
+  end))
+end
 
 -- replace {cl} with the characters charlink
 local origSendMessage = SendChatMessage;
@@ -281,7 +327,11 @@ local origChatFrame_OnHyperlinkShow = ChatFrame_OnHyperlinkShow;
 ChatFrame_OnHyperlinkShow = function(...)
     local chatFrame, link, text, button = ...;
 
-    local r,g,b,itemID,linkType,C,D,E,clVersion,G,H,name = link:match("^|cff(%x%x)(%x%x)(%x%x)|Hitem:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%-?%d+):(%d+)|h%[(.+)%]|h|r$")
+    local r,g,b,itemID,linkType,C,D,E,clVersion,G,targetbin,name = link:match("^|cff(%x%x)(%x%x)(%x%x)|Hitem:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%-?%d+):(%d+)|h%[(.+)%]|h|r$")
+    local wisperTarget = StringFromDecString(targetbin);
+    if(wisperTarget:len() == 0) then
+      wisperTarget = name
+    end
 
     if(itemID == "1" and linkType == "1") then
 
@@ -290,7 +340,7 @@ ChatFrame_OnHyperlinkShow = function(...)
             return
         elseif(tonumber(clVersion) < SCL_CONSTS.VERSION) then -- receiver version is lower than sender
             -- LV = low Version
-            SendAddonMessage("SCLLV", SCL_CONSTS.VERSION, "WHISPER", name);
+            SendAddonMessage("SCLLV", SCL_CONSTS.VERSION, "WHISPER", wisperTarget);
             message("Sender uses old Charlink version (" ..clVersion.. "). Can't open link, user has been notified!")
             return
         end
@@ -300,18 +350,25 @@ ChatFrame_OnHyperlinkShow = function(...)
         if(IsShiftKeyDown()) then
             SCL_AddCharacterLink(link)
         else
+            local requestedCharacter = "";
+            if(name ~= wisperTarget) then
+              requestedCharacter = ":" .. name;
+            end
+            
+            -- DEFAULT_CHAT_FRAME:AddMessage("Char: " .. requestedCharacter .. " name " .. name .. " target " .. wisperTarget .. " binTar " .. targetbin);
+            
             if(SCL_PLAYER[name]) then
                 if(SCL_PLAYER[name]["E_HASH"]) then
-                    SCL_ShowCharacterFrame(name)
+                    SCL_ShowCharacterFrame(name, wisperTarget)
                     SCL_SetStatsInFrame(name)
                     SCL_SetBuffIconsInFrame(name)
                     -- either the following triggers sending new data which will update the frame or not
-                    SendAddonMessage("SCLRC", tostring(SCL_PLAYER[name]["E_HASH"]), "WHISPER", name);
+                    SendAddonMessage("SCLRC", tostring(SCL_PLAYER[name]["E_HASH"]) .. requestedCharacter, "WHISPER", wisperTarget);
                 else
-                    SendAddonMessage("SCLRC", "0", "WHISPER", name);
+                    SendAddonMessage("SCLRC", "0" .. requestedCharacter, "WHISPER", wisperTarget);
                 end
             else
-                SendAddonMessage("SCLRC", "0", "WHISPER", name);
+                SendAddonMessage("SCLRC", "0" .. requestedCharacter, "WHISPER", wisperTarget);
             end
         end
 
@@ -406,6 +463,13 @@ function SCL_DeserializeBaseinfoString(name, simpleData, charHash)
 
     SCL_PLAYER[name]["E_HASH"] = charHash
     SCL_PLAYER[name]["HASH_DATE"] = tostring(date("%d.%m.%y %H:%M"))
+    if(SCL_PLAYER[name]["IS_OWN"] == nil or SCL_PLAYER[name]["IS_OWN"] == "0") then
+      if(name == UnitName("player")) then
+        SCL_PLAYER[name]["IS_OWN"] = "1";
+      else
+        SCL_PLAYER[name]["IS_OWN"] = "0";
+      end
+    end
 
     -- LLCRS
     -- LL = Level
@@ -729,45 +793,150 @@ function SCL_GetNumTalentPoints(iTab)
     return numTalentCount;
 end
 
+function SCL_ExtractCharacterNameFromParameter(text, index)
+  if(text == nil) then
+    return UnitName('player');
+  end
+  local table = {string.split(':', text)};
+  local characterName = table[index];
+  local appendString = "";
+  if(characterName == nil or characterName:len() < 3) then
+    characterName = UnitName('player');
+  else
+    appendString = ":" .. characterName;
+  end
+  
+  return characterName, appendString;
+end
+
 function SCL_OnEvent(self, event, ...)
 
     if (event == 'CHAT_MSG_ADDON') then
+    local eventSource = arg4;
+
         if(arg1 == 'SCLRC') then -- request char
-            local strSerializedBaseinfo, baseInfoHash = SCL_SerializePlayerBaseinfo()
-            local strSerializedTalents, talentsHash = SCL_SerializePlayerTalentsSimple()
-            local strSerializedStats = SCL_SerializePlayerStatsSimple()
-            local strSerializedPlayer, equipHash = SCL_SerializePlayer()
+      DEFAULT_CHAT_FRAME:AddMessage("SCLRC" .. arg2);
+      -- arg2 := hash[:encoded character name]
+      local request = {string.split(':', arg2)};
+      local hash = request[1];
+      local characterName, appendString = SCL_ExtractCharacterNameFromParameter(arg2, 2);
             
-            local charHash = tostring(baseInfoHash) .. tostring(talentsHash) .. tostring(equipHash)
+      local charHash = "";
+      local strSerializedBaseinfo = "";
+      local strSerializedTalents = "";
+      local strSerializedPlayer = "";
+      
+      if(characterName == UnitName("player")) then
+        local baseInfo, baseInfoHash = SCL_SerializePlayerBaseinfo()
+        local talents, talentsHash = SCL_SerializePlayerTalentsSimple()
+        local player, equipHash = SCL_SerializePlayer()
+        strSerializedBaseinfo = baseInfo;
+        strSerializedTalents = talents;
+        strSerializedPlayer = player;
+        charHash = tostring(baseInfoHash) .. tostring(talentsHash) .. tostring(equipHash) .. appendString
+      else
+        local playerRef = SCL_PLAYER[characterName];
+        -- collect values from DB
+        strSerializedBaseinfo = playerRef["LEVEL"] .. SCL_CONSTS.CLASSTOSTRINGID[playerRef["CLASS"]] .. SCL_CONSTS.RACETOSTRINGID[playerRef["RACE"]] .. playerRef["SEX"];
+        strSerializedTalents = playerRef["TALENTS1"] .. playerRef["TALENTS2"] .. playerRef["TALENTS3"];
+        
+        local playerTab = {};
+        for i, slotID in ipairs(SCL_CONSTS.SLOTIDSTRING) do
+          -- remove trailing :0es and leading item
+          local item = playerRef[slotID]:replace(":0$", ""):sub(6);
+          -- replace ':' with ','
+          playerTab[#playerTab + 1] = item:replace(':', ',');
+        end
+        
+        strSerializedPlayer = table.concat (playerTab,":") .. appendString;
+        charHash = SCL_PLAYER[characterName]["E_HASH"] .. appendString;
+      end
 
             if(charHash == tostring(arg2)) then
-                SendAddonMessage("SCLSH", charHash, "WHISPER", arg4);
+        SendAddonMessage("SCLSH", charHash, "WHISPER", eventSource);
                 return;
             end
 
-            SendAddonMessage("SCLST", (tostring(charHash) ..",".. strSerializedBaseinfo ..",".. strSerializedTalents ..","..  strSerializedStats), "WHISPER", arg4);
-            SendAddonMessage("SCLII", strSerializedPlayer, "WHISPER", arg4);
-            SendAddonMessage("SCLIS", SCL_SerializePlayerStats(), "WHISPER", arg4);
-            SendAddonMessage("SCLIB", SCL_SerializeBuffs(), "WHISPER", arg4);
+      local strSerializedPlayerSimpleStats = "";
+      local strSerializedPlayerStats = "";
+      local strSerializedBuffs = "";
+      if(characterName == UnitName("player")) then
+        strSerializedPlayerSimpleStats = SCL_SerializePlayerStatsSimple();
+        strSerializedPlayerStats = SCL_SerializePlayerStats();
+        strSerializedBuffs = SCL_SerializeBuffs();
+      else
+        local playerRef = SCL_PLAYER[characterName];
+        strSerializedPlayerSimpleStats = string.format("%05d", tonumber(playerRef["MANAMAX"])) .. string.format("%05d", tonumber(playerRef["HEALTHMAX"]));
+        
+        local statsTab = {};
+        for i, category in ipairs(SCL_CONSTS.STATSORDERTABLE) do
+          local statGroupTab = {};
+          for j,item in ipairs(category) do
+            statGroupTab[#statGroupTab + 1] = playerRef[item];
+          end
+          statsTab[#statsTab + 1] = table.concat (statGroupTab, ',');
+        end
+        strSerializedPlayerStats = table.concat (statsTab, ':') .. appendString;
+        
+        local buffTab = {};
+        for i = 1, 40 do
+          local buff = playerRef["BUFF" .. i];
+          if(buff ~=nil and buff ~= "") then
+            buffTab[#buffTab + 1] = buff;
+          end
+        end
+        strSerializedBuffs = table.concat (buffTab, ',') .. appendString;
+      end
+
+      SendAddonMessage("SCLST", (tostring(charHash) ..",".. strSerializedBaseinfo ..",".. strSerializedTalents ..",".. strSerializedPlayerSimpleStats), "WHISPER", eventSource);
+      SendAddonMessage("SCLII", strSerializedPlayer, "WHISPER", eventSource);
+      SendAddonMessage("SCLIS", strSerializedPlayerStats, "WHISPER", eventSource);
+      SendAddonMessage("SCLIB", strSerializedBuffs, "WHISPER", eventSource);
         elseif(arg1 == "SCLII") then
-            SCL_DeserializePlayerItemsStringShort(arg2, arg4)
-            SCL_ShowCharacterFrame(arg4)
-            SCL_CharList_FillButtons()
+      DEFAULT_CHAT_FRAME:AddMessage("SCLII: ".. arg2);
+      -- arg2 := data(:data){19}[:encoded character name]
+      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 20);
+      DEFAULT_CHAT_FRAME:AddMessage("SCLII:CHNAME: ".. characterName);
+      SCL_DeserializePlayerItemsStringShort(arg2, characterName);
+      SCL_ShowCharacterFrame(characterName, eventSource);
+      SCL_CharList_FillButtons();
         elseif(arg1 == "SCLIS") then
-            SCL_DeserializePlayerStats(arg2, arg4)
+      DEFAULT_CHAT_FRAME:AddMessage("SCLIS: ".. arg2);
+      -- arg2 := data(:data){21}[:encoded character name]
+      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 5);
+      DEFAULT_CHAT_FRAME:AddMessage("SCLIS:CHNAME: ".. characterName);
+      
+      SCL_DeserializePlayerStats(arg2, characterName)
         elseif(arg1 == "SCLIB") then
-            SCL_DeserializePlayerBuffs(arg2, arg4)
+      DEFAULT_CHAT_FRAME:AddMessage("SCLIB: ".. arg2);
+      -- arg2 := (buff(,buff){0,40})[:encoded character name]
+      local segments = {string.split(':', arg2)};
+      local buffs = segments[1];
+      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 2);
+      DEFAULT_CHAT_FRAME:AddMessage("SCLIB:CHNAME: ".. characterName);
+      
+      SCL_DeserializePlayerBuffs(buffs, characterName)
         elseif(arg1 == "SCLLV") then
+      DEFAULT_CHAT_FRAME:AddMessage("SCLLV: ".. arg2);
             message("Your version is deprecated!\nYou have: " ..SCL_CONSTS.VERSION.. " Sender has: " ..arg2.. "\nPlease update (see B2B Addons)!")
         elseif(arg1 == "SCLST") then
-            -- arg2 data: "hash,simpleData,simpleTalents,simpleStats"
-            local dataStrings = {string.split(",", arg2)}
+      DEFAULT_CHAT_FRAME:AddMessage("SCLST: " .. arg2);
+      local dataStrings = {string.split(",", arg2)};
+      local characterName = SCL_ExtractCharacterNameFromParameter(dataStrings[1], 2);
+      DEFAULT_CHAT_FRAME:AddMessage("SCLST:CHNAME: ".. characterName);
+      local hashTab = {string.split(":", dataStrings[1])};
+      local baseInfo = dataStrings[2];
+      local telentsSimple = dataStrings[3];
+      local simpleData = dataStrings[4];
             
-            SCL_DeserializeBaseinfoString(arg4, dataStrings[2], dataStrings[1])
-            SCL_DeserializePlayerTalentsSimple(arg4, dataStrings[3])
-            SCL_DeserializePlayerStatsSimple(arg4, dataStrings[4])
+      SCL_DeserializeBaseinfoString(characterName, baseInfo, hashTab[1])
+      SCL_DeserializePlayerTalentsSimple(characterName, telentsSimple)
+      SCL_DeserializePlayerStatsSimple(characterName, simpleData)
         elseif(arg1 == "SCLSH") then
-            SCL_PLAYER[arg4]["HASH_DATE"] = tostring(date("%d.%m.%y %H:%M"))
+      DEFAULT_CHAT_FRAME:AddMessage("SCLSH" .. arg2);
+      -- arg2 := hash[:encoded character name]
+      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 2);
+      SCL_PLAYER[characterName]["HASH_DATE"] = tostring(date("%d.%m.%y %H:%M"))
             SCL_CharList_FillButtons()
         end
     elseif(event == 'VARIABLES_LOADED') then
@@ -1018,16 +1187,18 @@ function SCL_DeserializePlayerItemsStringShort(strItemsString, strPlayer)
 
     local itemStrings = {string.split(":", strItemsString)}
 
-    for i = 1, table.getn(itemStrings) do
+    for i, slotID in ipairs(SCL_CONSTS.SLOTIDSTRING) do      
+        local strRebuiltItemstring = SCL_RebuildItemString("")
 
-        local strRebuiltItemstring = SCL_RebuildItemString(itemStrings[i])
+        if(itemStrings[i] ~= nil) then
+          strRebuiltItemstring = SCL_RebuildItemString(itemStrings[i])
+        end
 
         if not (SCL_PLAYER[strPlayer]) then
             SCL_PLAYER[strPlayer] = {}
         end
 
-        SCL_PLAYER[strPlayer][SCL_CONSTS.SLOTIDSTRING[tostring(i)]] = strRebuiltItemstring
-
+        SCL_PLAYER[strPlayer][slotID] = strRebuiltItemstring
     end
     
 end
@@ -1087,9 +1258,15 @@ function SCL_OnUpdate(self, elapsed)
 
 end
 
-function SCL_SetFrameInfo(strUnitName)
-
+function SCL_SetFrameInfo(strUnitName, eventSource)
     SCL_InspectNameText:SetText(strUnitName);
+    if(strUnitName == eventSource) then
+      SCL_InspectLogedInAsText:SetText("");
+      SCL_InspectLogedInAsTextPredicate:SetText("");
+    else
+      SCL_InspectLogedInAsTextPredicate:SetText("@");
+      SCL_InspectLogedInAsText:SetText(eventSource);
+    end
 
     SCL_InspectLevelText:SetText("Level: " .. SCL_PLAYER[strUnitName]["LEVEL"] .. " " .. SCL_PLAYER[strUnitName]["CLASS"] .. " " .. SCL_PLAYER[strUnitName]["RACE"]);
     SCL_InspectTitleText:SetText("Skillung: " .. SCL_PLAYER[strUnitName]["TALENTSSTRINGNAME"] .. " (" .. SCL_PLAYER[strUnitName]["TALENTSSTRING"] .. ")");
@@ -1116,13 +1293,15 @@ function SCL_SetFrameInfo(strUnitName)
     end
 end
 
-function SCL_ShowCharacterFrame(strPlayer)
-
+function SCL_ShowCharacterFrame(strPlayer, eventSource)
+    if(eventSource == nil or eventSource == "") then
+        eventSource = strPlayer;
+    end
     if(strPlayer == nil or strPlayer == "") then
         return
     end
 
-    SCL_SetFrameInfo(strPlayer);
+    SCL_SetFrameInfo(strPlayer, eventSource);
 
     SCL_ItemSlotButton_Update(SCL_InspectHeadSlot);
     SCL_ItemSlotButton_Update(SCL_InspectNeckSlot);
@@ -1161,7 +1340,7 @@ function SCL_SetGlow(strPlayer)
 		
 		if(not tmpFrame.bc) then SCL_CreateGlowBorder(tmpFrame, point) end
 	
-		local linkItem = SCL_PLAYER[strPlayer][SCL_CONSTS.SLOTIDSTRING[tostring(index)]]
+		local linkItem = SCL_PLAYER[strPlayer][SCL_CONSTS.SLOTIDSTRING[index]]
 		
 		if (linkItem) then
 			local q = select(3, GetItemInfo(linkItem))
@@ -1292,58 +1471,31 @@ function SCL_OnHide()
   PlaySound("igCharacterInfoClose");
 end
 
-function SCL_RebuildPlayerString(strName)
-    if (not SCL_PLAYER[strName]) then
-        return
+function SCL_BuildPlayerString(unitName)
+    local englishClass = "";
+    if(unitName == nil or unitName == "") then
+      unitName = UnitName("player");
+      _, englishClass, _ = UnitClass("player");
+    else
+      englishClass = SCL_PLAYER[unitName]["CLASS"];
     end
 
     local strPlayerItemString = "|cff"
 
-    strPlayerItemString = strPlayerItemString .. SCL_CONSTS.CLASSCOLOR[SCL_PLAYER[strName]["CLASS"]]
-
-    strPlayerItemString = strPlayerItemString .. "|Hitem:1:1:0:0:0:"
-
-    strPlayerItemString = strPlayerItemString .. SCL_CONSTS.VERSION
-    
-    strPlayerItemString = strPlayerItemString .. ":0:0|h["
-
-    strPlayerItemString = strPlayerItemString .. strName
-
-    strPlayerItemString = strPlayerItemString .. "]|h|r"
-
-    return strPlayerItemString
-end
-
-function SCL_BuildPlayerString()
-    local strPlayerItemString = "|cff"
-
-    local localizedClass, englishClass, classIndex = UnitClass("player");
 
     strPlayerItemString = strPlayerItemString .. SCL_CONSTS.CLASSCOLOR[englishClass]
 
-    strPlayerItemString = strPlayerItemString .. "|Hitem:1:1:"
-
-    strPlayerItemString = strPlayerItemString .. "0"
-    
-    strPlayerItemString = strPlayerItemString .. ":"
-    
-    strPlayerItemString = strPlayerItemString .. "0"
-
-    strPlayerItemString = strPlayerItemString ..":"
-    
-    strPlayerItemString = strPlayerItemString .. "0"
-
-    strPlayerItemString = strPlayerItemString .. ":"
+    strPlayerItemString = strPlayerItemString .. "|Hitem:1:1:0:0:0:"
     
     strPlayerItemString = strPlayerItemString .. SCL_CONSTS.VERSION
     
-    strPlayerItemString = strPlayerItemString .. ":"
+    strPlayerItemString = strPlayerItemString .. ":0:"
 
-    strPlayerItemString = strPlayerItemString .. "0"
+    strPlayerItemString = strPlayerItemString .. StringToDecString(UnitName("player"))
     
-    strPlayerItemString = strPlayerItemString .. ":0|h["
+    strPlayerItemString = strPlayerItemString .. "|h["
 
-    strPlayerItemString = strPlayerItemString .. UnitName("player")
+    strPlayerItemString = strPlayerItemString .. unitName
 
     strPlayerItemString = strPlayerItemString .. "]|h|r"
 
@@ -1369,7 +1521,6 @@ function SCL_SerializePlayerBaseinfo()
     strPlayerBaseInfo = strPlayerBaseInfo .. SCL_BaseInfo_Race()
     strPlayerBaseInfo = strPlayerBaseInfo .. SCL_BaseInfo_Sex()
     return strPlayerBaseInfo, (tonumber(UnitLevel("player")))
-
 end
 
 function SCL_BaseInfo_Level()
@@ -1400,7 +1551,7 @@ function SCL_SerializePlayer()
     local itemLevelSum = 0
 
     for i = 1, 19 do
-        local strData, sum_stat, level = SCL_SerializeSlotShort(SCL_CONSTS.SLOTIDSTRING[tostring(i)])
+        local strData, sum_stat, level = SCL_SerializeSlotShort(SCL_CONSTS.SLOTIDSTRING[i])
 
         statSum = statSum + sum_stat
         itemLevelSum = itemLevelSum + level
@@ -1518,38 +1669,62 @@ function SCL_LPad(strValue, strPadChar, iPadLength)
     return tostring(strReturnString)
 end
 
-function SCL_InvitePlayer()
-    if(IsShiftKeyDown()) then
-	
-		strMsg = SCL_SETTINGS["SHIFT_MSG"]
-	
-		if(string.match(string.lower(strMsg), "{n}")) then
-			local strSplitMsg = {string.split("\{n\}", strMsg)}
-	
-			strMsg = string.gsub(strMsg, "{n}", SCL_InspectNameText:GetText())
-		end
-	
-        SendChatMessage(strMsg, "WHISPER", nil, SCL_InspectNameText:GetText())
-        SCL_InspectFrame:Hide()
-    else
-        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", du bist dabei!", "WHISPER", nil, SCL_InspectNameText:GetText())
-        InviteUnit(SCL_InspectNameText:GetText())
-        SCL_InspectFrame:Hide()
+function SCL_InvitePlayerMessage(playerName)
+    if(playerName == nil) then
+      return
     end
+    
+    if(IsShiftKeyDown()) then
+			strMsg = SCL_SETTINGS["SHIFT_MSG"]
+	
+			if(string.match(string.lower(strMsg), "{n}")) then
+				local strSplitMsg = {string.split("\{n\}", strMsg)}
+	
+				strMsg = string.gsub(strMsg, "{n}", playerName)
+			end
+	
+        SendChatMessage(strMsg, "WHISPER", nil, playerName)
+    else
+        SendChatMessage("Hallo " ..playerName.. ", du bist dabei!", "WHISPER", nil, playerName)
+        InviteUnit(playerName)
+    end
+end
+
+function SCL_InvitePlayer()
+    SCL_InvitePlayerMessage(SCL_InspectNameText:GetText());
+    if(SCL_InspectLogedInAsText:GetText() ~= "") then
+      SCL_InvitePlayerMessage(SCL_InspectLogedInAsText:GetText());
+			end
+        SCL_InspectFrame:Hide()
 end
 
 function SCL_RejectPlayer(strReason)
 
     if(strReason == "EQUIPMENT") then
         SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider reicht dein Equipment nicht aus.", "WHISPER", nil, SCL_InspectNameText:GetText())
+      if(SCL_InspectLogedInAsText:GetText() ~= "" and SCL_InspectLogedInAsText:GetText() ~= nil) then
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider reicht dein Equipment nicht aus.", "WHISPER", nil, SCL_InspectLogedInAsText:GetText())
+      end
     elseif(strReason == "ENCHANT") then
         SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider ist dein Equipment nicht ausreichend verzaubert.", "WHISPER", nil, SCL_InspectNameText:GetText())
+      if(SCL_InspectLogedInAsText:GetText() ~= "" and SCL_InspectLogedInAsText:GetText() ~= nil) then
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider ist dein Equipment nicht ausreichend verzaubert.", "WHISPER", nil, SCL_InspectLogedInAsText:GetText())
+      end
     elseif(strReason == "GEMS") then
         SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider ist dein Equipment nicht ausreichend gesockelt.", "WHISPER", nil, SCL_InspectNameText:GetText())
+      if(SCL_InspectLogedInAsText:GetText() ~= "" and SCL_InspectLogedInAsText:GetText() ~= nil) then
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider ist dein Equipment nicht ausreichend gesockelt.", "WHISPER", nil, SCL_InspectLogedInAsText:GetText())
+      end
     elseif(strReason == "CLASS") then
         SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider brauche ich deine Klasse nicht mehr.", "WHISPER", nil, SCL_InspectNameText:GetText())
+      if(SCL_InspectLogedInAsText:GetText() ~= "" and SCL_InspectLogedInAsText:GetText() ~= nil) then
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider brauche ich deine Klasse nicht mehr.", "WHISPER", nil, SCL_InspectLogedInAsText:GetText())
+      end
     else
         SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider passt du nicht in meine Gruppenplanung.", "WHISPER", nil, SCL_InspectNameText:GetText())
+      if(SCL_InspectLogedInAsText:GetText() ~= "" and SCL_InspectLogedInAsText:GetText() ~= nil) then
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider passt du nicht in meine Gruppenplanung.", "WHISPER", nil, SCL_InspectLogedInAsText:GetText())
+      end
     end
 
     SCL_InspectFrame:Hide()
