@@ -302,6 +302,11 @@ function StringFromDecString(decString)
   if (decString == nil) then
     return "";
   end
+  
+  if((decString:len() % 3) ~= 0) then
+    return "";
+  end
+  
   return (decString:gsub('...', function (ccc)
     return string.char(tonumber(ccc, 10))
   end))
@@ -396,7 +401,45 @@ function __genOrderedIndex( t )
     for key in pairs(t) do
         table.insert( orderedIndex, key )
     end
-    table.sort( orderedIndex )
+    table.sort( orderedIndex , function (lhs,rhs) 
+        if(lhs == nil) then
+          return rhs ~= nil;
+        end
+        if(rhs == nil) then
+          return false;
+        end
+        
+        local lhsOwn = t[lhs]['IS_OWN'];
+        local rhsOwn = t[rhs]['IS_OWN'];
+        local lhsDate = t[lhs]['HASH_DATE'];
+        local rhsDate = t[rhs]['HASH_DATE'];
+        
+        if(lhsOwn == nil) then
+          lhsOwn = '0';
+        end
+        if(rhsOwn == nil) then
+          rhsOwn = '0';
+        end
+        if(lhsDate == nil) then
+          lhsDate = '0';
+        end
+        if(rhsDate == nil) then
+          rhsDate = '0';
+        end
+        
+        if(lhsOwn ~= rhsOwn) then
+          if(lhsOwn ~= nil and rhsOwn ~= nil) then
+            return lhsOwn > rhsOwn;
+          end
+          return lhsOwn == '1';
+        end
+        
+        if(lhsDate ~= nil and rhsDate ~= nil) then
+          return lhsDate > rhsDate;
+        end
+        
+        return lhs < rhs;
+      end)
     return orderedIndex
 end
 
@@ -486,6 +529,10 @@ function SCL_OnLoad()
     this:RegisterEvent('VARIABLES_LOADED');
     this:RegisterEvent('CHAT_MSG_ADDON');
     this:RegisterEvent('PLAYER_ENTERING_WORLD');
+    this:RegisterEvent('CHARACTER_POINTS_CHANGED');
+--    this:RegisterEvent('PLAYER_LOGOUT'); -- no item/talent data availiable
+--    this:RegisterEvent('PLAYER_LEAVING_WORLD'); -- no item/talent data availiable
+    this:RegisterEvent('UNIT_INVENTORY_CHANGED');
     
     SLASH_SPIKESCHARLINK1 = "/scl";
     SLASH_SPIKESCHARLINK2 = "/charlink";
@@ -500,7 +547,6 @@ function SCL_OnLoad()
 end
 
 function SCL_SlashCommandHandlerW(msg)
-
     DoEmote("wave", "target")
 
     if(UnitIsPlayer("target")) then
@@ -793,15 +839,15 @@ function SCL_GetNumTalentPoints(iTab)
     return numTalentCount;
 end
 
-function SCL_ExtractCharacterNameFromParameter(text, index)
+function SCL_ExtractCharacterNameFromParameter(text, index, unitName)
   if(text == nil) then
-    return UnitName('player');
+    return unitName;
   end
   local table = {string.split(':', text)};
   local characterName = table[index];
   local appendString = "";
   if(characterName == nil or characterName:len() < 3) then
-    characterName = UnitName('player');
+    characterName = unitName;
   else
     appendString = ":" .. characterName;
   end
@@ -810,16 +856,14 @@ function SCL_ExtractCharacterNameFromParameter(text, index)
 end
 
 function SCL_OnEvent(self, event, ...)
-
-    if (event == 'CHAT_MSG_ADDON') then
+  if (event == 'CHAT_MSG_ADDON') then
     local eventSource = arg4;
 
-        if(arg1 == 'SCLRC') then -- request char
-      DEFAULT_CHAT_FRAME:AddMessage("SCLRC" .. arg2);
-      -- arg2 := hash[:encoded character name]
+    if(arg1 == 'SCLRC') then -- request char
+      -- arg2 := hash[:character name]
       local request = {string.split(':', arg2)};
       local hash = request[1];
-      local characterName, appendString = SCL_ExtractCharacterNameFromParameter(arg2, 2);
+      local characterName, appendString = SCL_ExtractCharacterNameFromParameter(arg2, 2, arg4);
             
       local charHash = "";
       local strSerializedBaseinfo = "";
@@ -852,10 +896,10 @@ function SCL_OnEvent(self, event, ...)
         charHash = SCL_PLAYER[characterName]["E_HASH"] .. appendString;
       end
 
-            if(charHash == tostring(arg2)) then
+      if(charHash == tostring(arg2)) then
         SendAddonMessage("SCLSH", charHash, "WHISPER", eventSource);
-                return;
-            end
+        return;
+      end
 
       local strSerializedPlayerSimpleStats = "";
       local strSerializedPlayerStats = "";
@@ -892,38 +936,34 @@ function SCL_OnEvent(self, event, ...)
       SendAddonMessage("SCLII", strSerializedPlayer, "WHISPER", eventSource);
       SendAddonMessage("SCLIS", strSerializedPlayerStats, "WHISPER", eventSource);
       SendAddonMessage("SCLIB", strSerializedBuffs, "WHISPER", eventSource);
-        elseif(arg1 == "SCLII") then
-      DEFAULT_CHAT_FRAME:AddMessage("SCLII: ".. arg2);
-      -- arg2 := data(:data){19}[:encoded character name]
-      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 20);
+    elseif(arg1 == "SCLII") then
+      -- arg2 := data(:data){19}[:character name]
+      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 20, arg4);
       DEFAULT_CHAT_FRAME:AddMessage("SCLII:CHNAME: ".. characterName);
       SCL_DeserializePlayerItemsStringShort(arg2, characterName);
       SCL_ShowCharacterFrame(characterName, eventSource);
       SCL_CharList_FillButtons();
-        elseif(arg1 == "SCLIS") then
-      DEFAULT_CHAT_FRAME:AddMessage("SCLIS: ".. arg2);
+    elseif(arg1 == "SCLIS") then
       -- arg2 := data(:data){21}[:encoded character name]
-      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 5);
+      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 5, arg4);
       DEFAULT_CHAT_FRAME:AddMessage("SCLIS:CHNAME: ".. characterName);
       
       SCL_DeserializePlayerStats(arg2, characterName)
-        elseif(arg1 == "SCLIB") then
-      DEFAULT_CHAT_FRAME:AddMessage("SCLIB: ".. arg2);
-      -- arg2 := (buff(,buff){0,40})[:encoded character name]
+    elseif(arg1 == "SCLIB") then
+      -- arg2 := (buff(,buff){0,40})[:character name]
       local segments = {string.split(':', arg2)};
       local buffs = segments[1];
-      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 2);
+      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 2, arg4);
       DEFAULT_CHAT_FRAME:AddMessage("SCLIB:CHNAME: ".. characterName);
       
       SCL_DeserializePlayerBuffs(buffs, characterName)
-        elseif(arg1 == "SCLLV") then
-      DEFAULT_CHAT_FRAME:AddMessage("SCLLV: ".. arg2);
+    elseif(arg1 == "SCLLV") then
+      -- arg2 := version
             message("Your version is deprecated!\nYou have: " ..SCL_CONSTS.VERSION.. " Sender has: " ..arg2.. "\nPlease update (see B2B Addons)!")
-        elseif(arg1 == "SCLST") then
-      DEFAULT_CHAT_FRAME:AddMessage("SCLST: " .. arg2);
+    elseif(arg1 == "SCLST") then
+      -- arg2 := hash[:character name],baseinfo,talents,simpleData
       local dataStrings = {string.split(",", arg2)};
-      local characterName = SCL_ExtractCharacterNameFromParameter(dataStrings[1], 2);
-      DEFAULT_CHAT_FRAME:AddMessage("SCLST:CHNAME: ".. characterName);
+      local characterName = SCL_ExtractCharacterNameFromParameter(dataStrings[1], 2, arg4);
       local hashTab = {string.split(":", dataStrings[1])};
       local baseInfo = dataStrings[2];
       local telentsSimple = dataStrings[3];
@@ -932,24 +972,37 @@ function SCL_OnEvent(self, event, ...)
       SCL_DeserializeBaseinfoString(characterName, baseInfo, hashTab[1])
       SCL_DeserializePlayerTalentsSimple(characterName, telentsSimple)
       SCL_DeserializePlayerStatsSimple(characterName, simpleData)
-        elseif(arg1 == "SCLSH") then
-      DEFAULT_CHAT_FRAME:AddMessage("SCLSH" .. arg2);
+    elseif(arg1 == "SCLSH") then
       -- arg2 := hash[:encoded character name]
-      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 2);
+      local characterName = SCL_ExtractCharacterNameFromParameter(arg2, 2, arg4);
       SCL_PLAYER[characterName]["HASH_DATE"] = tostring(date("%d.%m.%y %H:%M"))
             SCL_CharList_FillButtons()
-        end
-    elseif(event == 'VARIABLES_LOADED') then
-        if not(SCL_PLAYER) then
-            SCL_PLAYER = {}
-        end
-		if not(SCL_SETTINGS) then
-			SCL_SETTINGS = {}
-			SCL_SETTINGS["SHIFT_MSG"] = "Hallo {n}, du bist dabei! Bitte sei pünktlich zum Raid online und whispere mich an!"
-		end
-    elseif(event == 'PLAYER_ENTERING_WORLD') then
-        SCL_HookOutfitter()
     end
+  elseif(event == 'VARIABLES_LOADED') then
+    if not(SCL_PLAYER) then
+        SCL_PLAYER = {}
+    end
+	  if not(SCL_SETTINGS) then
+		  SCL_SETTINGS = {}
+		  SCL_SETTINGS["SHIFT_MSG"] = "Hallo {n}, du bist dabei! Bitte sei pünktlich zum Raid online und whispere mich an!"
+	  end
+  elseif(event == 'PLAYER_ENTERING_WORLD') then
+      SCL_HookOutfitter()
+  elseif(event == 'CHARACTER_POINTS_CHANGED' or event == 'PLAYER_LOGOUT' or event == 'PLAYER_LEAVING_WORLD' or event == 'UNIT_INVENTORY_CHANGED') then
+    local baseInfo, baseInfoHash = SCL_SerializePlayerBaseinfo()
+    local talents, talentsHash = SCL_SerializePlayerTalentsSimple()
+    local player, equipHash = SCL_SerializePlayer()
+    local hash = tostring(baseInfoHash) .. tostring(talentsHash) .. tostring(equipHash)
+    local characterName = UnitName('player')
+
+    SCL_DeserializeBaseinfoString(characterName, baseInfo, hash)
+    SCL_DeserializePlayerTalentsSimple(characterName, talents)
+    SCL_DeserializePlayerStatsSimple(characterName, SCL_SerializePlayerStatsSimple())
+
+    SCL_DeserializePlayerItemsStringShort(player, characterName)
+    SCL_DeserializePlayerBuffs(SCL_SerializeBuffs(), characterName)
+    SCL_DeserializePlayerStats(SCL_SerializePlayerStats(), characterName)
+  end
 end
 
 function SCL_DeserializePlayerBuffs(strDataString, strPlayer)
