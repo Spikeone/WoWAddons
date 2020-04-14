@@ -1,0 +1,5 @@
+## Interface: 20400
+## Title : ArpHint
+## Notes: Watches some summon spells and resists on other spells
+## Author: Spikeone @ B2B-WoW
+ArpHint.xml
