@@ -1,0 +1,805 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Script file="SpikesTargetAnnouncer.lua"/>
+
+  <Frame name="STAConfig" hidden="true" movable="true" enableMouse="true" enableKeyboard="true" parent="UIParent">
+    <!--<FrameSkin skinid="dcb143e1-a4ab-4e7c-b934-1efa40101d21" frameid="2d508883-59c2-4f83-ae10-27aaad48391b" />-->
+	<Scripts>
+     <OnLoad>
+        STA_OnLoad();
+     </OnLoad>
+     <OnEvent>
+        --SW_OnEvent(self, event, ...);
+     </OnEvent>
+	 <OnShow>
+		STA_ScanRaid();
+	 </OnShow>
+  </Scripts>
+	
+    <Size>
+      <AbsDimension x="800" y="600" />
+    </Size>
+
+    <Anchors>
+      <Anchor point="CENTER" relativeTo="UIParent">
+        <Offset>
+          <AbsDimension x="0" y="0" />
+        </Offset>
+      </Anchor>
+    </Anchors>
+
+    <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="11" right="12" top="12" bottom="11" />
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="32" />
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="32" />
+      </EdgeSize>
+    </Backdrop>
+
+    <Layers>
+
+      <Layer>
+        <Texture name="$parentTitleBorder" file="Interface\DialogFrame\UI-DialogBox-Header">
+          <Size>
+            <AbsDimension x="300" y="32" />
+          </Size>
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset>
+                <AbsDimension x="0" y="5" />
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0.2" right="0.8" top="0" bottom="0.6" />
+        </Texture>
+        <FontString name="$parentTitleString" inherits="GameFontHighlight" text="SpikesTargetAnnouncer">
+          <Size>
+            <AbsDimension x="300" y="0" />
+          </Size>
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset>
+                <AbsDimension x="0" y="-4" />
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <FontHeight>
+            <AbsValue val="12" />
+          </FontHeight>
+          <Color r="1" g="0.8196079" b="0" />
+          <Shadow>
+            <Color r="0" g="0" b="0" />
+            <Offset>
+              <AbsDimension x="1" y="-1" />
+            </Offset>
+          </Shadow>
+        </FontString>
+      </Layer>
+
+    </Layers>
+
+    <Frames>
+
+	<Button name="STAExitButton">
+		<Size>
+			<AbsDimension x="32" y="32"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPRIGHT">
+				<Offset>
+					<AbsDimension x="-10" y="-10"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<NormalTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Up"/>
+		<PushedTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Down"/>
+		<HighlightTexture alphaMode="ADD" file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight"/>
+		<Scripts>
+			<OnLoad>
+				--this:RegisterForClicks("LeftButtonUp", "RightButtonUp");
+			</OnLoad>
+			<OnClick>
+				STAConfig:Hide();
+			</OnClick>
+		</Scripts>
+	</Button>
+	
+	<Button name="STAMinimizeButton">
+		<Size>
+          <AbsDimension x="32" y="32" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPRIGHT" relativeTo="STAExitButton" relativePoint="TOPRIGHT">
+            <Offset>
+              <AbsDimension x="-30" y="0" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+		<NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Up"/>
+        <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollUp-Down"/>
+        <HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
+		<Scripts>
+			<OnClick>
+				STAConfig:Hide();
+				STA_QuickReport:Show();
+			</OnClick>
+		</Scripts>
+	</Button>
+	
+	<Frame name="STA_ModeConfig">
+		<Size>
+			<AbsDimension x="100" y="50" />
+		</Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="30" y="-30" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentLabel" inherits="GameFontNormal" text="Mode:" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="TOPLEFT" />
+                <Anchor point="BOTTOMRIGHT" />
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+	<Button name="STA_ModeConfigDropdown" inherits="UIDropDownMenuTemplate" id="1">
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="130" y="-40" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				STA_ModeConfigDropdown_OnLoad();
+			</OnLoad>
+			<OnShow>
+				STA_ModeConfigDropdown_OnShow();
+			</OnShow>							
+		</Scripts>
+	</Button>
+	
+	<Button name="STA_OutputForMode">
+        <Size>
+          <AbsDimension x="35" y="35"/>
+        </Size>
+        <Anchors>
+          <Anchor point="LEFT" relativeTo="STA_ModeConfigDropdown" relativePoint="RIGHT"/>
+		  <Offset>
+					<AbsDimension x="150" y="20" />
+				</Offset>
+        </Anchors>
+        <Scripts>
+          <OnEnter>
+            --GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+            --GameTooltip:SetText("Characterlink erzeugen", 1.0,1.0,1.0 );
+          </OnEnter>
+          <OnLeave>
+            --GameTooltip:Hide();
+          </OnLeave>
+          <OnClick>
+            STA_OutputAssignmentsConfig();
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Up"/>
+        <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Down"/>
+        <HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
+      </Button>
+
+	<!-- Totenkopf, rt8 -->
+	<Frame name="STA_TargetSettings1">
+		<Size>
+			<AbsDimension x="32" y="32" />
+		</Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="STA_ModeConfig">
+            <Offset>
+              <AbsDimension x="10" y="-50" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+	
+		<Layers>
+			<Layer>
+				<Texture file="Interface\TargetingFrame\UI-RaidTargetingIcons">
+					<Size>
+						<AbsDimension x="32" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-8" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.75" right="1" top="0.25" bottom="0.5"/>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+	
+	<Button name="STA_TargetSettingsDropdown1" inherits="UIDropDownMenuTemplate" id="2">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="STA_TargetSettings1">
+				<Offset>
+					<AbsDimension x="15" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				--STA_TargetSettingsDropdowns_OnLoad();
+				--UIDropDownMenu_Initialize(this, STA_TargetSettingsDropdowns_InitializeOptions);
+			</OnLoad>
+			<OnShow>
+				STA_TargetSettingsDropdowns_OnShow(this);
+			</OnShow>							
+		</Scripts>
+	</Button>
+	
+	<!-- Kreuz, rt7 -->
+	<Frame name="STA_TargetSettings2">
+		<Size>
+			<AbsDimension x="200" y="50" />
+		</Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="STA_TargetSettings1">
+            <Offset>
+              <AbsDimension x="0" y="-30" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+	
+		<Layers>
+			<Layer>
+				<Texture file="Interface\TargetingFrame\UI-RaidTargetingIcons">
+					<Size>
+						<AbsDimension x="32" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-8" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.5" right="0.75" top="0.25" bottom="0.5"/>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+	
+	<Button name="STA_TargetSettingsDropdown2" inherits="UIDropDownMenuTemplate" id="3">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="STA_TargetSettings2">
+				<Offset>
+					<AbsDimension x="15" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				--STA_TargetSettingsDropdowns_OnLoad();
+				--UIDropDownMenu_Initialize(this, STA_TargetSettingsDropdowns_InitializeOptions);
+			</OnLoad>
+			<OnShow>
+				STA_TargetSettingsDropdowns_OnShow(this);
+			</OnShow>							
+		</Scripts>
+	</Button>
+	
+	<!-- Quadrat, rt6 -->
+	<Frame name="STA_TargetSettings3">
+		<Size>
+			<AbsDimension x="200" y="50" />
+		</Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="STA_TargetSettings2">
+            <Offset>
+              <AbsDimension x="0" y="-40" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+	
+		<Layers>
+			<Layer>
+				<Texture file="Interface\TargetingFrame\UI-RaidTargetingIcons">
+					<Size>
+						<AbsDimension x="32" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-8" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.25" right="0.5" top="0.25" bottom="0.5"/>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+	
+	<Button name="STA_TargetSettingsDropdown3" inherits="UIDropDownMenuTemplate" id="4">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="STA_TargetSettings3">
+				<Offset>
+					<AbsDimension x="15" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				--STA_TargetSettingsDropdowns_OnLoad();
+				--UIDropDownMenu_Initialize(this, STA_TargetSettingsDropdowns_InitializeOptions);
+			</OnLoad>
+			<OnShow>
+				STA_TargetSettingsDropdowns_OnShow(this);
+			</OnShow>							
+		</Scripts>
+	</Button>
+	
+	<!-- Dreieck, rt4 -->
+	<Frame name="STA_TargetSettings4">
+		<Size>
+			<AbsDimension x="200" y="50" />
+		</Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="STA_TargetSettings3">
+            <Offset>
+              <AbsDimension x="0" y="-40" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+	
+		<Layers>
+			<Layer>
+				<Texture file="Interface\TargetingFrame\UI-RaidTargetingIcons">
+					<Size>
+						<AbsDimension x="32" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-8" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.75" right="1" top="0" bottom="0.25"/>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+	
+	<Button name="STA_TargetSettingsDropdown4" inherits="UIDropDownMenuTemplate" id="5">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="STA_TargetSettings4">
+				<Offset>
+					<AbsDimension x="15" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				--STA_TargetSettingsDropdowns_OnLoad();
+				--UIDropDownMenu_Initialize(this, STA_TargetSettingsDropdowns_InitializeOptions);
+			</OnLoad>
+			<OnShow>
+				STA_TargetSettingsDropdowns_OnShow(this);
+			</OnShow>							
+		</Scripts>
+	</Button>
+	
+	<!-- Sonne, rt2 -->
+	<Frame name="STA_TargetSettings5">
+		<Size>
+			<AbsDimension x="200" y="50" />
+		</Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="STA_TargetSettings4">
+            <Offset>
+              <AbsDimension x="0" y="-40" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+	
+		<Layers>
+			<Layer>
+				<Texture file="Interface\TargetingFrame\UI-RaidTargetingIcons">
+					<Size>
+						<AbsDimension x="32" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-8" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.25" right="0.5" top="0" bottom="0.25"/>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+	
+	<Button name="STA_TargetSettingsDropdown5" inherits="UIDropDownMenuTemplate" id="7">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="STA_TargetSettings5">
+				<Offset>
+					<AbsDimension x="15" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				--STA_TargetSettingsDropdowns_OnLoad();
+				--UIDropDownMenu_Initialize(this, STA_TargetSettingsDropdowns_InitializeOptions);
+			</OnLoad>
+			<OnShow>
+				STA_TargetSettingsDropdowns_OnShow(this);
+			</OnShow>							
+		</Scripts>
+	</Button>
+	
+	<!-- Mond, rt5 -->
+	<Frame name="STA_TargetSettings6">
+		<Size>
+			<AbsDimension x="200" y="50" />
+		</Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="STA_TargetSettings5">
+            <Offset>
+              <AbsDimension x="0" y="-40" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+	
+		<Layers>
+			<Layer>
+				<Texture file="Interface\TargetingFrame\UI-RaidTargetingIcons">
+					<Size>
+						<AbsDimension x="32" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-8" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="0.25" top="0.25" bottom="0.5"/>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+	
+	<Button name="STA_TargetSettingsDropdown6" inherits="UIDropDownMenuTemplate" id="8">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="STA_TargetSettings6">
+				<Offset>
+					<AbsDimension x="15" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				--STA_TargetSettingsDropdowns_OnLoad();
+				--UIDropDownMenu_Initialize(this, STA_TargetSettingsDropdowns_InitializeOptions);
+			</OnLoad>
+			<OnShow>
+				STA_TargetSettingsDropdowns_OnShow(this);
+			</OnShow>							
+		</Scripts>
+	</Button>
+	
+	<!-- Sterne, rt1 -->
+	<Frame name="STA_TargetSettings7">
+		<Size>
+			<AbsDimension x="200" y="50" />
+		</Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="STA_TargetSettings6">
+            <Offset>
+              <AbsDimension x="0" y="-40" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+	
+		<Layers>
+			<Layer>
+				<Texture file="Interface\TargetingFrame\UI-RaidTargetingIcons">
+					<Size>
+						<AbsDimension x="32" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-8" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="0.25" top="0" bottom="0.25"/>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+	
+	<Button name="STA_TargetSettingsDropdown7" inherits="UIDropDownMenuTemplate" id="9">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="STA_TargetSettings7">
+				<Offset>
+					<AbsDimension x="15" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				--STA_TargetSettingsDropdowns_OnLoad();
+				--UIDropDownMenu_Initialize(this, STA_TargetSettingsDropdowns_InitializeOptions);
+			</OnLoad>
+			<OnShow>
+				STA_TargetSettingsDropdowns_OnShow(this);
+			</OnShow>							
+		</Scripts>
+	</Button>
+	
+	<!-- Diamant, rt3 -->
+	<Frame name="STA_TargetSettings8">
+		<Size>
+			<AbsDimension x="200" y="50" />
+		</Size>
+        <Anchors>
+          <Anchor point="TOPLEFT" relativeTo="STA_TargetSettings7">
+            <Offset>
+              <AbsDimension x="0" y="-40" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+	
+		<Layers>
+			<Layer>
+				<Texture file="Interface\TargetingFrame\UI-RaidTargetingIcons">
+					<Size>
+						<AbsDimension x="32" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-8" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.5" right="0.75" top="0" bottom="0.25"/>
+				</Texture>
+			</Layer>
+		</Layers>
+	</Frame>
+	
+	<Button name="STA_TargetSettingsDropdown8" inherits="UIDropDownMenuTemplate" id="6">
+		<Anchors>
+			<Anchor point="LEFT" relativeTo="STA_TargetSettings8">
+				<Offset>
+					<AbsDimension x="15" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				--STA_TargetSettingsDropdowns_OnLoad();
+				--UIDropDownMenu_Initialize(this, STA_TargetSettingsDropdowns_InitializeOptions);
+			</OnLoad>
+			<OnShow>
+				STA_TargetSettingsDropdowns_OnShow(this);
+			</OnShow>							
+		</Scripts>
+	</Button>
+	
+    </Frames>
+  </Frame>
+
+  <Frame name="STA_QuickReport" hidden="false" movable="true" enableMouse="true" enableKeyboard="true" parent="UIParent">
+    <Size>
+      <AbsDimension x="140" y="70" />
+    </Size>
+
+    <Anchors>
+      <Anchor point="CENTER" relativeTo="UIParent">
+        <Offset>
+          <AbsDimension x="0" y="0" />
+        </Offset>
+      </Anchor>
+    </Anchors>
+
+    <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" tile="true">
+      <BackgroundInsets>
+        <AbsInset left="11" right="12" top="12" bottom="11" />
+      </BackgroundInsets>
+      <TileSize>
+        <AbsValue val="32" />
+      </TileSize>
+      <EdgeSize>
+        <AbsValue val="32" />
+      </EdgeSize>
+    </Backdrop>
+
+    <Frames>
+
+      <Frame name="STA_QuickReport_Title">
+        <Size>
+          <AbsDimension x="100" y="40" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="16" y="-1" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Layers>
+          <Layer>
+            <FontString name="$parentLabel" inherits="GameFontNormal" text="Quick Report" justifyH="LEFT">
+              <Anchors>
+                <Anchor point="TOPLEFT" />
+                <Anchor point="BOTTOMRIGHT" />
+              </Anchors>
+              <FontHeight>
+                <AbsValue val="10" />
+              </FontHeight>
+              <Color r="1" g="0.8196079" b="0" />
+              <Shadow>
+                <Color r="0" g="0" b="0" />
+                <Offset>
+                  <AbsDimension x="1" y="-1" />
+                </Offset>
+              </Shadow>
+            </FontString>
+          </Layer>
+        </Layers>
+		
+		<Frames>
+		<Button name="STA_QuickReport_Minimize">
+        <Size>
+          <AbsDimension x="16" y="16" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="78" y="-12" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            STAConfig:Show();
+			STA_QuickReport:Hide();
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollEnd-Up"/>
+        <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-ScrollEnd-Down"/>
+        <HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
+		</Button>
+		
+		<Button name="STA_QuickReport_ModeDropdown" inherits="UIDropDownMenuTemplate" id="1">
+		<Size>
+			<AbsDimension x="10" y="10"/>
+		</Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="15" y="-26" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+		<Scripts>
+			<OnLoad>
+				--STA_ModeConfigDropdown_OnLoad();
+				UIDropDownMenu_SetWidth(60);
+			</OnLoad>
+			<OnShow>
+				STA_QuickReport_ModeDropdown_OnShow();
+				UIDropDownMenu_SetWidth(60);
+			</OnShow>							
+		</Scripts>
+	</Button>
+	
+	<Button name="STA_QuickReport_Output">
+        <Size>
+          <AbsDimension x="32" y="32" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="-5" y="-25" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnEnter>
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
+            GameTooltip:SetText("Ausgabe der Zuweisungen", 1.0,1.0,1.0 );
+          </OnEnter>
+          <OnLeave>
+            GameTooltip:Hide();
+          </OnLeave>
+          <OnClick>
+            STA_OutputAssignmentsQuick();
+          </OnClick>
+        </Scripts>
+        <NormalTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Up"/>
+        <PushedTexture file="Interface\ChatFrame\UI-ChatIcon-Chat-Down"/>
+        <HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
+      </Button>
+		
+		<Button name="STA_QuickReport_Close">
+		<Size>
+          <AbsDimension x="20" y="20" />
+        </Size>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset>
+              <AbsDimension x="91" y="-10" />
+            </Offset>
+          </Anchor>
+        </Anchors>
+		<NormalTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Up"/>
+		<PushedTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Down"/>
+		<HighlightTexture alphaMode="ADD" file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight"/>
+		<Scripts>
+			<OnClick>
+				STA_QuickReport:Hide();
+			</OnClick>
+		</Scripts>
+	</Button>
+		
+		</Frames>
+		
+      </Frame>
+	  
+	  
+    </Frames>
+	
+	
+	
+
+    <Scripts>
+      <OnLoad>
+		this:RegisterForDrag("LeftButton");
+		--ArpHint_OnLoad()
+      </OnLoad>
+	  <OnEvent>
+		--ArpHint_OnEvent(self, event, ...)
+	  </OnEvent>
+      <OnDragStart>
+        this:StartMoving();
+        this.isMoving = true;
+      </OnDragStart>
+      <OnDragStop>
+        this:StopMovingOrSizing();
+        this.isMoving = false;
+      </OnDragStop>
+    </Scripts>
+  </Frame>
+  
+  
+</Ui>
