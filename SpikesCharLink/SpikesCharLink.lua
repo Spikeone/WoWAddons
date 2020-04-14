@@ -806,7 +806,7 @@ function SCL_ExtractCharacterNameFromParameter(text, index, unitName)
     return unitName;
   end
   local table = {string.split(':', text)};
-  local characterName = table[index];
+  local characterName = table[index];  
   local appendString = "";
   if(characterName == nil or characterName:len() < 3) then
     characterName = unitName;
@@ -825,7 +825,7 @@ function SCL_OnEvent(self, event, ...)
       -- arg2 := hash[:character name]
       local request = {string.split(':', arg2)};
       local hash = request[1];
-      local characterName, appendString = SCL_ExtractCharacterNameFromParameter(arg2, 2, arg4);
+      local characterName, appendString = SCL_ExtractCharacterNameFromParameter(arg2, 2, UnitName("player"));
             
       local charHash = "";
       local strSerializedBaseinfo = "";
