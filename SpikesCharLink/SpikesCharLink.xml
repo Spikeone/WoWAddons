@@ -816,15 +816,15 @@
               </Anchors>
               <Color r="1.0" g="1.0" b="1.0"/>
             </FontString>
-            <FontString name="SCL_InspectLogedInAsTextPredicate" inherits="GameFontNormalSmall" text="@">
+            <FontString name="SCL_InspectLoggedInAsTextPredicate" inherits="GameFontNormalSmall" text="@">
               <Anchors>
                 <Anchor point="LEFT" relativeTo="SCL_InspectNameText" relativePoint="RIGHT"/>
               </Anchors>
               <Color r="1.0" g="1.0" b="1.0"/>
             </FontString>
-            <FontString name="SCL_InspectLogedInAsText" inherits="GameFontNormalSmall" text="zirafinuistderbeste">
+            <FontString name="SCL_InspectLoggedInAsText" inherits="GameFontNormalSmall" text="zirafinuistderbeste">
               <Anchors>
-                <Anchor point="LEFT" relativeTo="SCL_InspectLogedInAsTextPredicate" relativePoint="RIGHT"/>
+                <Anchor point="LEFT" relativeTo="SCL_InspectLoggedInAsTextPredicate" relativePoint="RIGHT"/>
               </Anchors>
               <Color r="1.0" g="1.0" b="1.0"/>
             </FontString>
