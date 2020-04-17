@@ -948,7 +948,6 @@ function SCL_OnEvent(self, event, ...)
     if(SCL_SETTINGS["START_TIME"] == nil or (SCL_SETTINGS["START_TIME"] + 10) >= tonumber(time(), 10)) then
        return;
     end
-    DEFAULT_CHAT_FRAME:AddMessage("Triggered");
     local baseInfo, baseInfoHash = SCL_SerializePlayerBaseinfo();
     local talents, talentsHash = SCL_SerializePlayerTalentsSimple();
     local player, equipHash = SCL_SerializePlayer();
@@ -962,8 +961,6 @@ function SCL_OnEvent(self, event, ...)
     SCL_DeserializePlayerItemsStringShort(player, characterName);
     SCL_DeserializePlayerBuffs(SCL_SerializeBuffs(), characterName);
     SCL_DeserializePlayerStats(SCL_SerializePlayerStats(), characterName);
-  else
-     DEFAULT_CHAT_FRAME:AddMessage("Event : " .. event);
   end
 end
 
