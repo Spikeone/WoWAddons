@@ -1605,13 +1605,12 @@ function SCL_SerializeSlotShort(strSlotName)
 
     -- step 3: analyze link
     local r,g,b,itemID,enchant,gem1,gem2,gem3,gem4,rndID,H,name = link:match("^|cff(%x%x)(%x%x)(%x%x)|Hitem:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%-?%d+):(%d+)|h%[(.+)%]|h|r$")
-    local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemID)
-    
     -- no item?
     if (itemID == "0" or itemID == nil) then
         return "0", 0, 0;
     end
     
+    local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemID)
     local itemStatSum = 0
     
     if (itemLevel == nil or itemLevel == "0") then
