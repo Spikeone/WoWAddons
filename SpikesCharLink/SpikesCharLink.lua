@@ -939,15 +939,16 @@ function SCL_OnEvent(self, event, ...)
 		  SCL_SETTINGS = {}
 		  SCL_SETTINGS["SHIFT_MSG"] = "Hallo {n}, du bist dabei! Bitte sei pünktlich zum Raid online und whispere mich an!"
 	  end
+    this:RegisterEvent('UNIT_INVENTORY_CHANGED');
+    this:RegisterEvent('CHARACTER_POINTS_CHANGED');
+    SCL_SETTINGS["START_TIME"] = tonumber(time(), 10);
   elseif(event == 'PLAYER_ENTERING_WORLD') then
       SCL_HookOutfitter()
-      this:RegisterEvent('UNIT_INVENTORY_CHANGED');
-      this:RegisterEvent('CHARACTER_POINTS_CHANGED');
-      SCL_SETTINGS["START_TIME"] = tonumber(time(), 10);
   elseif(event == 'UNIT_INVENTORY_CHANGED' or event == 'CHARACTER_POINTS_CHANGED') then
-    if(SCL_SETTINGS["START_TIME"] == nil or (SCL_SETTINGS["START_TIME"] + 15) >= tonumber(time(), 10)) then
+    if(SCL_SETTINGS["START_TIME"] == nil or (SCL_SETTINGS["START_TIME"] + 10) >= tonumber(time(), 10)) then
        return;
     end
+    DEFAULT_CHAT_FRAME:AddMessage("Triggered");
     local baseInfo, baseInfoHash = SCL_SerializePlayerBaseinfo();
     local talents, talentsHash = SCL_SerializePlayerTalentsSimple();
     local player, equipHash = SCL_SerializePlayer();
