@@ -1,0 +1,8 @@
+## Interface: 11302
+## Title: BamModRevived
+## Version: 2
+## Author: Tråpz / Spikeone
+## Notes: BaM!! - Now for classic and with yell option
+## SavedVariables: BamModRevivedDB
+
+BamModRevived.lua
