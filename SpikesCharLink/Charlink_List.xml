@@ -67,9 +67,23 @@
     <HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
   </Button>
 
+  <Button name="SCL_CharList_CharButtonLink_Template" virtual="true">
+    <Size>
+      <AbsDimension x="16" y="16"/>
+    </Size>
+    <Scripts>
+      <OnClick>
+        SCL_CharLinkList_Link(this)
+      </OnClick>
+    </Scripts>
+    <NormalTexture file="Interface\GLUES\CharacterCreate\UI-RotationRight-Big-Up"/>
+    <PushedTexture file="Interface\GLUES\CharacterCreate\UI-RotationRight-Big-Down"/>
+    <HighlightTexture file="Interface\Buttons\ButtonHilight-Round" alphaMode="ADD"/>
+  </Button>
+  
   <Frame name="SCL_CharlinkListFrame" hidden="true" movable="true" enableMouse="true" enableKeyboard="true" parent="UIParent">
     <Size>
-      <AbsDimension x="300" y="560" />
+      <AbsDimension x="315" y="560" />
     </Size>
 
     <Anchors>
@@ -318,7 +332,7 @@
         <Anchors>
           <Anchor point="TOPLEFT">
             <Offset>
-              <AbsDimension x="30" y="-90" />
+              <AbsDimension x="45" y="-90" />
             </Offset>
           </Anchor>
         </Anchors>

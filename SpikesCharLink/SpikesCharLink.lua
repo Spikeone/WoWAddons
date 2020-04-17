@@ -289,7 +289,7 @@ StaticPopupDialogs["SHIFT_ACCEPT_MSG"] = {
   end
 }
   
-function StringToDecString(text)
+local function StringToDecString(text)
   if (text == nil) then
     return "";
   end
@@ -298,7 +298,7 @@ function StringToDecString(text)
   end))
 end
 
-function StringFromDecString(decString)
+local function StringFromDecString(decString)
   if (decString == nil) then
     return "";
   end
@@ -331,15 +331,13 @@ end
 local origChatFrame_OnHyperlinkShow = ChatFrame_OnHyperlinkShow;
 ChatFrame_OnHyperlinkShow = function(...)
     local chatFrame, link, text, button = ...;
-
     local r,g,b,itemID,linkType,C,D,E,clVersion,G,targetbin,name = link:match("^|cff(%x%x)(%x%x)(%x%x)|Hitem:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%-?%d+):(%d+)|h%[(.+)%]|h|r$")
-    local wisperTarget = StringFromDecString(targetbin);
-    if(wisperTarget:len() == 0) then
-      wisperTarget = name
-    end
 
     if(itemID == "1" and linkType == "1") then
-
+        local wisperTarget = StringFromDecString(targetbin);
+        if(wisperTarget:len() == 0) then
+          wisperTarget = name
+        end
         if(tonumber(clVersion) > SCL_CONSTS.VERSION) then -- sender VERSION is higher than local version
             message("Your version is deprecated!\nYou have: " ..SCL_CONSTS.VERSION.. " Sender has: " ..clVersion.. "\nPlease update (see B2B Addons)!")
             return
@@ -491,10 +489,6 @@ function SCL_OnLoad()
     this:RegisterEvent('VARIABLES_LOADED');
     this:RegisterEvent('CHAT_MSG_ADDON');
     this:RegisterEvent('PLAYER_ENTERING_WORLD');
-    this:RegisterEvent('CHARACTER_POINTS_CHANGED');
---    this:RegisterEvent('PLAYER_LOGOUT'); -- no item/talent data availiable
---    this:RegisterEvent('PLAYER_LEAVING_WORLD'); -- no item/talent data availiable
-    this:RegisterEvent('UNIT_INVENTORY_CHANGED');
     
     SLASH_SPIKESCHARLINK1 = "/scl";
     SLASH_SPIKESCHARLINK2 = "/charlink";
@@ -945,22 +939,28 @@ function SCL_OnEvent(self, event, ...)
 		  SCL_SETTINGS = {}
 		  SCL_SETTINGS["SHIFT_MSG"] = "Hallo {n}, du bist dabei! Bitte sei pünktlich zum Raid online und whispere mich an!"
 	  end
+    SCL_SETTINGS["START_TIME"] = tonumber(time(), 10);
+    this:RegisterEvent('UNIT_INVENTORY_CHANGED');
+    this:RegisterEvent('CHARACTER_POINTS_CHANGED');
   elseif(event == 'PLAYER_ENTERING_WORLD') then
-      SCL_HookOutfitter()
-  elseif(event == 'CHARACTER_POINTS_CHANGED' or event == 'PLAYER_LOGOUT' or event == 'PLAYER_LEAVING_WORLD' or event == 'UNIT_INVENTORY_CHANGED') then
-    local baseInfo, baseInfoHash = SCL_SerializePlayerBaseinfo()
-    local talents, talentsHash = SCL_SerializePlayerTalentsSimple()
-    local player, equipHash = SCL_SerializePlayer()
-    local hash = tostring(baseInfoHash) .. tostring(talentsHash) .. tostring(equipHash)
-    local characterName = UnitName('player')
+    SCL_HookOutfitter()
+  elseif(event == 'UNIT_INVENTORY_CHANGED' or event == 'CHARACTER_POINTS_CHANGED') then
+    if(SCL_SETTINGS["START_TIME"] == nil or (SCL_SETTINGS["START_TIME"] + 10) >= tonumber(time(), 10)) then
+       return;
+    end
+    local baseInfo, baseInfoHash = SCL_SerializePlayerBaseinfo();
+    local talents, talentsHash = SCL_SerializePlayerTalentsSimple();
+    local player, equipHash = SCL_SerializePlayer();
+    local hash = tostring(baseInfoHash) .. tostring(talentsHash) .. tostring(equipHash);
+    local characterName = UnitName('player');
 
-    SCL_DeserializeBaseinfoString(characterName, baseInfo, hash)
-    SCL_DeserializePlayerTalentsSimple(characterName, talents)
-    SCL_DeserializePlayerStatsSimple(characterName, SCL_SerializePlayerStatsSimple())
+    SCL_DeserializeBaseinfoString(characterName, baseInfo, hash);
+    SCL_DeserializePlayerTalentsSimple(characterName, talents);
+    SCL_DeserializePlayerStatsSimple(characterName, SCL_SerializePlayerStatsSimple());
 
-    SCL_DeserializePlayerItemsStringShort(player, characterName)
-    SCL_DeserializePlayerBuffs(SCL_SerializeBuffs(), characterName)
-    SCL_DeserializePlayerStats(SCL_SerializePlayerStats(), characterName)
+    SCL_DeserializePlayerItemsStringShort(player, characterName);
+    SCL_DeserializePlayerBuffs(SCL_SerializeBuffs(), characterName);
+    SCL_DeserializePlayerStats(SCL_SerializePlayerStats(), characterName);
   end
 end
 
@@ -1196,23 +1196,20 @@ function SCL_SerializePlayerStats()
 end
 
 function SCL_DeserializePlayerItemsStringShort(strItemsString, strPlayer)
-
     local itemStrings = {string.split(":", strItemsString)}
 
     for i, slotID in ipairs(SCL_CONSTS.SLOTIDSTRING) do      
-        local strRebuiltItemstring = SCL_RebuildItemString("")
-
-        if(itemStrings[i] ~= nil) then
-          strRebuiltItemstring = SCL_RebuildItemString(itemStrings[i])
+        local itemString = itemStrings[i]
+        if(itemString == nil) then
+          itemString = ""
         end
 
         if not (SCL_PLAYER[strPlayer]) then
             SCL_PLAYER[strPlayer] = {}
         end
 
-        SCL_PLAYER[strPlayer][slotID] = strRebuiltItemstring
-    end
-    
+        SCL_PLAYER[strPlayer][slotID] = SCL_RebuildItemString(itemString)
+    end    
 end
 
 function SCL_RebuildItemString(strItemString)
@@ -1273,11 +1270,11 @@ end
 function SCL_SetFrameInfo(strUnitName, eventSource)
     SCL_InspectNameText:SetText(strUnitName);
     if(strUnitName == eventSource) then
-      SCL_InspectLogedInAsText:SetText("");
-      SCL_InspectLogedInAsTextPredicate:SetText("");
+      SCL_InspectLoggedInAsText:SetText("");
+      SCL_InspectLoggedInAsTextPredicate:SetText("");
     else
-      SCL_InspectLogedInAsTextPredicate:SetText("@");
-      SCL_InspectLogedInAsText:SetText(eventSource);
+      SCL_InspectLoggedInAsTextPredicate:SetText("@");
+      SCL_InspectLoggedInAsText:SetText(eventSource);
     end
 
     SCL_InspectLevelText:SetText("Level: " .. SCL_PLAYER[strUnitName]["LEVEL"] .. " " .. SCL_PLAYER[strUnitName]["CLASS"] .. " " .. SCL_PLAYER[strUnitName]["RACE"]);
@@ -1485,7 +1482,7 @@ end
 
 function SCL_BuildPlayerString(unitName)
     local englishClass = "";
-    if(unitName == nil or unitName == "") then
+    if(unitName == nil or unitName == "" or unitName == UnitName('player')) then
       unitName = UnitName("player");
       _, englishClass, _ = UnitClass("player");
     else
@@ -1606,13 +1603,12 @@ function SCL_SerializeSlotShort(strSlotName)
 
     -- step 3: analyze link
     local r,g,b,itemID,enchant,gem1,gem2,gem3,gem4,rndID,H,name = link:match("^|cff(%x%x)(%x%x)(%x%x)|Hitem:(%d+):(%d+):(%d+):(%d+):(%d+):(%d+):(%-?%d+):(%d+)|h%[(.+)%]|h|r$")
-    local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemID)
-    
     -- no item?
     if (itemID == "0" or itemID == nil) then
         return "0", 0, 0;
     end
     
+    local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice = GetItemInfo(itemID)
     local itemStatSum = 0
     
     if (itemLevel == nil or itemLevel == "0") then
@@ -1704,8 +1700,8 @@ end
 
 function SCL_InvitePlayer()
     SCL_InvitePlayerMessage(SCL_InspectNameText:GetText());
-    if(SCL_InspectLogedInAsText:GetText() ~= "") then
-      SCL_InvitePlayerMessage(SCL_InspectLogedInAsText:GetText());
+    if(SCL_InspectLoggedInAsText:GetText() ~= "") then
+      SCL_InvitePlayerMessage(SCL_InspectLoggedInAsText:GetText());
 			end
         SCL_InspectFrame:Hide()
 end
@@ -1714,28 +1710,28 @@ function SCL_RejectPlayer(strReason)
 
     if(strReason == "EQUIPMENT") then
         SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider reicht dein Equipment nicht aus.", "WHISPER", nil, SCL_InspectNameText:GetText())
-      if(SCL_InspectLogedInAsText:GetText() ~= "" and SCL_InspectLogedInAsText:GetText() ~= nil) then
-        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider reicht dein Equipment nicht aus.", "WHISPER", nil, SCL_InspectLogedInAsText:GetText())
+      if(SCL_InspectLoggedInAsText:GetText() ~= "" and SCL_InspectLoggedInAsText:GetText() ~= nil) then
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider reicht dein Equipment nicht aus.", "WHISPER", nil, SCL_InspectLoggedInAsText:GetText())
       end
     elseif(strReason == "ENCHANT") then
         SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider ist dein Equipment nicht ausreichend verzaubert.", "WHISPER", nil, SCL_InspectNameText:GetText())
-      if(SCL_InspectLogedInAsText:GetText() ~= "" and SCL_InspectLogedInAsText:GetText() ~= nil) then
-        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider ist dein Equipment nicht ausreichend verzaubert.", "WHISPER", nil, SCL_InspectLogedInAsText:GetText())
+      if(SCL_InspectLoggedInAsText:GetText() ~= "" and SCL_InspectLoggedInAsText:GetText() ~= nil) then
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider ist dein Equipment nicht ausreichend verzaubert.", "WHISPER", nil, SCL_InspectLoggedInAsText:GetText())
       end
     elseif(strReason == "GEMS") then
         SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider ist dein Equipment nicht ausreichend gesockelt.", "WHISPER", nil, SCL_InspectNameText:GetText())
-      if(SCL_InspectLogedInAsText:GetText() ~= "" and SCL_InspectLogedInAsText:GetText() ~= nil) then
-        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider ist dein Equipment nicht ausreichend gesockelt.", "WHISPER", nil, SCL_InspectLogedInAsText:GetText())
+      if(SCL_InspectLoggedInAsText:GetText() ~= "" and SCL_InspectLoggedInAsText:GetText() ~= nil) then
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider ist dein Equipment nicht ausreichend gesockelt.", "WHISPER", nil, SCL_InspectLoggedInAsText:GetText())
       end
     elseif(strReason == "CLASS") then
         SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider brauche ich deine Klasse nicht mehr.", "WHISPER", nil, SCL_InspectNameText:GetText())
-      if(SCL_InspectLogedInAsText:GetText() ~= "" and SCL_InspectLogedInAsText:GetText() ~= nil) then
-        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider brauche ich deine Klasse nicht mehr.", "WHISPER", nil, SCL_InspectLogedInAsText:GetText())
+      if(SCL_InspectLoggedInAsText:GetText() ~= "" and SCL_InspectLoggedInAsText:GetText() ~= nil) then
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider brauche ich deine Klasse nicht mehr.", "WHISPER", nil, SCL_InspectLoggedInAsText:GetText())
       end
     else
         SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider passt du nicht in meine Gruppenplanung.", "WHISPER", nil, SCL_InspectNameText:GetText())
-      if(SCL_InspectLogedInAsText:GetText() ~= "" and SCL_InspectLogedInAsText:GetText() ~= nil) then
-        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider passt du nicht in meine Gruppenplanung.", "WHISPER", nil, SCL_InspectLogedInAsText:GetText())
+      if(SCL_InspectLoggedInAsText:GetText() ~= "" and SCL_InspectLoggedInAsText:GetText() ~= nil) then
+        SendChatMessage("Hallo " ..SCL_InspectNameText:GetText().. ", leider passt du nicht in meine Gruppenplanung.", "WHISPER", nil, SCL_InspectLoggedInAsText:GetText())
       end
     end
 
