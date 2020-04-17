@@ -61,6 +61,10 @@ function SCL_CharList_BuildButtons(frame)
             pButton = CreateFrame("Button","SCL_CharList_CharButtonDelete_" .. i, frame, "SCL_CharList_CharButtonDelete_Template")
             pButton:SetPoint("TOPLEFT", "SCL_CharList_CharButton_" .. i, -16, 0);
             pButton:Hide()
+            
+            pButton = CreateFrame("Button","SCL_CharList_CharButtonLink_" .. i, frame, "SCL_CharList_CharButtonLink_Template")
+            pButton:SetPoint("TOPLEFT", "SCL_CharList_CharButtonDelete_" .. i, -16, 0);
+            pButton:Hide()
         end
 
 		getglobal("SCL_VersionLabel"):SetText(SCL_GetVersionString())
@@ -95,6 +99,7 @@ function SCL_CharList_FillButtons()
     for i = 1, SCL_CHARLISTCONSTS.MAXLIST do
         getglobal("SCL_CharList_CharButton_"..i):Hide()
         getglobal("SCL_CharList_CharButtonDelete_"..i):Hide()
+            getglobal("SCL_CharList_CharButtonLink_"..i):Hide()
     end
 
     local p = 1
@@ -104,6 +109,9 @@ function SCL_CharList_FillButtons()
 
             getglobal("SCL_CharList_CharButton_"..realIndex):Show()
             getglobal("SCL_CharList_CharButtonDelete_"..realIndex):Show()
+            if(SCL_PLAYER[key]["IS_OWN"] == '1') then
+              getglobal("SCL_CharList_CharButtonLink_"..realIndex):Show()
+            end
 
             getglobal("SCL_CharList_CharButton_"..realIndex.. "Label"):SetText("[" .. key .."]")
 
@@ -138,11 +146,7 @@ function SCL_CharLinkList_Open(fName)
     local name = lLabel:GetText():match("^%[(.+)%]$")
 
     if(SCL_PLAYER[name]) then
-        if(IsShiftKeyDown()) then
-          if(SCL_PLAYER[name]["IS_OWN"] == "1") then
-            SCL_AddCharacterLink(SCL_BuildPlayerString(name));
-          end
-        elseif(SCL_PLAYER[name]["E_HASH"]) then
+        if(SCL_PLAYER[name]["E_HASH"]) then
             SCL_ShowCharacterFrame(name)
             SCL_SetStatsInFrame(name)
             SCL_SetBuffIconsInFrame(name)
@@ -154,6 +158,18 @@ function SCL_CharLinkList_Open(fName)
     else
         SendAddonMessage("SCLRC", "0", "WHISPER", name);
     end
+end
+
+function SCL_CharLinkList_Link(fName)
+    local iIndex = string.match(fName:GetName(),"%d+")
+    local lLabel = getglobal("SCL_CharList_CharButton_" .. tostring(iIndex) .. "Label")
+    local name = lLabel:GetText():match("^%[(.+)%]$")
+
+  if(SCL_PLAYER[name]) then
+    if(SCL_PLAYER[name]["IS_OWN"] == "1") then
+      SCL_AddCharacterLink(SCL_BuildPlayerString(name));
+    end
+  end
 end
 
 function SCL_CharLinkList_Delete(fName)
