@@ -939,11 +939,11 @@ function SCL_OnEvent(self, event, ...)
 		  SCL_SETTINGS = {}
 		  SCL_SETTINGS["SHIFT_MSG"] = "Hallo {n}, du bist dabei! Bitte sei pünktlich zum Raid online und whispere mich an!"
 	  end
+    SCL_SETTINGS["START_TIME"] = tonumber(time(), 10);
     this:RegisterEvent('UNIT_INVENTORY_CHANGED');
     this:RegisterEvent('CHARACTER_POINTS_CHANGED');
-    SCL_SETTINGS["START_TIME"] = tonumber(time(), 10);
   elseif(event == 'PLAYER_ENTERING_WORLD') then
-      SCL_HookOutfitter()
+    SCL_HookOutfitter()
   elseif(event == 'UNIT_INVENTORY_CHANGED' or event == 'CHARACTER_POINTS_CHANGED') then
     if(SCL_SETTINGS["START_TIME"] == nil or (SCL_SETTINGS["START_TIME"] + 10) >= tonumber(time(), 10)) then
        return;
