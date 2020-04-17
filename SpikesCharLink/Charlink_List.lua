@@ -67,8 +67,7 @@ function SCL_CharList_BuildButtons(frame)
             pButton:Hide()
         end
 
-		getglobal("SCL_VersionLabel"):SetText(SCL_GetVersionString())
-		
+    		getglobal("SCL_VersionLabel"):SetText(SCL_GetVersionString())	
     end
 end
 
@@ -99,7 +98,7 @@ function SCL_CharList_FillButtons()
     for i = 1, SCL_CHARLISTCONSTS.MAXLIST do
         getglobal("SCL_CharList_CharButton_"..i):Hide()
         getglobal("SCL_CharList_CharButtonDelete_"..i):Hide()
-            getglobal("SCL_CharList_CharButtonLink_"..i):Hide()
+        getglobal("SCL_CharList_CharButtonLink_"..i):Hide()
     end
 
     local p = 1
