@@ -3,7 +3,7 @@
 -- version is only increased on link change
 SCL_CONSTS.VERSION = 8
 -- changes, minor bugfixed, features
-SCL_CONSTS.VERSION_MINOR = 9
+SCL_CONSTS.VERSION_MINOR = 10
 
 SCL_CONSTS.CLASSCOLOR = {}
 SCL_CONSTS.CLASSCOLOR["DRUID"]      = "ff7d0a"
