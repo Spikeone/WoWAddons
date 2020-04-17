@@ -489,10 +489,6 @@ function SCL_OnLoad()
     this:RegisterEvent('VARIABLES_LOADED');
     this:RegisterEvent('CHAT_MSG_ADDON');
     this:RegisterEvent('PLAYER_ENTERING_WORLD');
-    this:RegisterEvent('CHARACTER_POINTS_CHANGED');
---    this:RegisterEvent('PLAYER_LOGOUT'); -- no item/talent data availiable
---    this:RegisterEvent('PLAYER_LEAVING_WORLD'); -- no item/talent data availiable
-    this:RegisterEvent('UNIT_INVENTORY_CHANGED');
     
     SLASH_SPIKESCHARLINK1 = "/scl";
     SLASH_SPIKESCHARLINK2 = "/charlink";
@@ -945,20 +941,28 @@ function SCL_OnEvent(self, event, ...)
 	  end
   elseif(event == 'PLAYER_ENTERING_WORLD') then
       SCL_HookOutfitter()
-  elseif(event == 'CHARACTER_POINTS_CHANGED' or event == 'UNIT_INVENTORY_CHANGED') then
-    local baseInfo, baseInfoHash = SCL_SerializePlayerBaseinfo()
-    local talents, talentsHash = SCL_SerializePlayerTalentsSimple()
-    local player, equipHash = SCL_SerializePlayer()
-    local hash = tostring(baseInfoHash) .. tostring(talentsHash) .. tostring(equipHash)
-    local characterName = UnitName('player')
+      this:RegisterEvent('UNIT_INVENTORY_CHANGED');
+      this:RegisterEvent('CHARACTER_POINTS_CHANGED');
+      SCL_SETTINGS["START_TIME"] = tonumber(time(), 10);
+  elseif(event == 'UNIT_INVENTORY_CHANGED' or event == 'CHARACTER_POINTS_CHANGED') then
+    if(SCL_SETTINGS["START_TIME"] == nil or (SCL_SETTINGS["START_TIME"] + 15) >= tonumber(time(), 10)) then
+       return;
+    end
+    local baseInfo, baseInfoHash = SCL_SerializePlayerBaseinfo();
+    local talents, talentsHash = SCL_SerializePlayerTalentsSimple();
+    local player, equipHash = SCL_SerializePlayer();
+    local hash = tostring(baseInfoHash) .. tostring(talentsHash) .. tostring(equipHash);
+    local characterName = UnitName('player');
 
-    SCL_DeserializeBaseinfoString(characterName, baseInfo, hash)
-    SCL_DeserializePlayerTalentsSimple(characterName, talents)
-    SCL_DeserializePlayerStatsSimple(characterName, SCL_SerializePlayerStatsSimple())
+    SCL_DeserializeBaseinfoString(characterName, baseInfo, hash);
+    SCL_DeserializePlayerTalentsSimple(characterName, talents);
+    SCL_DeserializePlayerStatsSimple(characterName, SCL_SerializePlayerStatsSimple());
 
-    SCL_DeserializePlayerItemsStringShort(player, characterName)
-    SCL_DeserializePlayerBuffs(SCL_SerializeBuffs(), characterName)
-    SCL_DeserializePlayerStats(SCL_SerializePlayerStats(), characterName)
+    SCL_DeserializePlayerItemsStringShort(player, characterName);
+    SCL_DeserializePlayerBuffs(SCL_SerializeBuffs(), characterName);
+    SCL_DeserializePlayerStats(SCL_SerializePlayerStats(), characterName);
+  else
+     DEFAULT_CHAT_FRAME:AddMessage("Event : " .. event);
   end
 end
 
@@ -1480,7 +1484,7 @@ end
 
 function SCL_BuildPlayerString(unitName)
     local englishClass = "";
-    if(unitName == nil or unitName == "") then
+    if(unitName == nil or unitName == "" or unitName == UnitName('player')) then
       unitName = UnitName("player");
       _, englishClass, _ = UnitClass("player");
     else
