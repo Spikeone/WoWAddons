@@ -1,0 +1,5 @@
+## Interface: 20400
+## Title: Arena Spectator UI
+## Version: 16
+ArenaSpectator.lua
+combatfeedback.lua
