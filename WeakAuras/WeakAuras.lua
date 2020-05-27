@@ -788,7 +788,8 @@ do
 
   local function CheckGCD()
   local event;
-  local startTime, duration = GetSpellCooldown(gcdReference);
+  local gcdRefName = GetSpellCooldown(gcdReference);
+  local startTime, duration = GetSpellCooldown(gcdRefName);
   if(duration and duration > 0) then
     if not(gcdStart) then
     event = "GCD_START";
@@ -865,7 +866,8 @@ do
   end
   
   for id, _ in pairs(spells) do
-    local startTime, duration = GetSpellCooldown(id);
+    local name = GetSpellInfo(id);
+    local startTime, duration = GetSpellCooldown(name);
     startTime = startTime or 0;
     duration = duration or 0;
     local time = GetTime();
@@ -1018,7 +1020,8 @@ do
   
   if not(spells[id]) then
     spells[id] = true;
-    local startTime, duration = GetSpellCooldown(id);
+    local name = GetSpellInfo(id);
+    local startTime, duration = GetSpellCooldown(name);
     startTime = startTime or 0;
     duration = duration or 0;
     if(duration > 1.51) then
