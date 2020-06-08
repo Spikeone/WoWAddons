@@ -134,7 +134,6 @@ function KalecgosDualHP_OnUpdate(self, elapsed)
     end
 
     if(SCAN_TIMER + elapsed > 1) then
-        DEFAULT_CHAT_FRAME:AddMessage("Scan!")
         KalecgosDualHP_Scan();
         SCAN_TIMER = 0;
     else
