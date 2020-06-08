@@ -1,0 +1,8 @@
+## Interface: 20400
+## Title: KalecgosDualHP
+## Notes: bla bla blub
+## Version: 0.9.9.6
+## Author: Verplant @ Frostwolf
+## LoadOnDemand: 0
+## SavedVariablesPerCharacter: khp_vars
+KalecgosDualHP.xml

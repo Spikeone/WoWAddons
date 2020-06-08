@@ -1,0 +1,162 @@
+			<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+
+	<Script file="KalecgosDualHP.LUA"/>
+	<Frame name="KalecgosFrame" enableMouse="true"  parent="UIParent">
+		<Size>
+			<AbsDimension x="150" y="76"/>
+		  </Size>
+		  <Anchors>
+			<Anchor point = "CENTER"/>
+		</Anchors>
+		<TitleRegion setAllPoints="true"/>
+		<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+      <EdgeSize>
+         <AbsValue val="16" />
+      </EdgeSize>
+      <TileSize>
+         <AbsValue val="16" />
+      </TileSize>
+      <BackgroundInsets>
+         <AbsInset left="5" right="5" top="5" bottom="5" />
+      </BackgroundInsets>
+     </Backdrop>
+     <Scripts>
+      <OnLoad>
+      KalecgosDualHP_onload();
+      </OnLoad>
+      <OnUpdate>
+      KalecgosDualHP_OnUpdate();
+      </OnUpdate>
+      <OnEvent>
+        KalecgosDualHP_Event(event);
+      </OnEvent>
+      <OnLeave>
+        save_position();
+      </OnLeave>
+		</Scripts>
+		<Frames>	
+		
+		<StatusBar name="$parent_dragonHPBar" inherits="SecureTargetButtonTemplate">
+        <Size>
+          <AbsDimension x="120" y="14"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-20"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+    <OnMouseDown >
+      </OnMouseDown >
+					
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <Layers>
+							<Layer>
+								<FontString name="$parent_dragonHPText" inherits="GameFontNormal"	text="00%">
+								<Color r="0" g="1" b="0.3" />
+									<Anchors>
+										<Anchor point="TOP">
+                      <Offset>
+                        <AbsDimension x="0" y="-1"/>
+                      </Offset>
+                    </Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="$parent_dragonName" inherits="GameFontNormal"	text="Dragon">
+								<Color r="0" g="1" b="0.3" />
+									<Anchors>
+										<Anchor point="TOP">
+                      <Offset>
+                        <AbsDimension x="0" y="15"/>
+                      </Offset>
+                    </Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+      </StatusBar>
+      <Button name="$parent_dragonHPButton" inherits="SecureActionButtonTemplate">
+        <Size>
+          <AbsDimension x="150" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-20"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+		<Scripts>
+		</Scripts>
+	</Button>
+      	
+      	
+            		<StatusBar name="$parent_deamonHPBar" inherits="TextStatusBar">
+        <Size>
+           <AbsDimension x="120" y="14"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-56"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnLoad>
+          </OnLoad>
+           <OnEnter>
+					</OnEnter>
+					<OnLeave>
+					</OnLeave>
+          <OnMouseUp>
+          </OnMouseUp>
+        </Scripts>
+        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <Layers>
+							<Layer>
+								<FontString name="$parent_deamonHPText" inherits="GameFontNormal"	text="00%">
+								<Color r="0" g="1" b="0.3" />
+									<Anchors>
+										<Anchor point="TOP">
+                      <Offset>
+                        <AbsDimension x="0" y="-1"/>
+                      </Offset>
+                    </Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="$parent_deamonHPText" inherits="GameFontNormal"	text="Deamon">
+								<Color r="0" g="1" b="0.3" />
+									<Anchors>
+										<Anchor point="TOP">
+                      <Offset>
+                        <AbsDimension x="0" y="15"/>
+                      </Offset>
+                    </Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+      </StatusBar>
+			 <Button name="$parent_deamonHPButton" >
+        <Size>
+          <AbsDimension x="150" y="16"/>
+        </Size>
+        <Anchors>
+          <Anchor point="TOP">
+            <Offset>
+              <AbsDimension x="0" y="-56"/>
+            </Offset>
+          </Anchor>
+        </Anchors>
+		<Scripts>
+		</Scripts>
+	</Button>
+		</Frames>
+	</Frame>	
+</Ui>
