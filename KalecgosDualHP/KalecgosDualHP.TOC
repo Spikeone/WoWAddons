@@ -1,8 +1,8 @@
 ## Interface: 20400
 ## Title: KalecgosDualHP
-## Notes: bla bla blub
-## Version: 0.9.9.6
-## Author: Verplant @ Frostwolf
+## Notes: Fixed logic, added raidscan
+## Version: 1.0
+## Author: Verplant @ Frostwolf, Spikeone @ B2B-WoW
 ## LoadOnDemand: 0
 ## SavedVariablesPerCharacter: khp_vars
 KalecgosDualHP.xml
