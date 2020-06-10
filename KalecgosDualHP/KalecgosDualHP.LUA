@@ -137,7 +137,9 @@ end
 function KalecgosDualHP_FormatValue(iValue, fPercent)
     local strReturn = "";
 
-    if(khp_vars.format == "vp") then
+    if(iValue == 1) then
+        strReturn = "Banish"
+    elseif(khp_vars.format == "vp") then
         strReturn = "" .. round((iValue / 1000), 0) .. "k (" .. round(fPercent, 2) .. "%)"
     elseif(khp_vars.format == "v") then
         strReturn = "" .. round((iValue / 1000), 0) .. "k"
@@ -175,7 +177,7 @@ function KalecgosDualHP_OnUpdate(self, elapsed)
     if(GUID_DRAGON == UnitGUID("target")) then
         local dragon_hp_temp = UnitHealth("target");
     
-        if(tonumber(dragon_hp - dragon_hp_temp) > 5000 or tonumber(dragon_hp - dragon_hp_temp) < -5000) then
+        if(tonumber(dragon_hp - dragon_hp_temp) > 5000 or tonumber(dragon_hp - dragon_hp_temp) < -5000 or (dragon_hp_temp == 1 and dragon_hp~= 1)) then
             KalecgosDualHP_UpdateVisuals("Dragon", dragon_hp_temp);
             SendAddonMessage("KHP_dragon", dragon_hp_temp, "RAID" );
         end
@@ -184,13 +186,13 @@ function KalecgosDualHP_OnUpdate(self, elapsed)
     if(GUID_DEAMON == UnitGUID("target")) then
         local deamon_hp_temp = UnitHealth("target");
     
-        if(tonumber(deamon_hp - deamon_hp_temp) > 5000 or tonumber(deamon_hp - deamon_hp_temp) < -5000) then
+        if(tonumber(deamon_hp - deamon_hp_temp) > 5000 or tonumber(deamon_hp - deamon_hp_temp) < -5000 or (deamon_hp_temp == 1 and deamon_hp~= 1)) then
             KalecgosDualHP_UpdateVisuals("Deamon", deamon_hp_temp);
             SendAddonMessage("KHP_deamon", deamon_hp_temp, "RAID" );
         end
     end
 
-    if(NAME_HUMAN == UnitName("target") and UnitIsFriend("player","target")) then
+    if(NAME_HUMAN == UnitName("target") and UnitIsFriend("player","target") and GUID_DRAGON ~= UnitGUID("target")) then
         local human_hp_temp = UnitHealth("target");
     
         if(tonumber(human_hp - human_hp_temp) > 5000 or tonumber(human_hp - human_hp_temp) < -5000) then
@@ -268,7 +270,7 @@ function KalecgosDualHP_OnEvent(event)
     end
 
     if (event == 'COMBAT_LOG_EVENT_UNFILTERED' and dragonSeen == false) then
-        if(arg3 == GUID_DRAGON or arg3 == GUID_DEAMON) then
+        if(arg3 == GUID_DRAGON or arg3 == GUID_DEAMON or arg4 == NAME_DRAGON or arg6 == GUID_DRAGON or arg7 == NAME_DRAGON) then
             dragonSeen = true;
         end
     end
@@ -280,7 +282,6 @@ function KalecgosDualHP_OnEvent(event)
 
         -- this is not broadcasted as one can't trust it
         if(arg6 ~= GUID_DRAGON and arg7 == NAME_HUMAN) then
-            DEFAULT_CHAT_FRAME:AddMessage("guid and name as expected")
             if(arg2 == "SPELL_HEAL" or arg2 == "SPELL_PERIODIC_HEAL") then
                 KalecgosDualHP_UpdateVisuals("Human", human_hp + tonumber(arg12));
             elseif(arg2 == "SWING_DAMAGE") then
