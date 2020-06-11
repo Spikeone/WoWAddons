@@ -305,9 +305,9 @@ end
 
 function addon_toggle()
     if(khp_vars.show_hide == "Show") then
-        KalecgosFrame:Hide();
+        addon_off();
     else
-        KalecgosFrame:Show();
+        addon_on();
     end
 end
 
