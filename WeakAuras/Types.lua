@@ -1099,6 +1099,7 @@ WeakAuras.cast_types = {
 };
 WeakAuras.sound_types = {
   ["Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BatmanPunch.mp3"] = "Batman Punch",
+  ["Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Beware.ogg"] = "Beware",
   ["Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BikeHorn.mp3"] = "Bike Horn",
   ["Interface\\AddOns\\WeakAuras\\Media\\Sounds\\BoxingArenaSound.mp3"] = "Boxing Arena Gong",
   ["Interface\\AddOns\\WeakAuras\\Media\\Sounds\\Bleat.mp3"] = "Bleat",
