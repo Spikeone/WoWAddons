@@ -63,7 +63,7 @@ end
 function UnitAura (unit, indexOrName, rank, filter)
   local newrank = (rank and string.gsub(string.gsub(string.gsub(string.gsub(string.gsub(string.gsub(rank, "|HELPFUL", ""), "HELPFUL|", ""), "HELPFUL", ""), "|HARMFUL", ""), "HARMFUL|", ""), "HARMFUL", "")) or nil;
   local newfilter = (filter and string.gsub(string.gsub(string.gsub(string.gsub(string.gsub(string.gsub(filter, "|HELPFUL", ""), "HELPFUL|", ""), "HELPFUL", ""), "|HARMFUL", ""), "HARMFUL|", ""), "HARMFUL", "")) or nil;
-
+  
   if ((filter and string.find(filter, "HARMFUL")) or ((rank and string.find(rank, "HARMFUL")) and filter == nil)) then
     debuffType = "HARMFUL";
   elseif ((filter and string.find(filter, "HELPFUL")) or ((rank and string.find(rank, "HARMFUL")) and filter == nil)) then
@@ -79,7 +79,7 @@ function UnitAura (unit, indexOrName, rank, filter)
     x = 1;
     while (name ~= nil) do
       if ((name == indexOrName or x == indexOrName) and (rank == nil or string.find(rank, "HARMFUL") or string.find(rank, "HELPFUL") or rank == r)) then
-        return name, r, icon, count, debuffType, duration, GetTime() + (expirationTime or 0)
+        return name, r, icon, count, debuffType, (duration or 0), GetTime() + (expirationTime or 0)
       end
       x = x + 1;
       name, r, icon, count, duration, expirationTime = UnitBuff(unit, x, newfilter);
@@ -91,7 +91,7 @@ function UnitAura (unit, indexOrName, rank, filter)
     x = 1;
     while (name ~= nil) do
       if ((name == indexOrName or x == indexOrName) and (rank == nil or string.find(rank, "HARMFUL") or string.find(rank, "HELPFUL") or rank == r)) then
-        return name, r, icon, count, debuffType, duration, GetTime() + (expirationTime or 0)
+        return name, r, icon, count, debuffType, (duration or 0), GetTime() + (expirationTime or 0)
       end
       x = x + 1;
       name, r, icon, count, _, duration, expirationTime = UnitDebuff(unit, x, newfilter);

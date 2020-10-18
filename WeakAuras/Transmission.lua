@@ -599,7 +599,8 @@ function WeakAuras.ShowDisplayTooltip(data, children, icon, icons, import, compr
             end
             importbutton = ItemRefTooltip.WeakAuras_Tooltip_Button;
             importbutton:SetPoint("BOTTOMRIGHT", ItemRefTooltip, "BOTTOMRIGHT", -20, 8);
-            importbutton:SetSize(100,22);
+            importbutton:SetWidth(100);
+            importbutton:SetHeight(22);
             if not WeakAurasSaved.import_disabled then
 
                 importbutton:SetText("Import");

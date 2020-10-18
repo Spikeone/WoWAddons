@@ -305,7 +305,7 @@ do
   -- Extra check needed, because aura_cache can potentially contain data of two different triggers with different settings!
   local function TestNonUniformSettings(acEntry, data)
   if(data.remFunc) then
-    if not(data.remFunc(acEntry.expirationTime - acEntry.duration)) then
+    if not(data.remFunc(acEntry.expirationTime - GetTime())) then
     return false
     end
   end
@@ -405,12 +405,12 @@ do
     if(durationInfo) then
       -- Need to check if cached  data conforms to trigger
       if(durationInfo.expirationTime < bestExpirationTime and TestNonUniformSettings(durationInfo, data)) then
-      bestDuration = durationInfo.duration;
-      bestExpirationTime = durationInfo.expirationTime;
-      bestName = durationInfo.name;
-      bestIcon = durationInfo.icon;
-      bestCount = durationInfo.count;
-      bestSpellId = durationInfo.spellId;
+        bestDuration = durationInfo.duration;
+        bestExpirationTime = durationInfo.expirationTime;
+        bestName = durationInfo.name;
+        bestIcon = durationInfo.icon;
+        bestCount = durationInfo.count;
+        bestSpellId = durationInfo.spellId;
       end
     end
     end
@@ -2493,11 +2493,12 @@ function WeakAuras.ScanAuras(unit)
         -- Fetch aura data
         name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellId = UnitAura(unit, checkname, nil, filter);
         checkPassed = false;
-        
+
         -- Aura conforms to trigger options?
         if(name and ((not data.count) or data.count(count)) and (data.ownOnly ~= false or not UnitIsUnit("player", unitCaster))) then
         remaining = expirationTime - time;
         checkPassed = true;
+
         if(data.remFunc) then
           if not(data.remFunc(remaining)) then
           checkPassed = false;
@@ -2518,7 +2519,7 @@ function WeakAuras.ScanAuras(unit)
           db.tempIconCache[name] = icon;
         
           -- Update aura cache (and clones)
-          if(aura_object and not data.specificUnit) then         
+          if(aura_object and not data.specificUnit) then    
             local changed = aura_object:AssertAura(checkname, uGUID, duration, expirationTime, name, icon, count, casGUID, spellId);
             if(data.groupclone and changed) then
               groupcloneToUpdate[uGUID] = GetUnitName(unit, true);
@@ -2531,12 +2532,12 @@ function WeakAuras.ScanAuras(unit)
         
         -- Aura does not conforms to trigger
         elseif(aura_object and not data.specificUnit) then
-        -- Update aura cache (and clones)
-        
-        local changed = aura_object:DeassertAura(checkname, uGUID);
-        if(data.groupclone and changed) then
-          groupcloneToUpdate[uGUID] = GetUnitName(unit, true);
-        end
+          -- Update aura cache (and clones)
+          
+          local changed = aura_object:DeassertAura(checkname, uGUID);
+          if(data.groupclone and changed) then
+            groupcloneToUpdate[uGUID] = GetUnitName(unit, true);
+          end
         end
       end
       
@@ -2547,7 +2548,7 @@ function WeakAuras.ScanAuras(unit)
         -- Query count from aura cache
         local aura_count, max = aura_object:GetNumber(data.names, data), aura_object:GetMaxNumber();
         local satisfies_count = data.group_count(aura_count, max);
-        
+
         if(data.hideAlone and not IsInGroup()) then
           satisfies_count = false;
         end
