@@ -13,7 +13,7 @@
 ## X-Category: Interface Enhancements
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## SavedVariables: WeakAurasSaved, BuffLibDB
+## SavedVariables: WeakAurasSaved, BuffLib2DB
 ## OptionalDeps: Ace3, LibCompress, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, Masque, GTFO, LibChatAnims
 ## X-Curse-Packaged-Version: 2.0.10
 ## X-Curse-Project-Name: WeakAuras 2

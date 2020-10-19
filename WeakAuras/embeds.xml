@@ -17,4 +17,5 @@
 	<Include file="libs\AceGUI-3.0-SharedMediaWidgets\widget.xml"/>
 	<Include file="libs\LibCompress\lib.xml"/>
 	<Script file="libs\LibDataBroker-1.1\LibDataBroker-1.1.lua"/>
+	<Script file="libs\ChatThrottleLib\ChatThrottleLib.lua"/>
 </Ui>

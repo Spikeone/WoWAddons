@@ -1,5 +1,5 @@
 BuffLibDebug = 0
-BuffLibDB = BuffLibDB or { sync = true, buffs = true, debuffs = true}
+BuffLib2DB = BuffLib2DB or { sync = true, buffs = true, debuffs = true}
 local function log(msg)
 	if BuffLibDebug == 1 then
 		DEFAULT_CHAT_FRAME:AddMessage(msg)
@@ -33,6 +33,13 @@ local _UnitBuff = UnitBuff
 local _UnitDebuff = UnitDebuff
 local _SetUnitDebuff = GameTooltip.SetUnitDebuff
 local _SetUnitBuff = GameTooltip.SetUnitBuff
+local SendAddonMessage = _G.SendAddonMessage;
+if (ChatThrottleLib) then
+	SendAddonMessage = function (...)
+		ChatThrottleLib:SendAddonMessage("NORMAL", ...);
+	end
+end
+
 
 local function firstToUpper(str)
 	if (str~=nil) then
@@ -58,7 +65,7 @@ BuffLib:RegisterEvent("PLAYER_LOGIN")
 BuffLib:SetScript("OnUpdate", function()
 	-- only sync every second
 	local t = GetTime();
-	if (BuffLibDB.sync == true and t - lastSync >= 1 and #syncList > 0) then
+	if (BuffLib2DB.sync == true and t - lastSync >= 1 and #syncList > 0) then
 		BuffLib:Sync();
 	end
 end);
@@ -230,7 +237,7 @@ function BuffLib:PLAYER_ENTERING_WORLD(...)
 	self:RegisterEvent("CHAT_MSG_ADDON")
 	
 	-- We do not need to sync each aura
-	--if BuffLibDB.sync == true then
+	--if BuffLib2DB.sync == true then
 	--	self:RegisterEvent("UNIT_AURA")
 	--end
 	
@@ -295,16 +302,14 @@ function BuffLib:COMBAT_LOG_EVENT_UNFILTERED(...)
 	-- the self:UNIT_AURA() sends sync messages
 	-- check if we need to sync
 	local needToSync = false;
-	if BuffLibDB.sync == true then
+	if BuffLib2DB.sync == true then
 		if (eventType == "SPELL_AURA_REFRESH") then
 			needToSync = true;
-		elseif spellName == GetSpellInfo(20243) then -- Devestate
-			needToSync = true;
-			spellID = 11597; -- Update sunder armor
 		end
 	end
 
 	if needToSync then
+		-- DEFAULT_CHAT_FRAME:AddMessage("ID: " .. spellID .. " Name: " .. spellName .. " Event: " .. eventType);
 		-- mark spell for sync
 		table.insert(syncList, {spellID, destGUID});
 
@@ -503,22 +508,22 @@ function BuffLib:CreateOptions()
 	     'name', 'Synchronize timers',
 	     'description', 'Turns off synchronizing timers with your teammates. Could prevent lags.',
 	     'default', false,
-	     'getFunc', function() return BuffLibDB.sync end,
-		 'setFunc', function(value) BuffLibDB.sync = value BuffLib:PLAYER_ENTERING_WORLD() end)
+	     'getFunc', function() return BuffLib2DB.sync end,
+		 'setFunc', function(value) BuffLib2DB.sync = value BuffLib:PLAYER_ENTERING_WORLD() end)
 		 
 	local buff = panel:MakeToggle(
 		'name', 'Show Buff-Timers',
 		'description', 'Turns off support from Bufflib for buff spells',
 		'default', false,
-		'getFunc', function() return BuffLibDB.buffs end,
-		'setFunc', function(value) BuffLibDB.buffs = value end)
+		'getFunc', function() return BuffLib2DB.buffs end,
+		'setFunc', function(value) BuffLib2DB.buffs = value end)
 
 	local debuff = panel:MakeToggle(
 		'name', 'Show Debuff-Timers',
 		'description', 'Turns off support from BuffLib for debuff spells',
 		'default', false,
-		'getFunc', function() return BuffLibDB.debuffs end,
-		'setFunc', function(value) BuffLibDB.debuffs = value end)
+		'getFunc', function() return BuffLib2DB.debuffs end,
+		'setFunc', function(value) BuffLib2DB.debuffs = value end)
 	     
 	sync:SetPoint("TOPLEFT",subText,"TOPLEFT",16,-32)
 	buff:SetPoint("TOPLEFT",sync,"TOPLEFT",0, -32)
@@ -533,7 +538,7 @@ end
 
 function UnitBuff(unitID, index, castable)
 	local name, rank, icon, count, duration, timeLeft, isMine = _UnitBuff(unitID, index, castable)
-	if not name or not BuffLibDB.buffs then return name, rank, icon, count, duration, timeLeft, isMine end
+	if not name or not BuffLib2DB.buffs then return name, rank, icon, count, duration, timeLeft, isMine end
 	--local EBFrame = getglobal(name.."_"..UnitGUID(unitID))
 	local EBFrame
 	if BuffLib.guids and BuffLib.guids[UnitGUID(unitID)] then
@@ -572,13 +577,12 @@ end
 
 function UnitDebuff(unitID, index, castable)
 	local name, rank, icon, count, debuffType, duration, timeLeft, isMine = _UnitDebuff(unitID, index, castable)
-	if not name or not BuffLibDB.debuffs then return name, rank, icon, count, debuffType, duration, timeLeft, isMine end
+	if not name or not BuffLib2DB.debuffs then return name, rank, icon, count, debuffType, duration, timeLeft, duration ~= nil end
 	--local EBFrame = getglobal(name.."_"..UnitGUID(unitID))
 	local EBFrame
 	if BuffLib.guids and BuffLib.guids[UnitGUID(unitID)] then
 		EBFrame = BuffLib.guids[UnitGUID(unitID)][name]
 	end
-	
 	
 	if timeLeft ~= nil or duration ~= nil then
 		if unitID ~= "player" then
