@@ -55,11 +55,12 @@ local function wipe(t)
 	end
 end
 
-local BuffLib = CreateFrame("Frame", nil, UIParent);
+BuffLib = CreateFrame("Frame", "BuffLib", UIParent);
 function BuffLib:OnEvent(event, ...) -- functions created in "object:method"-style have an implicit first parameter of "self", which points to object
 	self[event](self, ...) -- route event parameters to LoseControl:event methods
 end
 BuffLib:SetScript("OnEvent", BuffLib.OnEvent)
+BuffLib:RegisterEvent("PLAYER_TARGET_CHANGED")
 BuffLib:RegisterEvent("PLAYER_ENTERING_WORLD")
 BuffLib:RegisterEvent("PLAYER_LOGIN")
 BuffLib:SetScript("OnUpdate", function()
@@ -104,6 +105,49 @@ GameTooltip.SetUnitDebuff = function(f, unit, id, dispellable)
 	end
 
 	f:Show();
+end
+
+function BuffLib:PLAYER_TARGET_CHANGED(...)
+	if (UnitGUID("target") == nil or UnitGUID("target") == UnitGUID("player")) then
+		return
+	end
+
+	if (not UnitInParty("target")) then
+		return
+	end
+
+	if (BuffLib2DB.buffs) then
+		for i = 1, 40 do
+			local name, _, _, _, duration, timeLeft = UnitBuff("target", i);
+			if (name == nil) then
+				break;
+			end
+
+			if (duration == nil) then
+				self:RequestTargetAuraRefresh();
+				return;
+			end
+		end
+	end
+
+
+	if (BuffLib2DB.debuffs) then
+		for i = 1, 40 do
+			local name, _, _, _, _, duration, timeLeft = UnitDebuff("target", i);
+			if (name == nil) then
+				break;
+			end
+
+			if (duration == nil) then
+				self:RequestTargetAuraRefresh();
+				return;
+			end
+		end
+	end
+end
+
+function BuffLib:RequestTargetAuraRefresh()
+	SendAddonMessage("BuffLib2-R", "RefreshAuras", "WHISPER", UnitName("target"));
 end
 
 function BuffLib:InitDR(destGUID, spellID, event)
@@ -166,6 +210,7 @@ function BuffLib:CreateFrames(destGUID, spellName, spellID)
 		self.guids[destGUID][spellName] = {}
 		self.guids[destGUID][spellName].startTime = GetTime()
 		self.guids[destGUID][spellName].endTime = self.abilities[spellID]*diminished
+		self.guids[destGUID][spellName].count = 1
 	end
 end
 
@@ -193,7 +238,7 @@ function BuffLib:UpdateFrames(destGUID, spellName, spellID)
 end
 
 function BuffLib:HideFrames(destGUID, spellName, spellID)
-	if self.guids[destGUID] and self.guids[destGUID][spellName] and self.abilities[spellID] then
+	if self.guids[destGUID] and self.guids[destGUID][spellName] and self.abilities[spellID] and self.guids[destGUID][spellName].count == 0 then
 		-- combatLog
 		self.guids[destGUID][spellName].startTime = 0
 		self.guids[destGUID][spellName].endTime = 0
@@ -210,37 +255,63 @@ end
 function BuffLib:PLAYER_ENTERING_WORLD(...)
 	-- clear frames, just to be sure
 	if type(self.guids) == "table" then
+		local t = GetTime();
 		for k,v in pairs(self.guids) do
-			for ke,va in pairs(self.abilities) do
-				local frame = getglobal(ke.."_"..k)
-				if frame then
-					frame = nil
+			local all = true;
+			for spellName,spellData in pairs(v) do
+				if (spellData.timeLeft ~= nil) then
+					if (t - v.getTime > v.timeLeft) then
+						self.guids[k][spellName] = nil;
+						all = false;
+					end
+				elseif (spellData.endTime <= t) then
+					self.guids[k][spellName] = nil
+					all = false;
 				end
 			end
-			self.guids[k]=nil
+
+			if (all) then
+				self.guids[k] = nil;
+			end
 		end
-	end
-	
-	self.guids = {}
-	self.abilities = {}
-	for k,v in pairs(BuffLibabilityIDs) do
-		local name = GetSpellInfo(k);
-		if (name) then
-			self.abilities[k]=v;
-		else
-			DEFAULT_CHAT_FRAME:AddMessage(k);
+	else
+		self.guids = {}
+		self.abilities = {}
+		self.reverseLookup = {}
+
+		_G["SLASH_BUFFLIBZ1"] = "/bldump";
+		_G.SlashCmdList["BUFFLIBZ"] = function()
+			BuffLib:PrintOwnBuffs();
 		end
+
+		for k,v in pairs(BuffLibabilityIDs) do
+			local name = GetSpellInfo(k);
+			if (name) then
+				self.abilities[k]=v;
+				self.reverseLookup[name] = k;
+			end
+		end
+
+		DRLib = LibStub("DRData-1.0")
+		self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+		self:RegisterEvent("CHAT_MSG_ADDON")
 	end
-	
-	DRLib = LibStub("DRData-1.0")
-	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	self:RegisterEvent("CHAT_MSG_ADDON")
 	
 	-- We do not need to sync each aura
 	--if BuffLib2DB.sync == true then
 	--	self:RegisterEvent("UNIT_AURA")
 	--end
 	
+end
+
+function BuffLib:PrintOwnBuffs()
+	if (self.guids[UnitGUID("player")]) then
+		for a,b in pairs(self.guids[UnitGUID("player")]) do
+			DEFAULT_CHAT_FRAME:AddMessage("ID: " .. a .. " (" .. GetSpellInfo(a) ..")");
+		end
+	else
+		DEFAULT_CHAT_FRAME:AddMessage("No player buffs found.")
+	end
 end
 
 --[[
@@ -261,6 +332,7 @@ function BuffLib:COMBAT_LOG_EVENT_UNFILTERED(...)
 			self:CreateFrames(destGUID, spellName, spellID)
 		elseif not self.guids[destGUID] or not self.guids[destGUID][spellName] or not self.guids[destGUID][spellName].lastTime then
 			self:CreateFrames(destGUID, spellName, spellID)
+			self.guids[destGUID][spellName].count = self.guids[destGUID][spellName].count + 1;
 		end
 	-- have to also take CAST_SUCCESS because it's the only way to get refreshed spells like MS, Harmstring etc	
 	elseif self.abilities[spellID] and (eventType == "SPELL_AURA_REFRESH" or eventType == "SPELL_AURA_APPLIED_DOSE" or eventType == "SPELL_CAST_SUCCESS") then	
@@ -270,8 +342,10 @@ function BuffLib:COMBAT_LOG_EVENT_UNFILTERED(...)
 			self:CreateFrames(destGUID, spellName, spellID)
 		end
 	elseif self.abilities[spellID] and removeEvents[eventType] then
+		self.guids[destGUID][spellName].count = self.guids[destGUID][spellName].count - 1;
 		self:HideFrames(destGUID, spellName, spellID)
 	end
+
 	
 	-- some spells do not have AURA_REFRESH because they are physical, CAST_SUCCESS works though
 	-- could technically catch even more by just using CAST_SUCCESS without spellSchool
@@ -385,6 +459,74 @@ function BuffLib:CHAT_MSG_ADDON(prefix, message, channel, sender)
 				end
 			end
 		end
+	elseif (prefix == "BuffLib2-R") then -- Refresh Request
+		if (message == "RefreshAuras") then
+			BuffLib:SendAuraRefreshResponse(sender);
+		end
+	end
+end
+
+function BuffLib:SendAuraRefreshResponse(target)
+	local maxLength = 254 - #"BuffLib2"; -- 254 is max length of message + prefix
+
+	-- we will sync spellId (2 Bytes)
+	local syncMessage = "";
+	local guid = UnitGUID("player");
+
+	for i = 1,40 do	
+		local part = "";
+		local name, _, _, _, duration, timeLeft = _UnitBuff("player", i);
+		if (name) then
+			local spellId = self.reverseLookup[name];
+			if (duration and spellId) then
+				part = spellId .. "&" .. duration .. "&" .. timeLeft .. "&" .. guid;
+			end
+		else
+			break;
+		end
+
+		if (#part > 0) then
+			if (#part + #syncMessage + 1 > maxLength) then
+				BuffLib:SendSync(syncMessage);
+				syncMessage = "";
+			end
+
+			if (#syncMessage > 0) then
+				syncMessage = syncMessage .. "|" .. part;
+			else
+				syncMessage = part;
+			end
+		end
+	end
+
+	for i = 1,40 do	
+		local part = "";
+		local name, _, _, _, _, duration, timeLeft = _UnitDebuff("player", i);
+		if (buffName) then
+			local spellId = self.reverseLookup[name];
+			if (duration and spellId) then
+				part = spellId .. "&" .. duration .. "&" .. timeLeft .. "&" .. guid;
+			end
+		else
+			break;
+		end
+
+		if (#part > 0) then
+			if (#part + #syncMessage + 1 > maxLength) then
+				BuffLib:SendSync(syncMessage, target);
+				syncMessage = "";
+			end
+
+			if (#syncMessage > 0) then
+				syncMessage = syncMessage .. "|" .. part;
+			else
+				syncMessage = part;
+			end
+		end
+	end
+
+	if (#syncMessage > 0) then
+		BuffLib:SendSync(syncMessage, target);
 	end
 end
 
@@ -480,7 +622,12 @@ function BuffLib:rshift(x, by)
 return math.floor(x / 2 ^ by)
 end
 
-function BuffLib:SendSync(message)
+function BuffLib:SendSync(message, target)
+	if (target ~= nil) then
+		SendAddonMessage("BuffLib2", message, "WHISPER", target);
+		return
+	end
+
 	local inInstance, instanceType = IsInInstance()
 	if instanceType == "pvp" then
 		SendAddonMessage("BuffLib2", message, "BATTLEGROUND")
@@ -546,21 +693,24 @@ function UnitBuff(unitID, index, castable)
 	end
 	
 	-- if duration can be seen by the player (provided by the server) return original duration and end function here
-	if timeLeft ~= nil or duration ~=nil then -- can see timer, perfect
-		if unitID ~= "player" then
-			isMine = true
-		else
-			isMine = false
+	if timeLeft ~= nil and duration ~=nil then -- can see timer, perfect
+		if (timeLeft == 0 and duration == 0) or (duration > 0 and timeLeft > 0) then
+			if unitID ~= "player" then
+				isMine = true
+			else
+				isMine = false
+			end
+
+			return name, rank, icon, count, duration, timeLeft, isMine
 		end
-		return name, rank, icon, count, duration, timeLeft, isMine
 	end	
 	
-	if timeLeft == nil and EBFrame ~=nil and EBFrame.timeLeft ~= nil and EBFrame.timeLeft-(GetTime()-EBFrame.getTime) > 0 then -- can't see timer but someone in party/raid/bg can
+	if (timeLeft == nil or (duration > 0 and timeLeft == 0)) and EBFrame ~=nil and EBFrame.timeLeft ~= nil and EBFrame.timeLeft-(GetTime()-EBFrame.getTime) > 0 then -- can't see timer but someone in party/raid/bg can
 		--log(name.. " reading from snyc")
 		duration = EBFrame.duration
 		timeLeft = EBFrame.timeLeft-(GetTime()-EBFrame.getTime)
 		isMine = false
-	elseif timeLeft == nil and EBFrame ~=nil and EBFrame.timeLeft == nil then -- have to load timer from combatlog :(
+	elseif (timeLeft == nil or (timeLeft == 0 and duration > 0)) and EBFrame ~=nil and EBFrame.timeLeft == nil then -- have to load timer from combatlog :(
 		--log(name.. " reading from combatlog")
 		duration = EBFrame.endTime
 		timeLeft = EBFrame.endTime-(GetTime()-EBFrame.startTime)
