@@ -40,6 +40,11 @@ if (ChatThrottleLib) then
 	end
 end
 
+-- make seaLib optional
+local seaLib;
+if (AceLibrary:HasInstance("SpecialEvents-Aura-2.0")) then
+	AceLibrary("SpecialEvents-Aura-2.0")
+end
 
 local function firstToUpper(str)
 	if (str~=nil) then
@@ -260,7 +265,7 @@ function BuffLib:PLAYER_ENTERING_WORLD(...)
 			local all = true;
 			for spellName,spellData in pairs(v) do
 				if (spellData.timeLeft ~= nil) then
-					if (t - v.getTime > v.timeLeft) then
+					if (t - spellData.getTime > spellData.timeLeft) then
 						self.guids[k][spellName] = nil;
 						all = false;
 					end
@@ -393,6 +398,18 @@ function BuffLib:COMBAT_LOG_EVENT_UNFILTERED(...)
 	end
 end
 
+function BuffLib:UpdatePitBullTarget(unit)
+	if (PitBull ~= nil and PitBull:GetModule("Aura") ~= nil) then
+		PitBull:GetModule("Aura"):UNIT_AURA(nil, "UNIT_AURA", unit);
+	end
+end
+
+function BuffLib:ScanSEA(unit)
+	if (seaLib) then
+		seaLib:AuraScan(unit, "BuffLib2 - AuraRefresh")
+	end
+end
+
 function BuffLib:CHAT_MSG_ADDON(prefix, message, channel, sender)
 	if prefix == "BuffLib2" and sender ~= UnitName("player") then
 		if (sender == nil) then
@@ -435,6 +452,7 @@ function BuffLib:CHAT_MSG_ADDON(prefix, message, channel, sender)
 				self.guids[guid][name].timeLeft = tonumber(timeLeft)
 				self.guids[guid][name].duration = tonumber(duration)
 				self.guids[guid][name].getTime = GetTime()
+				self.guids[guid][name].count = 1
 			end
 
 			--instant buff/debuff timer update for default UnitFrames
@@ -444,18 +462,38 @@ function BuffLib:CHAT_MSG_ADDON(prefix, message, channel, sender)
 					TargetDebuffButton_Update()
 				end
 
-				if (PitBull ~= nil and PitBull:GetModule("Aura") ~= nil) then
-					PitBull:GetModule("Aura"):UNIT_AURA(nil, "UNIT_AURA", "target");
-				end
-			end
-
-			if (guid == UnitGUID("focus")) then
+				BuffLib:UpdatePitBullTarget("target")
+				BuffLib:ScanSEA("target")
+			elseif (guid == UnitGUID("focus")) then
 				if FocusFrame and FocusFrame:IsVisible() then
 					FocusDebuffButton_Update()
 				end
 
-				if (PitBull ~= nil and PitBull:GetModule("Aura") ~= nil) then
-					PitBull:GetModule("Aura"):UNIT_AURA(nil, "UNIT_AURA", "target");
+				BuffLib:UpdatePitBullTarget("focus")
+				BuffLib:ScanSEA("focus")
+			elseif (guid == UnitGUID("player")) then
+				BuffLib:UpdatePitBullTarget("player")
+				BuffLib:ScanSEA("player")
+			else
+				local updated = false;
+				for i = 1,GetNumPartyMembers() do
+					if (UnitGUID("party" .. i) == guid) then
+						BuffLib:UpdatePitBullTarget("party" .. i)
+						BuffLib:ScanSEA("party" .. i)
+						updated = true
+						break
+					end
+				end
+
+				if not updated then
+					for i = 1, GetNumRaidMembers() do
+						if (UnitGUID("raid" .. i) == guid) then
+							BuffLib:UpdatePitBullTarget("raid" .. i)
+							BuffLib:ScanSEA("raid" .. i)
+							updated = true
+							break
+						end
+					end
 				end
 			end
 		end

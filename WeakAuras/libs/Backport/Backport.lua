@@ -75,26 +75,26 @@ function UnitAura (unit, indexOrName, rank, filter)
   local x;
 
   if (debuffType == "HELPFUL" or debuffType == nil) then
-    local name, r, icon, count, duration, expirationTime = UnitBuff(unit, 1, newfilter);
+    local name, r, icon, count, duration, expirationTime, isMine = UnitBuff(unit, 1, newfilter);
     x = 1;
     while (name ~= nil) do
       if ((name == indexOrName or x == indexOrName) and (rank == nil or string.find(rank, "HARMFUL") or string.find(rank, "HELPFUL") or rank == r)) then
-        return name, r, icon, count, debuffType, (duration or 0), GetTime() + (expirationTime or 0)
+        return name, r, icon, count, debuffType, (duration or 0), GetTime() + (expirationTime or 0), isMine
       end
       x = x + 1;
-      name, r, icon, count, duration, expirationTime = UnitBuff(unit, x, newfilter);
+      name, r, icon, count, duration, expirationTime, isMine = UnitBuff(unit, x, newfilter);
     end
   end
 
   if (debuffType == "HARMFUL" or debuffType == nil) then
-    local name, r, icon, count, _, duration, expirationTime = UnitDebuff(unit, 1, newfilter);
+    local name, r, icon, count, _, duration, expirationTime, isMine = UnitDebuff(unit, 1, newfilter);
     x = 1;
     while (name ~= nil) do
       if ((name == indexOrName or x == indexOrName) and (rank == nil or string.find(rank, "HARMFUL") or string.find(rank, "HELPFUL") or rank == r)) then
-        return name, r, icon, count, debuffType, (duration or 0), GetTime() + (expirationTime or 0)
+        return name, r, icon, count, debuffType, (duration or 0), GetTime() + (expirationTime or 0), isMine
       end
       x = x + 1;
-      name, r, icon, count, _, duration, expirationTime = UnitDebuff(unit, x, newfilter);
+      name, r, icon, count, _, duration, expirationTime, isMine = UnitDebuff(unit, x, newfilter);
     end
   end
 
