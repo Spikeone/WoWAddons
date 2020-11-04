@@ -117,7 +117,7 @@ function BuffLib:PLAYER_TARGET_CHANGED(...)
 		return
 	end
 
-	if (not UnitInParty("target")) then
+	if (not UnitInParty("target") and not UnitInRaid("target")) then
 		return
 	end
 
@@ -267,11 +267,17 @@ function BuffLib:PLAYER_ENTERING_WORLD(...)
 				if (spellData.timeLeft ~= nil) then
 					if (t - spellData.getTime > spellData.timeLeft) then
 						self.guids[k][spellName] = nil;
+					else
 						all = false;
 					end
-				elseif (spellData.endTime <= t) then
+				elseif (spellData.endTime ~= nil) then
+					if (spellData.endTime <= t) then
+						self.guids[k][spellName] = nil
+					else
+						all = false;
+					end
+				else -- both seem nil so it can as well be removed
 					self.guids[k][spellName] = nil
-					all = false;
 				end
 			end
 

@@ -440,7 +440,8 @@ WeakAuras.load_prototype = {
       values = function(trigger)
         return function()
           local single_class;
-          local min_specs = 4;
+          local class_list = {}
+
           --First check to use if the Class load is on multi-select with only one class selected
           --Also check the number of specs for each class selected in the multi-select and keep track of the minimum
           --(i.e., 3 unless Druid is the only thing select, but this method is flexible in case another spec gets added to another class)
@@ -448,9 +449,8 @@ WeakAuras.load_prototype = {
             local num_classes = 0;
             for class in pairs(trigger.class.multi) do
               single_class = class;
-              --If any checked class has only 3 specs, min_specs will become 3
-              min_specs = min(min_specs, GetNumSpecializationsForClassID(WeakAuras.class_ids[class]))
               num_classes = num_classes + 1;
+              table.insert(class_list, class)
             end
             if(num_classes ~= 1) then
               single_class = nil;
@@ -462,14 +462,32 @@ WeakAuras.load_prototype = {
           end
           --If a single specific class was found, load the specific list for it
           if(single_class) then
-            return WeakAuras.spec_types_specific[single_class];
-          else
-            --List 4 specs if no class is specified, but if any multi-selected classes have less than 4 specs, list 3 instead
-            if(min_specs < 4) then
-              return WeakAuras.spec_types_reduced;
-            else
-              return WeakAuras.spec_types;
+            local classData = WeakAuras.spec_types_specific[single_class];
+            local result = {}
+            if (type(classData[1]) == "table") then
+              for i =1, #classData do
+                result[single_class .. "_" .. tostring(i)] = "|T" .. classData[i][2] ..":0|t " .. classData[i][1]
+              end
             end
+
+            return result;
+          else
+            local result = {}
+            local classData = WeakAuras.spec_types_specific;
+            if #class_list ~= 0 then
+              classData = {}
+              for i,class in ipairs(class_list) do
+                classData[class] = WeakAuras.spec_types_specific[class]
+              end
+            end
+
+            for class,cData in pairs(classData) do
+              for i = 1, #cData do
+                result[class .. "_" .. i] = "|T" .. cData[i][2] ..":0|t " .. cData[i][1]
+              end
+            end
+
+            return result
           end
         end
       end,

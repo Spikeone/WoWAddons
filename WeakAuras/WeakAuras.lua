@@ -2063,6 +2063,28 @@ function WeakAuras.EndEvent(id, triggernum, force)
   end
 end
 
+function WeakAuras.GetPlayerSpec()
+  local _,c = UnitClass("player");
+  local talentDist = {0, 0, 0};
+  local numTabs = GetNumTalentTabs();
+  for t=1, numTabs do
+      local numTalents = GetNumTalents(t);
+      for i=1, numTalents do
+          nameTalent, icon, tier, column, currRank, maxRank= GetTalentInfo(t,i);
+          talentDist[t] = talentDist[t] + currRank;
+      end
+  end
+
+  local maxTalent = 1;
+  for t = 2,3 do
+      if (talentDist[t] > talentDist[maxTalent]) then
+          maxTalent = t;
+      end
+  end
+
+  return maxTalent
+end
+
 function WeakAuras.ScanForLoads(self, event, arg1)
   -- PET_BATTLE_CLOSE fires twice at the end of a pet battle. IsInBattle evaluates to TRUE during the
   -- first firing, and FALSE during the second. I am not sure if this check is necessary, but the
@@ -2074,6 +2096,8 @@ function WeakAuras.ScanForLoads(self, event, arg1)
 
   local player, zone, role = UnitName("player"), GetRealZoneText();
   local _, class = UnitClass("player");
+  local spec = WeakAuras.GetPlayerSpec();
+  spec = class .. "_" .. spec;
   -- 0:none 1:5N 2:5H 3:10N 4:25N 5:10H 6:25H 7:LFR 8:5CH 9:40N
   local inInstance, Type = IsInInstance()
   local _, size, difficulty, instanceType, difficultyIndex;
@@ -2491,9 +2515,10 @@ function WeakAuras.ScanAuras(unit)
       -- Check all selected auras (for one trigger)
       for index, checkname in pairs(data.names) do
         -- Fetch aura data
-        name, rank, icon, count, debuffType, duration, expirationTime, unitCaster, isStealable, shouldConsolidate, spellId = UnitAura(unit, checkname, nil, filter);
+        name, rank, icon, count, debuffType, duration, expirationTime, _, isStealable, shouldConsolidate, spellId = UnitAura(unit, checkname, nil, filter);
         checkPassed = false;
-
+        unitCaster = nil;
+        
         -- Aura conforms to trigger options?
         if(name and ((not data.count) or data.count(count)) and (data.ownOnly ~= false or not UnitIsUnit("player", unitCaster))) then
         remaining = expirationTime - time;

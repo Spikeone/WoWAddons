@@ -3,8 +3,6 @@ local L = WeakAuras.L;
 
 local LSM = LibStub("LibSharedMedia-3.0");
 
-DEFAULT_CHAT_FRAME:AddMessage(tostring(4294967294))
-
 local RAID_CLASS_COLORS = {
    ["HUNTER"] = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffabd473" },
    ["WARLOCK"] = { r = 0.58, g = 0.51, b = 0.79, colorStr = "ff9482c9" },
@@ -23,7 +21,7 @@ local CLASS_SORT_ORDER = { "HUNTER", "WARLOCK", "PRIEST", "PALADIN", "MAGE", "RO
 local SPECIALIZATION = "Specialization"
 
 function GetNumSpecializationsForClassID(id)
-	return 2
+	return 3
 end
 
 function GetSpecializationInfoForClassID(classID, i)
@@ -385,20 +383,23 @@ WeakAuras.spec_types_reduced = {
   [2] = SPECIALIZATION.." 2",
   [3] = SPECIALIZATION.." 3"
 }
+WeakAuras.spec_types_literal = {
+  WARRIOR = { { L["Arms"], "Interface\\Icons\\Ability_Warrior_SavageBlow"}, { L["Fury"], "Interface\\Icons\\Ability_Warrior_InnerRage" }, { L["Protection"], "Interface\\Icons\\Ability_Warrior_DefensiveStance" }},
+  WARLOCK = { { L["Affliction"], "Interface\\Icons\\Spell_Shadow_DeathCoil"} , { L["Demonolgy"], "Interface\\Icons\\Spell_Shadow_Metamorphosis"}, { L["Destruction"], "Interface\\Icons\\Spell_Shadow_RainOfFire"}},
+  PRIEST =  { { L["Discipline"], "Interface\\Icons\\Spell_Holy_WordFortitude"}, { L["Holy"], "Interface\\Icons\\Spell_Holy_HolyBolt"}, { L["Shadow"], "Interface\\Icons\\Spell_Shadow_ShadowWordPain"}},
+  ROGUE =   { { L["Assassination"], "Interface\\Icons\\Ability_Rogue_Eviscerate"}, { L["Combat"], "Interface\\Icons\\Ability_BackStab"}, { L["Subtlety"], "Interface\\Icons\\Ability_Stealth"}},
+  MAGE =    { { L["Arcane"], "Interface\\Icons\\Spell_Holy_MagicalSentry"}, { L["Fire"], "Interface\\Icons\\Spell_Fire_Flamebolt"}, { L["Frost"], "Interface\\Icons\\Spell_Frost_FrostBolt02"}},
+  HUNTER =  { { L["Beast Master"], "Interface\\Icons\\Ability_Hunter_BeastTaming"}, { L["Marksman"], "Interface\\Icons\\Ability_Marksmanship"},{ L["Survival"], "Interface\\Icons\\Ability_Hunter_SwiftStrike"}},
+  PALADIN = { { L["Holy"], "Interface\\Icons\\Spell_Holy_HolyBolt"}, { L["Protection"], "Interface\\Icons\\Spell_Holy_DevotionAura"},{ L["Retribution"], "Interface\\Icons\\Spell_Holy_AuraOfLight"}},
+  DRUID =   { { L["Balance"], "Interface\\Icons\\Spell_Nature_StarFall"}, { L["Feral"], "Interface\\Icons\\Ability_Racial_BearForm"},{ L["Restoration"], "Interface\\Icons\\Spell_Nature_HealingTouch"}},
+  SHAMAN =  { { L["Elemental"], "Interface\\Icons\\Spell_Nature_Lightning"}, { L["Enhancement"], "Interface\\Icons\\Spell_Nature_LightningShield"}, { L["Restoration"], "Interface\\Icons\\Spell_Nature_MagicImmunity"}},
+  DEATHKNIGHT = {}
+}
+
 WeakAuras.spec_types_specific = {}
 local function update_specs()
   for classFileName, classID in pairs(WeakAuras.class_ids) do
-    WeakAuras.spec_types_specific[classFileName] = {
-		TALENT_SPEC_PRIMARY,
-		TALENT_SPEC_SECONDARY,
-	}
-    --[[local numSpecs = GetNumSpecializationsForClassID(classID)
-    for i=1, numSpecs do
-      local _, tabName, _, icon = GetSpecializationInfoForClassID(classID, i);
-      if tabName then
-        tinsert(WeakAuras.spec_types_specific[classFileName], "|T"..(icon or "error")..":0|t "..(tabName or "error"));
-      end
-    end]]
+    WeakAuras.spec_types_specific[classFileName] = WeakAuras.spec_types_literal[classFileName]
   end
 end
 local spec_frame = CreateFrame("frame");
