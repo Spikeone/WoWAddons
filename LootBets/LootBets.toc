@@ -1,0 +1,6 @@
+## Interface: 20400
+## Title : LootBets
+## Notes: Lets you place bets on what bosses drop in a raid
+## Author: Spikeone @ B2B-WoW
+## SavedVariables: LB_VARIABLES
+LootBets.xml
