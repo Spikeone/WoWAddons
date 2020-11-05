@@ -123,6 +123,7 @@ function PallyPower:OnEnable()
 	self:RegisterEvent("SPELLS_CHANGED")
 	self:RegisterEvent("RAID_ROSTER_UPDATE")
 	self:RegisterEvent("PLAYER_ENTERING_WORLD")
+    self:RegisterEvent("CHAT_MSG_WHISPER")
 	self:RegisterBucketEvent("RosterLib_RosterUpdated", 1, "UpdateRoster")
 	self:ScheduleRepeatingEvent("PallyPowerInventoryScan", self.InventoryScan, 60, self)
 	self:UpdateRoster()
@@ -783,6 +784,68 @@ end
 -- Main functionality
 --
 
+local function getPallySubgroup(pallyName)
+    for i = 1, 40 do
+        name, rank, subgroup = GetRaidRosterInfo(i);
+        if (name ==  pallyName) then
+            return subgroup
+        end
+    end
+    
+    return 0
+end
+
+function PallyPower:ReportPlayer(strTargetReportName, strUnitClass, chattype)
+    if(strTargetReportName and strUnitClass) then
+        SendChatMessage("--- PallyPower: " ..strTargetReportName.. " ---", chattype, nil, strTargetReportName)
+
+        for id = 1, 11 do
+            if(PallyPower.ClassID[id] == strUnitClass) then
+
+                for pname in pairs(AllPallys) do
+
+                    local bid = 0
+                    
+                    if(PallyPower_NormalAssignments[pname]) then
+                        if(PallyPower_NormalAssignments[pname][id]) then
+                            if(PallyPower_NormalAssignments[pname][id][strTargetReportName]) then
+                                bid = PallyPower_NormalAssignments[pname][id][strTargetReportName]
+                            end
+                        end
+                    end
+                    
+                    local strInfo = ": "
+                    
+                    if(chattype == "WHISPER") then
+                        local psub = getPallySubgroup(pname)
+                        
+                        if(psub ~= 0) then
+                            if(psub <= 5) then
+                                strInfo = "(DRINNEN): "
+                            else
+                                strInfo = "(DRAUßEN): "
+                            end
+                        end
+                    end
+                    
+                    if bid and bid > 0 and bid ~= "0" then
+                        local _,_, spell = string.find(PallyPower.Spells[bid], PallyPower_BlessingNameSearch)
+                        SendChatMessage(pname.. strInfo ..spell, chattype, nil, strTargetReportName)
+                    else
+                        local bid = PallyPower_Assignments[pname][id]
+                        if bid and bid > 0 then
+                            local _,_, spell = string.find(PallyPower.GSpells[bid], PallyPower_BlessingNameSearch)
+                            SendChatMessage(pname.. strInfo ..spell, chattype, nil, strTargetReportName)
+                        end
+                    end
+                end
+            end
+        end
+
+        SendChatMessage(PALLYPOWER_ASSIGNMENTS2, chattype, nil, strTargetReportName)
+    end
+end
+
 function PallyPower:Report(arg)
     if(arg) then
         arg = string.lower(arg)
@@ -831,31 +894,7 @@ function PallyPower:Report(arg)
                 targetnick = UnitName("target")
                 targetclass, targetclassen = UnitClass("target")
 
-                if(targetnick and targetclassen) then
-                    SendChatMessage("--- PallyPower: " ..targetnick.. " ---", chattype)
-
-                    for id = 1, 11 do
-                        if(PallyPower.ClassID[id] == targetclassen) then
-
-                            for pname in pairs(AllPallys) do
-                                local bid = PallyPower_NormalAssignments[pname][id][targetnick]
-
-                                if bid and bid > 0 then
-                                    local _,_, spell = string.find(PallyPower.Spells[bid], PallyPower_BlessingNameSearch)
-                                    SendChatMessage(pname.. ": " ..spell, chattype)
-                                else
-                                    local bid = PallyPower_Assignments[pname][id]
-                                    if bid and bid > 0 then
-                                        local _,_, spell = string.find(PallyPower.GSpells[bid], PallyPower_BlessingNameSearch)
-                                        SendChatMessage(pname.. ": " ..spell, chattype)
-                                    end
-                                end
-                            end
-                        end
-                    end
-
-                    SendChatMessage(PALLYPOWER_ASSIGNMENTS2, chattype)
-                end
+                PallyPower:ReportPlayer(targetnick, targetclassen, chattype)
             elseif(arg == "tclass") then
                 targetclass, targetclassen = UnitClass("target")
 
@@ -1282,6 +1321,13 @@ end
 
 function PallyPower:PLAYER_ENTERING_WORLD()
     PallyPowerConfig_ScanRoles();
+end
+
+function PallyPower:CHAT_MSG_WHISPER(args)
+    if(arg1 == "!pphelp" and arg2 ~= UnitName("player")) then
+        targetclass, targetclassen = UnitClass(arg2)
+        PallyPower:ReportPlayer(arg2, targetclassen, "WHISPER")
+    end
 end
 
 function PallyPower:CHAT_MSG_ADDON(prefix, message, distribution, sender)
