@@ -1,0 +1,19 @@
+﻿## Interface: 20400
+## Title: X-Perl UnitFrames Core by |cFFFF8080Zek|r
+## Version: 2.4.3g
+## Title-ruRU: X-Perl UnitFrames |cFFFF6060Основной|r
+## Author: Zek
+## Title-zhCN: X-Perl 核心
+## Notes: Replaces the normal unit, party, target, pet frames and adds target-of-target.
+## Notes-ruRU: Заменяет стандартный фреймы играков, группы, цели, питомца и добовляет цели-цели.
+## Notes-deDE: Ersetzt die normalen Einheiten, Gruppe, Ziel, Begleiterframe und fügt Ziel des Zieles hinzu.
+## Notes-esES: Reemplazo para los marcos de unidades, con nuevo aspecto para jugador, mascota, grupo, objetivo, objetivo del objetivo, y banda
+## Notes-zhCN: 玩家头像增强插件，附带团队助手功能
+## X-eMail: zeksie@googlemail.com
+## X-Donate: PayPal:pussicat AT ntlworld DOT com
+## X-Category: Interface Enhancements
+## X-License: GNU GPL v3, 29 June 2007
+## OptionalDeps: MobHealth, MobInfo2, CT_RaidAssist, oRA2, DruidBar, SimpleDruidBar, LibDruidMana-1.0, SmartyCat
+## SavedVariables: XPerlConfig, XPerlConfig_Global, XPerlConfigNew, XPerlConfigSavePerCharacter
+XPerl_Globals.xml
+XPerl.xml

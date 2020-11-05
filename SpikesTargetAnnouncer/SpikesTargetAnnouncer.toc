@@ -1,6 +1,0 @@
-## Interface: 20400
-## Title : SpikesTargetAnnouncer
-## Notes: Watches some summon spells and resists on other spells
-## Author: Spikeone @ B2B-WoW
-## SavedVariables: 
-SpikesTargetAnnouncer.xml
