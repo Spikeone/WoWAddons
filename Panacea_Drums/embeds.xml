@@ -1,0 +1,11 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+<!--@no-ext-strip@-->
+<Include file="libs\LibRock-1.0\lib.xml"/>
+<Include file="libs\LibRockConfig-1.0\lib.xml"/>
+<Include file="libs\LibRockConsole-1.0\lib.xml"/>
+<Include file="libs\LibRockDB-1.0\lib.xml"/>
+<Include file="libs\LibRockEvent-1.0\lib.xml"/>
+<Include file="libs\LibSharedMedia-3.0\lib.xml"/>
+<!--@end-no-ext-strip@-->
+</Ui>

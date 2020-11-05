@@ -1,0 +1,28 @@
+## Interface: 20400
+
+## Title: Panacea Drums
+## Notes: Raid Drum Timers
+## Author: ccKep. Modified by Tsunadee
+## Version: 2.1
+## X-Category: Raid, Leatherworking
+
+## OptionalDeps: LibRock-1.0, SharedMedia, ButtonFacade
+## X-Embeds: LibRock-1.0, LibRockConfig-1.0, LibRockConsole-1.0, LibRockDB-1.0, LibRockEvent-1.0, LibSharedMedia-3.0, LibStub
+
+## SavedVariables: Panacea_DrumsDB
+
+embeds.xml
+
+# Locale-enUS.lua
+# Locale-deDE.lua
+
+PanaceaDrums.lua
+Options.lua
+
+DrumData.lua
+Frames.lua
+Flash.lua
+ButtonFacade.lua
+
+Layouts\SimpleDrum.lua
+Layouts\RaidDrums.lua
