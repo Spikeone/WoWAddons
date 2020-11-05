@@ -5,8 +5,8 @@ local NAME_HUMAN = NAME_DRAGON;
 local GUID_DRAGON = "0xF13000611200D61A";
 local GUID_DEAMON = "0xF13000613C00D18D";
 
-local HEALTH_DRAGON_DEFAULT = 5766500;
-local HEALTH_DEAMON_DEFAULT = 5766500;
+local HEALTH_DRAGON_DEFAULT = 5566499; --5766500;
+local HEALTH_DEAMON_DEFAULT = 5566499; --5766500;
 local HEALTH_HUMAN_DEFAULT = 1305050;
 
 local dragon_hp = HEALTH_DRAGON_DEFAULT;
@@ -175,6 +175,9 @@ function KalecgosDualHP_OnUpdate(self, elapsed)
     if(not isInfight or not dragonSeen) then return end;
 
     if(GUID_DRAGON == UnitGUID("target")) then
+        --DEFAULT_CHAT_FRAME:AddMessage("Max: " ..UnitHealthMax("target"))
+        HEALTH_DRAGON_DEFAULT = UnitHealthMax("target")
+
         local dragon_hp_temp = UnitHealth("target");
     
         if(tonumber(dragon_hp - dragon_hp_temp) > 5000 or tonumber(dragon_hp - dragon_hp_temp) < -5000 or (dragon_hp_temp == 1 and dragon_hp~= 1)) then
@@ -184,6 +187,8 @@ function KalecgosDualHP_OnUpdate(self, elapsed)
     end
 
     if(GUID_DEAMON == UnitGUID("target")) then
+        HEALTH_DEAMON_DEFAULT = UnitHealthMax("target")
+
         local deamon_hp_temp = UnitHealth("target");
     
         if(tonumber(deamon_hp - deamon_hp_temp) > 5000 or tonumber(deamon_hp - deamon_hp_temp) < -5000 or (deamon_hp_temp == 1 and deamon_hp~= 1)) then
@@ -193,6 +198,8 @@ function KalecgosDualHP_OnUpdate(self, elapsed)
     end
 
     if(NAME_HUMAN == UnitName("target") and UnitIsFriend("player","target") and GUID_DRAGON ~= UnitGUID("target")) then
+        HEALTH_HUMAN_DEFAULT = UnitHealthMax("target")
+
         local human_hp_temp = UnitHealth("target");
     
         if(tonumber(human_hp - human_hp_temp) > 5000 or tonumber(human_hp - human_hp_temp) < -5000) then
@@ -227,7 +234,8 @@ function KalecgosDualHP_OnEvent(event)
         -- v = value (in k)
         -- vp = value(percent)
         if(not khp_vars.format) then        khp_vars.format         = "p"; end
-        KalecgosFrame:SetPoint(khp_vars.point, "UIParent", khp_vars.relativePoint, khp_vars.xOfs , khp_vars.yOfs);
+        
+        --KalecgosFrame:SetPoint(khp_vars.point, "UIParent", khp_vars.relativePoint, khp_vars.xOfs , khp_vars.yOfs);
 
         human_handleVisible();
 
@@ -323,13 +331,25 @@ function scan_toggle()
     DEFAULT_CHAT_FRAME:AddMessage("KalecgosDualHP: Scan is now " ..khp_vars.scan)
 end
 
+--function updateHumanHP()
+--    local point, _, relativePoint, xOfs, yOfs = KalecgosFrame:GetPoint();
+--    if(khp_vars.human == "Off") then
+--        KalecgosFrame:SetPoint(point, "UIParent", relativePoint, xOfs , yOfs + 18);
+--    else
+--        KalecgosFrame:SetPoint(point, "UIParent", relativePoint, xOfs , yOfs - 18);
+--    end
+--    save_position()
+--end
+
 function human_handleVisible()
     if(khp_vars.human == "Off") then
         KalecgosFrame:SetHeight(76);
         KalecgosFrame_humanHPBar:Hide();
+        --updateHumanHP();
     else
         KalecgosFrame:SetHeight(114);
         KalecgosFrame_humanHPBar:Show();
+        --updateHumanHP();
     end
 end
 
@@ -354,6 +374,6 @@ function predict_toggle()
     DEFAULT_CHAT_FRAME:AddMessage("KalecgosDualHP: Human Healthprediction is now " ..khp_vars.predict)
 end
 
-function save_position()
-    khp_vars.point, _, khp_vars.relativePoint, khp_vars.xOfs, khp_vars.yOfs = KalecgosFrame:GetPoint();
-end
+--function save_position()
+--    khp_vars.point, _, khp_vars.relativePoint, khp_vars.xOfs, khp_vars.yOfs = KalecgosFrame:GetPoint();
+--end

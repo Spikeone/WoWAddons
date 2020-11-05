@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
 
   <Script file="KalecgosDualHP.LUA"/>
-  <Frame name="KalecgosFrame" enableMouse="true"  parent="UIParent">
+  <Frame name="KalecgosFrame" movable="true" enableMouse="true" enableKeyboard="true" parent="UIParent">
     <Size>
       <AbsDimension x="150" y="76"/>
     </Size>
@@ -30,9 +30,17 @@
       <OnEvent>
         KalecgosDualHP_OnEvent(event);
       </OnEvent>
-      <OnLeave>
+      <!--<OnLeave>
         save_position();
-      </OnLeave>
+      </OnLeave> -->
+      <OnDragStart>
+        this:StartMoving();
+        this.isMoving = true;
+      </OnDragStart>
+      <OnDragStop>
+        this:StopMovingOrSizing();
+        this.isMoving = false;
+      </OnDragStop>
     </Scripts>
     <Frames>
 
