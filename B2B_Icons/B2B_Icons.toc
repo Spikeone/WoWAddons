@@ -1,0 +1,5 @@
+﻿## Interface: 20300
+## Title: B2B-Icons |cFFE68A00[Support: @Spikeone]|r
+## Author: Spikeone @ B2B-WoW
+## Notes: Sets correct icons for custom B2B Items
+main.lua
