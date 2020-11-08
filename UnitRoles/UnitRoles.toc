@@ -1,0 +1,15 @@
+﻿## Interface: 20400
+## Title: UnitRoles
+## Author: Nanoware
+## Version: 0.1.0
+## Notes: Leverages the Retail role assignment features to the players client. This allows other addons to make decision based on roles. (WeakAuras, PallyPower)
+## Notes-deDE: Liefert die Rollenzuweisungen vom offiziellen Server. So können Addons Entscheidungen basierend auf der Rolle der Spieler tätigen. (WeakAuras, PallyPower)
+## X-Category: Interface Enhancements
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## OptionalDeps: Ace3, LibCompress
+
+embeds.xml
+locales\Locales.xml
+
+UnitRoles.lua

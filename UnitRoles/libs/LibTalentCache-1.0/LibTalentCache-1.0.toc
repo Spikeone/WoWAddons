@@ -1,0 +1,12 @@
+## Interface: 20400
+## Title: Lib: TalentCache 1.0
+## Notes: Library to help with managing raid role assignments and talents
+## Author: Peragor
+## Version: $Rev: 1 $
+## X-Category: Library
+## X-ReleaseDate: $Date: 2020-11-06 11:40:19 +0000 (Thu, 06 Nov 2020) $
+## X-Website: http://wowace.com/wiki/LibTalentQuery-1.0
+## X-License: LGPL v2.1
+
+LibStub\LibStub.lua
+lib.xml
