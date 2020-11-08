@@ -75,7 +75,11 @@ function UnitRoles:CreateRaidRoleFrame(index)
         return
     end
 
-    local button = CreateFrame("Button", "RaidGroupButton" .. index .. "UnitRole", raidInfoFrame)
+    local button = getglobal("RaidGroupButton" .. index .. "UnitRole")
+    if (button == nil) then
+       button = CreateFrame("Button", "RaidGroupButton" .. index .. "UnitRole", raidInfoFrame)
+    end
+    
     button.texture = button:CreateTexture(button:GetName() .. "Texture")
     button:SetPoint("TOPLEFT", "RaidGroupButton" .. index, "TOPLEFT", 102, -3)
     button:SetWidth(8)
