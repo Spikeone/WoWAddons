@@ -135,10 +135,6 @@ function UnitRoles:CreateRaidRoleFrame(index)
 end
 
 function UnitRoles:SetRoleTexture(button, role)
-    if (role == nil) then
-        return
-    end
-
     if (role) then
         if (role == "TANK") then
             button.texture:SetTexture("Interface\\AddOns\\UnitRoles\\textures\\Tank_Icon")
