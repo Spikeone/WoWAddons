@@ -10,3 +10,5 @@ L["Set role to Melee"] = true
 L["Set role to Caster"] = true
 L["Set role"] = true
 L["Unknown"] = true
+L["ROLE_CHANGED_SELF"] = "|cffffff00Your role has been set to %s.|r"
+L["ROLE_CHANGED"] = "|cffffff00%s is now %s.|r"

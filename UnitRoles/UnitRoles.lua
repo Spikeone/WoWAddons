@@ -51,7 +51,7 @@ end
 
 
 -- Raid frame handling
-function UnitRoles:UpdateRaidRoleFrames(event)
+function UnitRoles:UpdateRaidRoleFrames(event, name, role)
 
     local num = GetNumRaidMembers()
     for i = 1, num do
@@ -67,6 +67,14 @@ function UnitRoles:UpdateRaidRoleFrames(event)
     for i = num + 1, #RaidRoleFrames do
         RaidRoleFrames[i] = nil
     end
+
+    if (event == "TalentCache_RoleChanged") then
+        if (name == UnitName("player")) then
+            DEFAULT_CHAT_FRAME:AddMessage(self.L["ROLE_CHANGED_SELF"]:format(self.L[role], 1))
+        else
+            DEFAULT_CHAT_FRAME:AddMessage(self.L["ROLE_CHANGED"]:format(name, self.L[role], 2))
+        end
+    end
 end
 
 function UnitRoles:CreateRaidRoleFrame(index)
@@ -79,15 +87,15 @@ function UnitRoles:CreateRaidRoleFrame(index)
     if (button == nil) then
        button = CreateFrame("Button", "RaidGroupButton" .. index .. "UnitRole", raidInfoFrame)
     end
-    
+
     button.texture = button:CreateTexture(button:GetName() .. "Texture")
-    button:SetPoint("TOPLEFT", "RaidGroupButton" .. index, "TOPLEFT", 102, -3)
+    button:SetPoint("TOPLEFT", "RaidGroupButton" .. index, "TOPLEFT", 80, -3)
     button:SetWidth(8)
     button:SetHeight(8)
     button.texture:SetWidth(8)
     button.texture:SetHeight(8)
     button.texture:SetPoint("TOPLEFT", button:GetName(), "TOPLEFT", 0, 0)
-    button.texture:Show()
+    button.texture:SetTexture(nil)
     button:Show()
     button:SetScript("OnEnter", function(this)
         GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
@@ -119,6 +127,10 @@ function UnitRoles:CreateRaidRoleFrame(index)
         end
     end)
 
+    -- Prettyfiy raidframes
+    raidInfoFrame.subframes.name:SetPoint("LEFT", 24, 0)
+    raidInfoFrame.subframes.level:SetPoint("LEFT", 87, 0)
+
     return button
 end
 
@@ -139,6 +151,8 @@ function UnitRoles:SetRoleTexture(button, role)
         end
 
         button.texture:Show()
+    else
+        button.texture:Hide()
     end
 
     button.role = role

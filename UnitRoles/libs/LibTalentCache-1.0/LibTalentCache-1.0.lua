@@ -55,6 +55,7 @@ frame:UnregisterAllEvents()
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("CHARACTER_POINTS_CHANGED")
+frame:RegisterEvent("CONFIRM_TALENT_WIPE")
 frame:SetScript("OnEvent", function(this, event, ...)
     return LibTalentCache[event](LibTalentCache, ...)
 end)
@@ -103,6 +104,14 @@ function LibTalentCache:PLAYER_LOGIN()
     end
 end
 
+function LibTalentCache:CONFIRM_TALENT_WIPE()
+    local name = UnitName("player")
+
+    -- reset cached stats and role assignments
+    LibTalentCache:InitSpecCache(name)
+    LibTalentCache:NotifyTalentsChanged(name, UnitRole(name))
+end
+
 function LibTalentCache:CHARACTER_POINTS_CHANGED()
     local name = UnitName("player")
     LibTalentCache:NotifyTalentsChanged(name, UnitRole(name))
@@ -111,15 +120,7 @@ end
 function LibTalentCache:TalentQuery_Ready(e, name)
     local isnotplayer = (name ~= UnitName("player"))
     if (type(SpecCache[name]) ~= "table") then
-        SpecCache[name] = {
-            TotalPointsSpend = 0,
-            MainSpec = 1,
-            TimeCached = GetTime(),
-            TabInfo = {{}, {}, {}},
-            Class = select(2, UnitClass(name)),
-            IsInRaid = false,
-            ForcedRole = nil
-        }
+        LibTalentCache:InitSpecCache(name)
     end
 
     -- reset talent spec and update cache time
@@ -154,6 +155,18 @@ function LibTalentCache:TalentQuery_Ready(e, name)
     end
 
     events:SendMessage("TalentCache_NewTalentData", name, UnitRole(name))
+end
+
+function LibTalentCache:InitSpecCache(name)
+    SpecCache[name] = {
+        TotalPointsSpend = 0,
+        MainSpec = 1,
+        TimeCached = GetTime(),
+        TabInfo = {{}, {}, {}},
+        Class = select(2, UnitClass(name)),
+        IsInRaid = false,
+        ForcedRole = nil
+    }
 end
 
 function LibTalentCache:ScanRoster()
@@ -248,15 +261,7 @@ end
 function LibTalentCache:OnTalentsChanged(request, sender)
     local name = request.n
     if (type(SpecCache[name]) ~= "table") then
-        SpecCache[name] = {
-            TotalPointsSpend = 0,
-            MainSpec = 1,
-            TimeCached = 0,
-            TabInfo = {{}, {}, {}},
-            Class = select(2, UnitClass(name)),
-            IsInRaid = false,
-            ForcedRole = nil
-        }
+        LibTalentCache:InitSpecCache(name)
     end
 
     if (request.f == false) then
@@ -299,19 +304,13 @@ function UnitSetRole(name, role, broadcast)
     end
 
     if (SpecCache[name] == nil) then
-        if (name  ~= UnitName("player")) then
+
+        -- check if unit is in our party
+        if (UnitInParty(name) == 0) then
             return nil
         end
 
-        SpecCache[name] = {
-            TotalPointsSpend = 0,
-            MainSpec = 1,
-            TimeCached = GetTime(),
-            TabInfo = {{}, {}, {}},
-            Class = select(2, UnitClass(name)),
-            IsInRaid = true,
-            ForcedRole = nil
-        }
+        LibTalentCache:InitSpecCache(name)
     end
     
     if (type(role) == "string") then
@@ -347,15 +346,7 @@ function UnitChangeRole(name, direction)
             return nil
         end
 
-        SpecCache[name] = {
-            TotalPointsSpend = 0,
-            MainSpec = 1,
-            TimeCached = GetTime(),
-            TabInfo = {{}, {}, {}},
-            Class = select(2, UnitClass(name)),
-            IsInRaid = true,
-            ForcedRole = nil
-        }
+        LibTalentCache:InitSpecCache(name)
     end
 
     if (SpecCache[name].ForcedRole == nil) then
