@@ -2094,7 +2094,12 @@ function WeakAuras.ScanForLoads(self, event, arg1)
     playerLevel = arg1;
   end
 
-  local player, zone, role = UnitName("player"), GetRealZoneText();
+  local role = nil
+  if (type(UnitRole) == "function") then
+    role = UnitRole(UnitName("player"))
+  end
+
+  local player, zone = UnitName("player"), GetRealZoneText();
   local _, class = UnitClass("player");
   local spec = WeakAuras.GetPlayerSpec();
   spec = class .. "_" .. spec;

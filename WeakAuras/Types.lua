@@ -1012,7 +1012,8 @@ WeakAuras.difficulty_types = {
 };
 WeakAuras.role_types = {
   TANK = L["Tank"],
-  DAMAGER = L["Damager"],
+  MELEE = L["Melee"],
+  CASTER = L["Caster"],
   HEALER = L["Healer"]
 };
 WeakAuras.anim_start_preset_types = {
