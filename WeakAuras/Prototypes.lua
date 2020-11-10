@@ -526,6 +526,13 @@ WeakAuras.load_prototype = {
       test = "select(5, GetTalentInfo(string.split(\".\",%f))) > 0"
     },
     {
+      name = "race",
+      display = L["Player Race"],
+      type = "multiselect",
+      values = "race_types",
+      init = "arg"
+    },
+    {
       name = "level",
       display = L["Player Level"],
       type = "number",

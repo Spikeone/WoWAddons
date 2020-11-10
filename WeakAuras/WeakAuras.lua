@@ -2100,6 +2100,7 @@ function WeakAuras.ScanForLoads(self, event, arg1)
   end
 
   local player, zone = UnitName("player"), GetRealZoneText();
+  local _, race = UnitRace("player")
   local _, class = UnitClass("player");
   local spec = WeakAuras.GetPlayerSpec();
   spec = class .. "_" .. spec;
@@ -2166,8 +2167,8 @@ function WeakAuras.ScanForLoads(self, event, arg1)
   local shouldBeLoaded, couldBeLoaded;
   for id, triggers in pairs(auras) do
   local _, data = next(triggers);
-  shouldBeLoaded = data.load and data.load("ScanForLoads_Auras", incombat, inpetbattle, player, class, spec, playerLevel, zone, size, difficulty, role);
-  couldBeLoaded = data.load and data.load("ScanForLoads_Auras", true, true, player, class, spec, playerLevel, zone, size, difficulty, role);
+  shouldBeLoaded = data.load and data.load("ScanForLoads_Auras", incombat, inpetbattle, player, class, spec, race, playerLevel, zone, size, difficulty, role);
+  couldBeLoaded = data.load and data.load("ScanForLoads_Auras", true, true, player, class, spec, race, playerLevel, zone, size, difficulty, role);
   if(shouldBeLoaded and not loaded[id]) then
     WeakAuras.LoadDisplay(id);
     changed = changed + 1;
@@ -2192,8 +2193,8 @@ function WeakAuras.ScanForLoads(self, event, arg1)
   end
   for id, triggers in pairs(events) do
   local _, data = next(triggers);
-  shouldBeLoaded = data.load and data.load("ScanForLoads_Events", incombat, inpetbattle, player, class, spec, playerLevel, zone, size, difficulty, role);
-  couldBeLoaded = data.load and data.load("ScanForLoads_Events", true, true, player, class, spec, playerLevel, zone, size, difficulty, role);
+  shouldBeLoaded = data.load and data.load("ScanForLoads_Events", incombat, inpetbattle, player, class, spec, race, playerLevel, zone, size, difficulty, role);
+  couldBeLoaded = data.load and data.load("ScanForLoads_Events", true, true, player, class, spec, race, playerLevel, zone, size, difficulty, role);
   if(shouldBeLoaded and not loaded[id]) then
     WeakAuras.LoadDisplay(id);
     changed = changed + 1;

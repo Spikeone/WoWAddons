@@ -156,6 +156,18 @@ do
   WeakAuras.class_types[eClass] = WeakAuras.class_color_types[eClass]..L_C_N_M[eClass]..F_C_C_C
   end
 end
+WeakAuras.race_types = {
+  Draenei = L["Draenei"],
+  Dwarf = L["Dwarf"],
+  Gnome = L["Gnome"],
+  Human = L["Human"],
+  NightElf = L["Night Elf"],
+  BloodElf = L["Blood Elf"],
+  Orc = L["Orc"],
+  Tauren = L["Tauren"],
+  Troll = L["Troll"],
+  Undead = L["Undead"]
+}
 WeakAuras.form_types = {};
 local function update_forms()
   wipe(WeakAuras.form_types);
@@ -292,7 +304,6 @@ WeakAuras.subevent_prefix_types = {
   RANGE = L["Range"],
   SPELL = L["Spell"],
   SPELL_PERIODIC = L["Periodic Spell"],
-  SPELL_BUILDING = L["Spell (Building)"],
   ENVIRONMENTAL = L["Environmental"],
   DAMAGE_SHIELD = L["Damage Shield"],
   DAMAGE_SPLIT = L["Damage Split"],
@@ -306,7 +317,6 @@ WeakAuras.subevent_actual_prefix_types = {
   RANGE = L["Range"],
   SPELL = L["Spell"],
   SPELL_PERIODIC = L["Periodic Spell"],
-  SPELL_BUILDING = L["Spell (Building)"],
   ENVIRONMENTAL = L["Environmental"]
 };
 WeakAuras.subevent_suffix_types = {
@@ -344,7 +354,6 @@ WeakAuras.power_types = {
   [2] = L["Focus"],
   [3] = L["Energy"],
   [4] = L["Happiness"],
-  [6] = L["Runic Power"]
 };
 WeakAuras.miss_types = {
   ABSORB = L["Absorb"],
