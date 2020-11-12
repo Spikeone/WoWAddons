@@ -1081,6 +1081,7 @@ loadedFrame:SetScript("OnEvent", function(self, event, addon)
       
       odb.iconCache = odb.iconCache or {};
       iconCache = odb.iconCache;
+      WeakAuras.iconCache = odb.iconCache;
       odb.idCache = odb.idCache or {};
       idCache = odb.idCache;
       odb.talentCache = odb.talentCache or {};
@@ -1135,7 +1136,7 @@ function WeakAuras.DeleteOption(data)
     end
   end
   
-  WeakAuras.HideAllClones(id);
+  WeakAuras.CollapseAllClones(id);
   
   WeakAuras.Delete(data);
   frame:ClearPicks();
@@ -1264,19 +1265,16 @@ function WeakAuras.DoConfigUpdate()
           region:SetDurationInfo(12, rem);
         end
       end
-      WeakAuras.duration_cache:SetDurationInfo(id, 12, rem, nil, nil, cloneNum);
     elseif(type(WeakAuras.CanHaveDuration(data)) == "table") then
       local demoValues = WeakAuras.CanHaveDuration(data);
       local current, maximum = demoValues.current or 10, demoValues.maximum or 100;
       if(region.SetDurationInfo) then
         region:SetDurationInfo(current, maximum, true);
       end
-      WeakAuras.duration_cache:SetDurationInfo(id, current, maximum, nil, nil, cloneNum);
     else
       if(region.SetDurationInfo) then
         region:SetDurationInfo(0, math.huge);
       end
-      WeakAuras.duration_cache:SetDurationInfo(id, 0, math.huge, nil, nil, cloneNum);
     end
   end
   
@@ -1322,31 +1320,14 @@ function WeakAuras.SetIconNames(data)
 end
 
 function WeakAuras.SetIconName(data, region)
-  local name, icon;
-  if(data.trigger.type == "aura" and not (data.trigger.inverse or WeakAuras.CanGroupShowWithZero(data))) then
-    -- Try to get an icon from the icon cache
-    for index, checkname in pairs(data.trigger.names) do
-      if(iconCache[checkname]) then
-        name, icon = checkname, iconCache[checkname];
-        break;
-      end
-    end
-  elseif((data.trigger.type == "event" or data.trigger.type == "status") and data.trigger.event and WeakAuras.event_prototypes[data.trigger.event]) then
-    if(WeakAuras.event_prototypes[data.trigger.event].iconFunc) then
-      icon = WeakAuras.event_prototypes[data.trigger.event].iconFunc(data.trigger);
-    end
-    if(WeakAuras.event_prototypes[data.trigger.event].nameFunc) then
-      name = WeakAuras.event_prototypes[data.trigger.event].nameFunc(data.trigger);
-    end
+  local name, icon = WeakAuras.GetNameAndIcon(data)
+  WeakAuras.transmitCache[data.id] = icon
+
+  if (region.SetIcon) then
+      region:SetIcon(icon)
   end
-  
-  WeakAuras.transmitCache[data.id] = icon;
-  
-  if(region.SetIcon) then
-    region:SetIcon(icon);
-  end
-  if(region.SetName) then
-    region:SetName(name);
+  if (region.SetName) then
+      region:SetName(name)
   end
 end
 
@@ -2050,6 +2031,58 @@ function WeakAuras.AddOption(id, data)
           WeakAuras.Add(data);
         end,
         args = {
+          init_header = {
+            type = "header",
+            name = L["On Init"],
+            order = 0.005
+          },
+          init_do_custom = {
+            type = "toggle",
+            name = L["Custom"],
+            order = 0.011,
+            width = "double"
+          },
+          init_custom = {
+            type = "input",
+            width = "normal",
+            name = L["Custom Code"],
+            order = 0.013,
+            multiline = true,
+            hidden = function() return not data.actions.init.do_custom end
+          },
+          init_expand = {
+            type = "execute",
+            order = 0.014,
+            name = L["Expand Text Editor"],
+            func = function()
+              WeakAuras.TextEditor(data, {"actions", "init", "custom"}, true)
+            end,
+            hidden = function() return not data.actions.init.do_custom end
+          },
+          init_customError = {
+            type = "description",
+            name = function()
+              if not(data.actions.init.custom) then
+                return "";
+              end
+              local _, errorString = loadstring("return function() "..data.actions.init.custom.." end");
+              return errorString and "|cFFFF0000"..errorString or "";
+            end,
+            width = "double",
+            order = 0.015,
+            hidden = function()
+              if not(data.actions.init.do_custom and data.actions.init.custom) then
+                return true;
+              else
+                local loadedFunction, errorString = loadstring("return function() "..data.actions.init.custom.." end");
+                if(errorString and not loadedFunction) then
+                  return false;
+                else
+                  return true;
+                end
+              end
+            end
+          },
           start_header = {
             type = "header",
             name = L["On Show"],
@@ -3856,7 +3889,7 @@ function WeakAuras.ReloadTriggerOptions(data)
           WeakAuras.ShowCloneDialog(data);
           WeakAuras.UpdateCloneConfig(data);
         else
-          WeakAuras.HideAllClones(data.id);
+          WeakAuras.CollapseAllClones(data.id);
         end
         WeakAuras.Add(data);
       end,
@@ -4372,7 +4405,7 @@ function WeakAuras.ReloadTriggerOptions(data)
           WeakAuras.ShowCloneDialog(data);
           WeakAuras.UpdateCloneConfig(data);
         else
-          WeakAuras.HideAllClones(data.id);
+          WeakAuras.CollapseAllClones(data.id);
         end
         WeakAuras.Add(data);
       end,
@@ -4448,7 +4481,7 @@ function WeakAuras.ReloadTriggerOptions(data)
           WeakAuras.ShowCloneDialog(data);
           WeakAuras.UpdateCloneConfig(data);
         else
-          WeakAuras.HideAllClones(data.id);
+          WeakAuras.CollapseAllClones(data.id);
         end
         WeakAuras.Add(data);
       end,
@@ -4625,7 +4658,7 @@ function WeakAuras.ReloadTriggerOptions(data)
         end
         return  WeakAuras.trigger_require_types_one;
       end,
-      get = function() return data.disjunctive end,
+      get = function() return data.disjunctive or "all" end,
       set = function(info, v) data.disjunctive = v end
     },
 	custom_trigger_combination = {
@@ -4673,6 +4706,32 @@ function WeakAuras.ReloadTriggerOptions(data)
           end
         end
       end
+    },
+    activeTriggerMode = {
+      type = "select",
+      name = L["Dynamic information"],
+      width = "double",
+      order = 0.3,
+      values = function()
+        local vals = {};
+        vals[WeakAuras.trigger_modes.first_active] = L["Dynamic information from first Active Trigger"];
+        local numTriggers = data.additional_triggers and #data.additional_triggers or 0;
+        for i=0,numTriggers do
+          vals[i] = L["Dynamic information from Trigger %i"]:format(i + 1);
+        end
+        return vals;
+      end,
+      get = function()
+        return data.activeTriggerMode or WeakAuras.trigger_modes.first_active;
+      end,
+      set = function(info, v)
+        data.activeTriggerMode = v;
+        WeakAuras.Add(data);
+        WeakAuras.SetThumbnail(data);
+        WeakAuras.SetIconNames(data);
+        WeakAuras.UpdateDisplayButton(data);
+      end,
+      hidden = function() return data.numTriggers <= 1 end
     },
     addTrigger = {
       type = "execute",
@@ -7852,6 +7911,8 @@ function WeakAuras.CreateFrame()
           local data = {
             id = new_id,
             regionType = regionType,
+            activeTriggerMode = WeakAuras.trigger_modes.first_active,
+            disjunctive = "all",
             trigger = {
               type = "aura",
               unit = "player",

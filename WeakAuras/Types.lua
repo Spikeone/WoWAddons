@@ -85,7 +85,9 @@ WeakAuras.trigger_require_types_one = {
   any = L["Trigger 1"],
   custom = L["Custom Function"]
 };
-
+WeakAuras.trigger_modes = {
+  ["first_active"] = -10,
+};
 WeakAuras.trigger_types = {
   aura = L["Aura"],
   status = L["Status"],
@@ -1208,4 +1210,10 @@ WeakAuras.pet_behavior_types = {
   passive = L["Passive"],
   defensive = L["Defensive"],
   assist = L["Assist"]
+};
+
+WeakAuras.cooldown_progress_behavior_types = {
+  showOnCooldown = L["On cooldown"],
+  showOnReady    = L["Not on cooldown"],
+  showAlways     = L["Always"]
 };

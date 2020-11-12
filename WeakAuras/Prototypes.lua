@@ -1257,13 +1257,19 @@ WeakAuras.event_prototypes = {
     args = {
       {}, -- timestamp ignored with _ argument
       {}, -- messageType ignored with _ argument (it is checked before the dynamic function)
-      {}, -- sourceGUID ignored with _ argument
       {
         enable = function()
           local _, _, _, tocversion = GetBuildInfo()
           return tocversion > 40000
         end
       }, -- new Combat Log Event argument hideCaster added in 4.1 - ignore it with _ if the toc version is 4.1 or later
+      {
+        name = "sourceGUID",
+        init = "arg",
+        hidden = "true",
+        test = "true",
+        store = true
+      },
       {
         name = "sourceunit",
         display = L["Source Unit"],
@@ -1290,12 +1296,17 @@ WeakAuras.event_prototypes = {
           return tocversion > 40100
         end
       }, -- new Combat Log Event argument sourceRaidFlags added in 4.2 - ignore it with _ if the toc version is 4.2 or later
-      {}, -- destGUID ignored with _ argument
+      {
+        name = "destGUID",
+        init = "arg",
+        hidden = "true",
+        test = "true"
+      },
       {
         name = "destunit",
         display = L["Destination Unit"],
         type = "unit",
-        test = "dest and UnitIsUnit(dest, '%s')",
+        test = "(destGUID or '') == (UnitGUID('%s') or '') and destGUID",
         values = "actual_unit_types_with_specific"
       },
       {
@@ -1524,10 +1535,9 @@ WeakAuras.event_prototypes = {
       local ret = [[
         local spellname = %s
         local startTime, duration = WeakAuras.GetSpellCooldown(spellname);
-        local inverse = %s;
-        local notestRune = %s;
+        local showOn = %s;
       ]];
-      if(trigger.use_remaining and not trigger.use_inverse) then
+      if(trigger.use_remaining and trigger.showOn == "showOnCooldown") then
         local ret2 = [[
           local expirationTime = startTime + duration
           local remaining = expirationTime - GetTime();
@@ -1536,20 +1546,13 @@ WeakAuras.event_prototypes = {
             WeakAuras.ScheduleCooldownScan(expirationTime - remainingCheck);
           end
         ]];
-        ret = ret..ret2:format(tonumber(trigger.remaining) or 0);
+        ret = ret..ret2:format(tonumber(trigger.remaining or 0) or 0);
       end 
-      return ret:format(spellName, (trigger.use_inverse and "true" or "false"), (trigger.use_matchedRune and "true" or "false"));
+      return ret:format(spellName, "\"" .. (trigger.showOn or "") .. "\"");
     end,
     args = {
       {
       }, -- Ignore first argument (id)
-      {
-        name = "matchedRune",
-        display = L["Ignore Rune CD"],
-        type = "toggle",
-        init = "arg",
-        test = "(notestRune or matchedRune ~= true or event  == 'COOLDOWN_REMAINING_CHECK')"
-      },
       {
         name = "spellName",
         required = true,
@@ -1561,17 +1564,21 @@ WeakAuras.event_prototypes = {
         name = "remaining",
         display = L["Remaining Time"],
         type = "number",
-        enable = function(trigger) return not(trigger.use_inverse) end
+        enable = function(trigger) return (trigger.showOn == "showOnCooldown") end
       },
       {
-        name = "inverse",
-        display = L["Inverse"],
-        type = "toggle",
-        test = "true"
+        name = "showOn",
+        display =  L["Show"],
+        type = "select",
+        values = "cooldown_progress_behavior_types",
+        test = "true",
+        required = true,
       },
       {
         hidden = true,
-        test = "(inverse and startTime == 0) or (not inverse and startTime > 0)"
+        test = "(showOn == \"showOnReady\" and startTime == 0) " ..
+               "or (showOn == \"showOnCooldown\" and startTime > 0) " ..
+               "or (showOn == \"showAlways\")"
       }
     },
     durationFunc = function(trigger)
@@ -1660,7 +1667,7 @@ WeakAuras.event_prototypes = {
           WeakAuras.ScheduleCooldownScan(expirationTime - remainingCheck);
         end
         ]];
-        ret = ret..ret2:format(tonumber(trigger.remaining) or 0);
+        ret = ret..ret2:format(tonumber(trigger.remaining or 0) or 0);
       end
       return ret:format(itemName, (trigger.use_inverse and "true" or "false"));
     end,
@@ -2091,7 +2098,7 @@ WeakAuras.event_prototypes = {
     type = "status",
     events = {
       "UPDATE_SHAPESHIFT_FORM",
-    "WA_DELAYED_PLAYER_ENTERING_WORLD"
+      "WA_DELAYED_PLAYER_ENTERING_WORLD"
     },
     force_events = true,
     name = L["Stance/Form/Aura"],
@@ -2353,7 +2360,7 @@ WeakAuras.event_prototypes = {
           WeakAuras.ScheduleCooldownScan(expirationTime - remainingCheck);
         end
       ]];
-      ret = ret..ret2:format(tonumber(trigger.remaining) or 0);
+      ret = ret..ret2:format(tonumber(trigger.remaining or 0) or 0);
     end
     return ret:format(trigger.rune, (trigger.use_inverse and "true" or "false"), (trigger.use_deathRune == true and "true" or trigger.use_deathRune == false and "false" or "nil"), (trigger.use_includeDeath and "true" or "false"));
   end,
@@ -2463,7 +2470,8 @@ WeakAuras.event_prototypes = {
   ["Item Equipped"] = {
     type = "status",
     events = {
-      "UNIT_INVENTORY_CHANGED"
+      "UNIT_INVENTORY_CHANGED",
+      "WA_DELAYED_PLAYER_ENTERING_WORLD"
     },
     force_events = true,
     name = L["Item Equipped"],
