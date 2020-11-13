@@ -1,0 +1,183 @@
+
+-- LVOnyxia
+DBM_ONYXIA_NAME			= "Onyxia";
+DBM_ONYXIA_INFO			= "Displays a warning when Onyxia does her deep breath ability during phase two.";
+DBM_ONYXIA_BREATH_EMOTE 		= "%s takes in a deep breath...";
+DBM_ONYXIA_BREATH_ANNOUNCE		= "*** Deep Breath ***"
+DBM_ONYXIA_PHASE2_YELL			= "This meaningless exertion bores me. I'll incinerate you all from above!";
+DBM_ONYXIA_PHASE2_ANNOUNCE		= "*** Phase 2 ***"
+DBM_ONYXIA_PHASE3_YELL			= "It seems you'll need another lesson, mortals!";
+DBM_ONYXIA_PHASE3_ANNOUNCE		= "*** Phase 3 ***"
+
+
+-- LVAzuregos
+DBM_AZUREGOS_NAME			= "Azuregos";
+DBM_AZUREGOS_INFO			= "Announces Azuregos' Teleport and Magic Shield abilities.";
+DBM_AZUREGOS_SHIELDUP_EXPR		= "Azuregos gains Reflection.";
+DBM_AZUREGOS_SHIELDUP_ANNOUNCE		= "*** Magic Reflection - stop casts against him ***";
+DBM_AZUREGOS_SHIELDDOWN_EXPR 		= "Reflection fades from Azuregos.";
+DBM_AZUREGOS_SHIELDDOWN_ANNOUNCE	= "*** Magic Reflection faded ***";
+DBM_AZUREGOS_PORT_EXPR 		= "Come, little ones. Face me!"
+DBM_AZUREGOS_PORT_ANNOUNCE		= "*** Teleport ***";
+
+-- Outdoor Dragons
+DBM_OUTDOOR_NAME		= "Lethon, Taerar, Emeriss and Ysondre";
+DBM_OUTDOOR_DESCRIPTION	= "Announces Noxious Breath and Emeriss' Volatile Infection.";
+DBM_OUTDOOR_YSONDRE		= "Ysondre";
+DBM_OUTDOOR_EMERISS		= "Emeriss";
+DBM_OUTDOOR_TAERAR		= "Taerar";
+DBM_OUTDOOR_LETHON		= "Lethon";
+
+DBM_OUTDOOR_BREATH_NOW		= "*** Noxious Breath - next in 30 sec ***";
+DBM_OUTDOOR_BREATH_WARNING	= "*** Noxious Breath in %s sec ***";
+DBM_OUTDOOR_INFECT_WARN	= "*** %s is afflicted by Volatile Infection ***";
+DBM_OUTDOOR_INFECT_SPECIAL	= "You are afflicted by Volatile Infection!";
+
+DBM_OUTDOOR_NOX_BREATH		= "([^%s]+) (%w+) afflicted by Noxious Breath";
+DBM_OUTDOOR_NOX_RESIST		= "([^%s]+) Noxious Breath was resisted by ([^%s]+)";
+DBM_OUTDOOR_INFECTION		= "([^%s]+) (%w+) afflicted by Volatile Infection.";
+
+DBM_OUTDOOR_LOCATION_1		= DBM_DUSKWOOD;
+DBM_OUTDOOR_LOCATION_2		= DBM_ASHENVALE;
+DBM_OUTDOOR_LOCATION_3		= DBM_FERALAS;
+DBM_OUTDOOR_LOCATION_4		= DBM_HINTERLANDS;
+
+-- Dark Portal
+DBM_DP_NAME			= "The Black Morass";
+DBM_DP_DESCRIPTION	= "Shows timers for portal spawns during the Dark Portal quest.";
+
+
+-- Maulgar
+DBM_MAULGAR_NAME			= "High King Maulgar";
+DBM_MAULGAR_DESCRIPTION		= "Announces shield and heal and shows a timer for Arcing Smash, Whirlwind and Felhunter spawn.";
+DBM_MAULGAR_OPTION_1		= "Announce Greater Power Word: Shield";
+DBM_MAULGAR_OPTION_2		= "Announce Spell Shield";
+DBM_MAULGAR_OPTION_3		= "Announce Prayer of Healing";
+DBM_MAULGAR_OPTION_4		= "Announce Heal";
+DBM_MAULGAR_OPTION_5		= "Announce Whirlwind";
+DBM_MAULGAR_OPTION_6		= "Announce Arcing Smash";
+DBM_MAULGAR_OPTION_7		= "Announce Felhunter";
+
+DBM_MAULGAR_WARN_GPWS		= "*** Shield on Blindeye ***";
+DBM_MAULGAR_WARN_SHIELD		= "*** Spell Shield on Krosh ***";
+DBM_MAULGAR_WARN_SMASH		= "Arcing Smash on %s: %s";
+DBM_MAULGAR_WARN_POH		= "*** Blindeye casts Prayer of Healing ***";
+DBM_MAULGAR_WARN_HEAL		= "*** Blindeye casts Heal ***";
+
+DBM_MAULGAR_WARN_WHIRLWIND	= "*** Whirlwind ***";
+DBM_MAULGAR_WARN_WW_SOON	= "*** Whirlwind soon ***";
+DBM_MAULGAR_WARN_FELHUNTER	= "*** Felhunter ***";
+
+DBM_MAULGAR_GPWS			= "Blindeye the Seer gains Greater Power Word: Shield.";
+DBM_MAULGAR_SPELLSHIELD		= "Krosh Firehand gains Spell Shield.";
+
+DBM_MAULGAR_POH				= "Blindeye the Seer begins to cast Prayer of Healing.";
+DBM_MAULGAR_HEAL			= "Blindeye the Seer begins to cast Heal.";
+DBM_MAULGAR_FELHUNTER		= "Olm the Summoner casts Summon Wild Felhunter.";
+DBM_MAULGAR_SHIELD_STOLEN	= "([^%s]+) gains Spell Shield%.";
+DBM_MAULGAR_SHIELD_STOLEN2	= "You gain Spell Shield.";
+
+DBM_MAULGAR_WHIRLWIND		= "High King Maulgar gains Whirlwind.";
+DBM_MAULGAR_ARCING_SMASH	= "High King Maulgar%s?'s Arcing Smash";
+DBM_MAULGAR_SMASH_HIT		= "High King Maulgar%s?'s Arcing Smash hits ([^%s]+) for (%d+).(.*)";
+DBM_MAULGAR_SMASH_MISS		= "High King Maulgar%s?'s Arcing Smash.+ (%w+) by ([^%s]+).";
+DBM_MAULGAR_SMASH_YOU_HIT	= "High King Maulgar%s?'s Arcing Smash hits you for (%d+).(.*)";
+DBM_MAULGAR_SMASH_YOU_MISS	= "High King Maulgar%s?'s Arcing Smash misses you.";
+DBM_MAULGAR_SMASH_YOU_DODGE	= "High King Maulgar%s?'s Arcing Smash was dodged.";
+DBM_MAULGAR_SMASH_YOU_PARRY	= "High King Maulgar%s?'s Arcing Smash was parried.";
+
+DBM_MAULGAR_DODGED	= "dodged";
+DBM_MAULGAR_PARRIED	= "parried";
+DBM_MAULGAR_MISSED	= "missed";
+
+
+-- Gruul
+DBM_GRUUL_NAME				= "Gruul the Dragonkiller";
+DBM_GRUUL_DESCRIPTION		= "Announces Shatter, Grow, Reverberation and Cave In.";
+
+DBM_GRUUL_RANGE_OPTION		= "Show range check frame";
+DBM_GRUUL_GROW_OPTION		= "Announce Grow";
+DBM_GRUUL_SHATTER_OPTION	= "Announce Ground Slam and Shatter";
+DBM_GRUUL_SILENCE_OPT		= "Announce Silence";
+DBM_GRUUL_CAVE_OPTION		= "Show special warning for Cave In";
+
+DBM_GRUUL_SAY_PULL			= "Come.... and die."
+DBM_GRUUL_GROW_EMOTE		= "%s grows in size!";
+DBM_GRUUL_EMOTE_SHATTER		= "%s roars!";
+DBM_GRUUL_CAVE_IN_YOU		= "You are afflicted by Cave In.";
+DBM_GRUUL_SHATTER_CAST		= "Gruul the Dragonkiller begins to cast Shatter.";
+DBM_GRUUL_SLAM_CAST			= "Gruul the Dragonkiller begins to cast Ground Slam.";
+DBM_GRUUL_SILENCE			= "Reverberation";
+
+DBM_GRUUL_GROW_ANNOUNCE		= "*** Grow #%s ***";
+DBM_GRUUL_SHATTER_WARN		= "*** Shatter ***";
+DBM_GRUUL_SHATTER_20WARN	= "*** Ground Slam in 10 sec ***";
+DBM_GRUUL_SHATTER_10WARN	= "*** Ground Slam - Shatter in 10 sec ***";
+DBM_GRUUL_SHATTER_SOON		= "*** Shatter soon ***";
+DBM_GRUUL_SILENCE_WARN		= "*** Silence ***";
+DBM_GRUUL_SILENCE_SOON_WARN	= "*** Silence soon ***";
+DBM_GRUUL_CAVE_IN_WARN		= "Cave In";
+
+
+-- LordKazzak
+DBM_KAZZAK_NAME				= "Doom Lord Kazzak";
+DBM_KAZZAK_DESCRIPTION		= "Announces Enrage, Mark of Kazzak and Twisted Reflection.";
+DBM_KAZZAK_OPTION_1			= "Announce Enrage";
+DBM_KAZZAK_OPTION_2			= "Announce Twisted Reflection";
+DBM_KAZZAK_OPTION_3			= "Announce Mark of Kazzak";
+DBM_KAZZAK_OPTION_4			= "Set icon";
+DBM_KAZZAK_OPTION_5			= "Send whisper";
+
+
+DBM_KAZZAK_TWISTED			= "([^%s]+) (%w+) afflicted by Twisted Reflection%.";
+DBM_KAZZAK_MARK				= "([^%s]+) (%w+) afflicted by Mark of Kazzak%.";
+DBM_KAZZAK_YELL_PULL		= "All mortals will perish!";
+DBM_KAZZAK_YELL_PULL2		= "The Legion will conquer all!";
+DBM_KAZZAK_EMOTE_ENRAGE		= "%s becomes enraged!";
+
+DBM_KAZZAK_SUP_SEC			= "*** Enrage in %s sec ***";
+DBM_KAZZAK_SUP_SOON			= "*** Enrage soon ***";
+DBM_KAZZAK_TWISTED_WARN		= "*** Twisted Reflection on %s ***";
+DBM_KAZZAK_MARK_WARN		= "*** Mark of Kazzak on %s ***";
+DBM_KAZZAK_WARN_ENRAGE		= "*** Enrage ***";
+DBM_KAZZAK_MARK_SPEC_WARN	= "You are the bomb!";
+
+-- Magtheridon
+DBM_MAG_NAME			= "Magtheridon";
+DBM_MAG_DESCRIPTION		= "Announces Infernals and Dark Mending and shows timers for Phase 2 and Blast Nova.";
+DBM_MAG_OPTION_1		= "Announce Infernals";
+DBM_MAG_OPTION_2		= "Announce Heal";
+DBM_MAG_OPTION_3		= "Announce Blast Nova";
+
+DBM_MAG_EMOTE_PULL		= "%s's bonds begin to weaken!";
+DBM_MAG_YELL_PHASE2		= "I... am... unleashed!"
+DBM_MAG_EMOTE_NOVA		= "%s begins to cast Blast Nova!";
+DBM_MAG_CAST_INFERNAL	= "Hellfire Channeler casts Burning Abyssal.";
+DBM_MAG_CAST_HEAL		= "Hellfire Channeler begins to cast Dark Mending.";
+
+DBM_MAG_PHASE2_WARN		= "*** Phase 2 in %s sec ***";
+DBM_MAG_WARN_P2			= "*** Magtheridon is free ***";
+DBM_MAG_WARN_INFERNAL	= "*** Infernal ***";
+DBM_MAG_WARN_HEAL		= "*** Heal ***";
+DBM_MAG_WARN_NOVA_NOW	= "*** Blast Nova ***";
+DBM_MAG_WARN_NOVA_SOON	= "Get ready for Blast Nova!";
+
+
+
+-- Doomwalker
+DBM_DOOMW_NAME			= "Doomwalker";
+DBM_DOOMW_DESCRIPTION	= "Shows a timer for Earthquake.";
+DBM_DOOMW_OPTION_1		= "Show range check frame";
+DBM_DOOMW_OPTION_2		= "Announce Earthquake";
+DBM_DOOMW_OPTION_3		= "Announce Overrun";
+
+DBM_DOOMW_CAST_QUAKE	= "afflicted by Earthquake";
+DBM_DOOMW_CAST_CHARGE	= "Doomwalker begins to cast Overrun.";
+DBM_DOOMW_EMOTE_ENRAGE	= "%s becomes enraged!";
+
+
+DBM_DOOMW_QUAKE_WARN	= "*** Earthquake ***";
+DBM_DOOMW_QUAKE_SOON	= "*** Earthquake soon ***";
+DBM_DOOMW_CHARGE		= "*** Overrun ***";
+DBM_DOOMW_CHARGE_SOON	= "*** Overrun soon ***";
+DBM_DOOMW_WARN_ENRAGE	= "*** Enrage ***";

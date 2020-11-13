@@ -1,0 +1,23 @@
+﻿## Interface: 20100
+## Title: |cff0055FFMisc. Deadly Boss Mods|r
+## Title-zhCN: |cff0055FFDeadly Boss Mod|r 其他
+## Notes: Miscellaneous Boss Mods
+## Notes-zhCN: Deadly Boss Mod 的户外首领以及小型团队副本模块
+## Author: Tandanu and Nitram
+## LoadOnDemand: 1
+## RequiredDeps: DBM_API
+localization.en.lua
+localization.de.lua
+localization.fr.lua
+localization.tw.lua
+localization.cn.lua
+Onyxia.lua
+OutdoorDragons.lua
+Azuregos.lua
+Maulgar.lua
+Gruul.lua
+Magtheridon.lua
+Kazzak.lua
+Doomwalker.lua
+Bosses.lua
+Load.lua
