@@ -1247,6 +1247,8 @@ function DBMStatusBars_EndImportantBar(frame)
 	if not frame.isUsed then
 		return
 	end
+
+	local oldUsedBy = frame.usedBy
 	UIFrameFadeRemoveFrame(getglobal(frame:GetName().."Bar"))
 	UIFrameFlashRemoveFrame(getglobal(frame:GetName().."Bar"))
 	getglobal(frame:GetName().."Bar").flashTimer = nil
@@ -1273,6 +1275,10 @@ function DBMStatusBars_EndImportantBar(frame)
 	getglobal(frame:GetName().."Icon"):Hide()
 	frame:Hide()
 	DBMHugeStatusBars_PullTogether();
+
+	if (type(DBM.Callbacks) == "table") then
+		DBM.Callbacks:Fire("DBM_TimerStop", oldUsedBy)
+	end
 end
 
 function DBMHugeStatusBars_CreateNewBar()

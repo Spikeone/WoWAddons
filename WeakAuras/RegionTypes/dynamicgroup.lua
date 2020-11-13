@@ -523,7 +523,6 @@ local function modify(parent, region, data)
             local childRegion = regionData.region;
             if(childData and childRegion) then
                 if (childRegion.toShow or WeakAuras.IsAnimating(childRegion) == "finish") then
-                    DEFAULT_CHAT_FRAME:AddMessage("|cffffff00Showing child region|r - toShow = " .. tostring(childRegion.toShow) .. "ID: " .. childId)
                     childRegion:Show();
                 end
                 

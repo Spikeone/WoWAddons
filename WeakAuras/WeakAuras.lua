@@ -1769,8 +1769,6 @@ function WeakAuras.SetRegion(data, cloneId)
             return;
           end
           region.toShow = false;
-
-          DEFAULT_CHAT_FRAME:AddMessage("Collapsing dynamic group childs")
           WeakAuras.PerformActions(data, "finish", region);
           WeakAuras.Animate("display", data, "finish", data.animation.finish, region, false, hideRegion, nil, cloneId);
           parent:ControlChildren();

@@ -237,7 +237,7 @@ function WeakAuras.ActivateEvent(id, triggernum, data)
             changed = true
         end
     end
-    
+
     local name = data.nameFunc and data.nameFunc(data.trigger) or nil
     local icon = data.iconFunc and data.iconFunc(data.trigger) or nil
     local texture = data.textureFunc and data.textureFunc(data.trigger) or nil
@@ -264,40 +264,40 @@ function WeakAuras.ActivateEvent(id, triggernum, data)
 end
 
 function WeakAuras.ScanEvents(event, arg1, arg2, ...)
-    local event_list = loaded_events[event];
-    if(event == "COMBAT_LOG_EVENT_UNFILTERED") then
-      event_list = event_list and event_list[arg2];
+    local event_list = loaded_events[event]
+    if (event == "COMBAT_LOG_EVENT_UNFILTERED") then
+        event_list = event_list and event_list[arg2]
     end
-    if(event_list) then
-    -- This reverts the COMBAT_LOG_EVENT_UNFILTERED_CUSTOM workaround so that custom triggers that check the event argument will work as expected
-      if(event == "COMBAT_LOG_EVENT_UNFILTERED_CUSTOM") then
-        event = "COMBAT_LOG_EVENT_UNFILTERED";
-      end
-      for id, triggers in pairs(event_list) do
-        WeakAuras.ActivateAuraEnvironment(id);
-        local updateTriggerState = false;
-        for triggernum, data in pairs(triggers) do
-          if(data.triggerFunc) then
-            if(data.triggerFunc(event, arg1, arg2, ...)) then
-              if(WeakAuras.ActivateEvent(id, triggernum, data)) then
-                updateTriggerState = true;
-              end
-            else
-              if(data.untriggerFunc and data.untriggerFunc(event, arg1, arg2, ...)) then
-                if (WeakAuras.EndEvent(id, triggernum)) then
-                  updateTriggerState = true;
+    if (event_list) then
+        -- This reverts the COMBAT_LOG_EVENT_UNFILTERED_CUSTOM workaround so that custom triggers that check the event argument will work as expected
+        if (event == "COMBAT_LOG_EVENT_UNFILTERED_CUSTOM") then
+            event = "COMBAT_LOG_EVENT_UNFILTERED"
+        end
+        for id, triggers in pairs(event_list) do
+            WeakAuras.ActivateAuraEnvironment(id)
+            local updateTriggerState = false
+            for triggernum, data in pairs(triggers) do
+                if (data.triggerFunc) then
+                    if (data.triggerFunc(event, arg1, arg2, ...)) then
+                        if (WeakAuras.ActivateEvent(id, triggernum, data)) then
+                            updateTriggerState = true
+                        end
+                    else
+                        if (data.untriggerFunc and data.untriggerFunc(event, arg1, arg2, ...)) then
+                            if (WeakAuras.EndEvent(id, triggernum)) then
+                                updateTriggerState = true
+                            end
+                        end
+                    end
                 end
-              end
             end
-          end
+            if (updateTriggerState) then
+                WeakAuras.UpdatedTriggerState(id)
+            end
+            WeakAuras.ActivateAuraEnvironment(nil)
         end
-        if (updateTriggerState) then
-          WeakAuras.UpdatedTriggerState(id);
-        end
-        WeakAuras.ActivateAuraEnvironment(nil);
-      end
     end
-  end
+end
 
 function GenericTrigger.ScanAll()
     for event, v in pairs(WeakAuras.forceable_events) do
@@ -1539,14 +1539,170 @@ end
 
 function GenericTrigger.AllAdded()
     -- Remove GTFO options if GTFO isn't enabled and there are no saved GTFO auras
-    for id, event in pairs(events) do
-      for triggernum, data in pairs(event) do
-        if (data.trigger.event == "GTFO") then
-          return;
-        end
-      end
+    local hideGTFO = true
+    local hideDBM = true
+    if (GTFO) then
+        hideGTFO = false
     end
-    WeakAuras.event_types["GTFO"] = nil;
-  end
+
+    DEFAULT_CHAT_FRAME:AddMessage("|cffffff00GenericTrigger.AllAdded: Testing for DBM")
+    if (DBM and type(DBM.RegisterCallback) == "function") then
+        DEFAULT_CHAT_FRAME:AddMessage("|cffffff00GenericTrigger.AllAdded: Not hiding DBM")
+        hideDBM = false
+    end
+
+    for id, event in pairs(events) do
+        for triggernum, data in pairs(event) do
+            if (data.trigger.event == "GTFO") then
+                hideGTFO = false
+            end
+            if (data.trigger.event == "DBM Announce" or data.trigger.event == "DBM Timer") then
+                hideDBM = false
+            end
+        end
+    end
+    if (hideGTFO) then
+        WeakAuras.event_types["GTFO"] = nil
+    end
+    if (hideDBM) then
+        WeakAuras.event_types["DBM Announce"] = nil
+        WeakAuras.status_types["DBM Timer"] = nil
+    end
+end
+
+-- DBM
+do
+    local registeredDBMEvents = {}
+    local bars = {}
+    local nextExpire  -- time of next expiring timer
+    local recheckTimer  -- handle of timer
+
+    local function dbmRecheckTimers()
+        --print ("dbmRecheckTimers");
+        local now = GetTime()
+        local sendUpdate = false -- Do we have a expired timer?
+        nextExpire = nil
+        local nextMsg = nil
+        local toRemove = {}
+        for k, v in pairs(bars) do
+            if (v.expirationTime < now) then
+                sendUpdate = true
+                --print ("  Removing:", k, v.message);
+                bars[k] = nil
+            elseif (nextExpire == nil) then
+                nextExpire = v.expirationTime
+                nextMsg = v.message
+            elseif (v.expirationTime < nextExpire) then
+                nextExpire = v.expirationTime
+                nextMsg = v.message
+            end
+        end
+
+        --print ("  nextExpire", nextExpire and nextExpire - now, nextMsg, "  sendUpdate", sendUpdate);
+
+        if (nextExpire) then
+            recheckTimer = timer:ScheduleTimer(dbmRecheckTimers, nextExpire - now)
+        end
+        if (sendUpdate) then
+            WeakAuras.ScanEvents("DBM_TimerUpdate")
+        end
+    end
+
+    local function dbmEventCallback(event, ...)
+        -- print ("dbmEventCallback", event, ...);
+        if (event == "DBM_TimerStart") then
+            local id, msg, duration = ...
+            local now = GetTime()
+            local expiring = now + duration
+            -- print ("  Adding timer, ID:", id, "MSG:", msg, "TimerStr", timerStr, duration)
+            bars[id] = timers[id] or {}
+            bars[id]["message"] = msg
+            bars[id]["expirationTime"] = expiring
+            bars[id]["duration"] = duration
+
+            if (nextExpire == nil) then
+                -- print ("  Scheduling timer for", expiring - now, msg);
+                nextExpire = expiring
+                recheckTimer = timer:ScheduleTimer(dbmRecheckTimers, expiring - now)
+            elseif (expiring < nextExpire) then
+                nextExpire = expiring
+                timer:CancelTimer(recheckTimer)
+                recheckTimer = timer:ScheduleTimer(dbmRecheckTimers, expiring - now, msg)
+            -- print ("  Scheduling timer for", expiring - now);
+            end
+            WeakAuras.ScanEvents("DBM_TimerUpdate")
+        elseif (event == "DBM_TimerStop") then
+            local id = ...
+            -- print ("  Removing timer with ID:", id);
+            bars[id] = nil
+            WeakAuras.ScanEvents("DBM_TimerUpdate")
+        elseif (event == "kill" or event == "wipe") then
+            -- print("  Wipe or kill, removing all timers")
+            bars = {}
+            WeakAuras.ScanEvents("DBM_TimerUpdate")
+        else -- DBM_Announce
+            WeakAuras.ScanEvents(event, ...)
+        end
+    end
+
+    function WeakAuras.GetDbmTimer(id, message, operator)
+        --print ("WeakAuras.GetDBMTimers", id, message, operator)
+        local duration, expirationTime
+        for k, v in pairs(bars) do
+            local found = true
+            if (id and id ~= k) then
+                found = false
+            end
+            if (found and message and operator) then
+                if (operator == "==") then
+                    if (v.message ~= message) then
+                        found = false
+                    end
+                elseif (operator == "find('%s')") then
+                    if (v.message == nil or not v.message:find(message)) then
+                        found = false
+                    end
+                elseif (operator == "match('%s')") then
+                    if (v.message == nil or not v.message:match(message)) then
+                        found = false
+                    end
+                end
+            end
+            if (found and (expirationTime == nil or v.expirationTime < expirationTime)) then
+                -- print ("  using", v.message);
+                expirationTime, duration = v.expirationTime, v.duration
+            end
+        end
+        return duration or 0, expirationTime or 0
+    end
+
+    function WeakAuras.RegisterDBMCallback(event)
+        if (registeredDBMEvents[event]) then
+            return
+        end
+        if (DBM) then
+            DBM:RegisterCallback(event, dbmEventCallback)
+            registeredDBMEvents[event] = true
+        end
+    end
+
+    function WeakAuras.GetDBMTimers()
+        return bars
+    end
+
+    local scheduled_scans = {}
+
+    local function doDbmScan(fireTime)
+        WeakAuras.debug("Performing dbm scan at " .. fireTime .. " (" .. GetTime() .. ")")
+        scheduled_scans[fireTime] = nil
+        WeakAuras.ScanEvents("DBM_TimerUpdate")
+    end
+    function WeakAuras.ScheduleDbmCheck(fireTime)
+        if not (scheduled_scans[fireTime]) then
+            scheduled_scans[fireTime] = timer:ScheduleTimer(doDbmScan, fireTime - GetTime() + 0.1, fireTime)
+            WeakAuras.debug("Scheduled dbm scan at " .. fireTime)
+        end
+    end
+end
 
 WeakAuras.RegisterTriggerSystem({"event", "status", "custom"}, GenericTrigger)

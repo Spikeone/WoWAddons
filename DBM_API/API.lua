@@ -171,7 +171,7 @@
 --  updated the Serpentshrine zone localizations
 --  added zhTW localization for Karazhan (thanks to Dean, kc10577 and jrkid)
 --  updated esES localization (thanks to Geran from Dun Modr)
---  updated deDE localization (thanks to Xerôn)
+--  updated deDE localization (thanks to Xerï¿½n)
 --  /dbm stop will no longer remove custom timers
 --  the Void Reaver boss mod will now detect Arcane Orb on dps warriors
 --  the Maiden of Virtue mod will now use her yell to detect repentance
@@ -321,7 +321,11 @@ DBM_SavedVars = {
 	},
 }
 
+
 DBM = {}
+
+local callbackHandler = LibStub("CallbackHandler-1.0")
+DBM.Callbacks = callbackHandler:New(DBM)
 
 DBM.Version = "3.22" -- used for "a new version of dbm is available"-spam
 DBMGUI_VERSION = "3.02"
@@ -2253,6 +2257,12 @@ function DBM.StartStatusBarTimer(timer, name, icon, noBroadcast, syncedBy, start
 		DBM.StatusBarData[name].frame:SetAlpha(1);
 		DBM.StatusBarData[name].frame:Show();
 
+
+		if type(DBM.Callbacks) == "table" then
+			local message = getglobal(DBM.StatusBarData[name].frame:GetName().."BarText"):GetText()
+			DBM.Callbacks:Fire("DBM_TimerStart", name, message, timer, syncedBy)
+		end
+
 	end
 	if not noBroadcast then
 		if icon then
@@ -2409,6 +2419,10 @@ function DBM.EndStatusBarTimer(name, noBroadcast, syncedBy, endRepeating, dontEn
 			else
 				DBM.AddSyncMessage("ENDSBT "..name);
 			end
+		end
+
+		if type(DBM.Callbacks) == "table" and not dontEndHugeBar then
+			DBM.Callbacks:Fire("DBM_TimerStop", name)
 		end
 		
 		DBMStatusBars_PullTogether();
@@ -2590,6 +2604,10 @@ function DBM.Announce(Warning, localWarning, addon, forceAnnounce, color)
 	
 	if DBM.Options.Gui["SelfWarning_Enable"] then
 		RaidWarningFrames_AddLocalMessages(Warning, true);
+	end
+
+	if (type(DBM.Callbacks) == "table") then
+		DBM.Callbacks:Fire("DBM_Announce", Warning)
 	end
 end
 
@@ -3506,6 +3524,15 @@ function DBM.CombatEnd(bossName, noBroadcast, subBossName)
 	end
 	
 	if not subBossName then
+		local event = "kill"
+		if (DBM.BossModMetatable:IsWipe()) then
+			event = "wipe"
+		end
+
+		if (type(DBM.Callbacks) == "table") then
+			DBM.Callbacks:Fire(event, bossName)
+		end
+
 		DBM.EndHideWhispers(bossName);
 		DBM.InCombat = false;
 	end

@@ -1768,6 +1768,109 @@ WeakAuras.event_prototypes = {
       },
     },
   },
+    -- DBM events
+    ["DBM Announce"] = {
+      type = "event",
+      events = {
+        "DBM_Announce"
+      },
+      name = L["DBM Announce"],
+      init = function(trigger)
+        WeakAuras.RegisterDBMCallback("DBM_Announce");
+        return "";
+      end,
+      args = {
+        {
+          name = "message",
+          init = "arg",
+          display = L["Message"],
+          type = "longstring"
+        }
+      }
+    },
+    ["DBM Timer"] = {
+      type = "status",
+      events = {
+        "DBM_TimerUpdate"
+      },
+      force_events = "DBM_TimerUpdate",
+      name = L["DBM Timer"],
+      init = function(trigger)
+        WeakAuras.RegisterDBMCallback("DBM_TimerStart");
+        WeakAuras.RegisterDBMCallback("DBM_TimerStop");
+        WeakAuras.RegisterDBMCallback("wipe");
+        WeakAuras.RegisterDBMCallback("kill");
+  
+        local ret = "";
+  
+        if (trigger.use_id) then
+          ret = "local triggerId = \"" .. trigger.id .. "\"\n";
+        else
+          ret = "local triggerId = nil\n";
+        end
+  
+        local test;
+        if (trigger.use_message) then
+          local ret2 = [[
+            local triggerMessage = "%s"
+            local triggerOperator = "%s"
+          ]]
+          ret = ret .. ret2:format(trigger.message or "", trigger.message_operator  or "")
+        else
+          ret = ret .. [[
+            local triggerMessage = nil;
+            local triggerOperator = nil;
+          ]]
+          test = "true";
+        end
+  
+        ret = ret .. [[
+          local duration, expirationTime = WeakAuras.GetDbmTimer(triggerId, triggerMessage, triggerOperator);
+        ]]
+  
+        if (trigger.use_remaining) then
+          local ret2 = [[
+            local remainingCheck = %s;
+            local remaining = expirationTime - GetTime();
+            if (remaining > remainingCheck) then
+              WeakAuras.ScheduleDbmCheck(expirationTime - remainingCheck);
+            end
+          ]]
+          ret = ret .. ret2:format(tonumber(trigger.remaining) or 0);
+        end
+        --print (ret);
+        return ret;
+      end,
+      durationFunc = function(trigger)
+        local duration, expirationTime = WeakAuras.GetDbmTimer(trigger.id, trigger.message, trigger.message_operator);
+        return duration, expirationTime;
+      end,
+      args = {
+        {
+          name = "id", -- TODO Is there ever anything useful in ID?
+          display = L["Id"],
+          type = "string",
+          test = "true"
+        },
+        {
+          name = "message",
+          display = L["Message"],
+          type = "longstring",
+          test = "true"
+        },
+        {
+          name = "remaining",
+          display = L["Remaining Time"],
+          type = "number",
+          init = "remaining"
+        },
+        {
+          hidden = true,
+          test = "duration > 0"
+        }
+      },
+      automaticrequired = true
+    },
   ["Global Cooldown"] = {
     type = "status",
     events = {

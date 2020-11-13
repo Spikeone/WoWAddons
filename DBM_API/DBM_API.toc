@@ -9,8 +9,7 @@
 ## Author: Tandanu and Nitram
 ## URL: http://www.deadlybossmods.com
 
-libs/LibStub/LibStub.lua
-libs/CallbackHandler-1.0/CallbackHandler-1.0.xml
+embeds.xml
 localization.en.lua
 localization.de.lua
 localization.fr.lua
