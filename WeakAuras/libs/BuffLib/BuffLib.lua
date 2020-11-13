@@ -43,7 +43,7 @@ end
 -- make seaLib optional
 local seaLib;
 if (AceLibrary:HasInstance("SpecialEvents-Aura-2.0")) then
-	AceLibrary("SpecialEvents-Aura-2.0")
+	seaLib = AceLibrary("SpecialEvents-Aura-2.0")
 end
 
 local function firstToUpper(str)
