@@ -739,13 +739,7 @@ function UnitBuff(unitID, index, castable)
 	-- if duration can be seen by the player (provided by the server) return original duration and end function here
 	if timeLeft ~= nil and duration ~=nil then -- can see timer, perfect
 		if (timeLeft == 0 and duration == 0) or (duration > 0 and timeLeft > 0) then
-			if unitID ~= "player" then
-				isMine = true
-			else
-				isMine = false
-			end
-
-			return name, rank, icon, count, duration, timeLeft, isMine
+			return name, rank, icon, count, duration, timeLeft, true
 		end
 	end	
 	
