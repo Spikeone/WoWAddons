@@ -1278,6 +1278,9 @@ do
             tenchFrame = CreateFrame("Frame")
             tenchFrame:RegisterEvent("UNIT_INVENTORY_CHANGED")
 
+            tenchFrame.lastMHTime = 0
+            tenchFrame.lastOHTime = 0
+
             tenchTip = WeakAuras.GetHiddenTooltip()
 
             local function getTenchName(id)
@@ -1327,6 +1330,14 @@ do
                     end
                 end
             )
+
+            tenchFrame:SetScript(
+                "OnUpdate",
+                function(self)
+                    tenchUpdate()
+                end
+            )
+            
             tenchUpdate()
         end
     end

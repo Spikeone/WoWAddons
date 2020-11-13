@@ -814,7 +814,6 @@ function WeakAuras.ScanForLoads(self, event, arg1)
   local inInstance, Type = IsInInstance()
   local _, size, difficulty, instanceType, difficultyIndex;
   local incombat = UnitAffectingCombat("player") -- or UnitAffectingCombat("pet"); 
-  local inpetbattle = false	--C_PetBattles.IsInBattle()
   if (inInstance) then
     _, instanceType, difficultyIndex = GetInstanceInfo();
     size = Type
@@ -874,8 +873,8 @@ function WeakAuras.ScanForLoads(self, event, arg1)
   for id, data in pairs(db.displays) do
   if (data and not data.controlledChildren) then
   local loadFunc = loadFuncs[id];
-  shouldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", incombat, inpetbattle, player, class, spec, race, playerLevel, zone, size, difficulty, role);
-  couldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", true, true, player, class, spec, race, playerLevel, zone, size, difficulty, role);
+  shouldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", incombat, player, class, spec, race, playerLevel, zone, size, difficulty, role);
+  couldBeLoaded = loadFunc and loadFunc("ScanForLoads_Auras", true, player, class, spec, race, playerLevel, zone, size, difficulty, role);
 
   if(shouldBeLoaded and not loaded[id]) then
     WeakAuras.LoadDisplay(id);

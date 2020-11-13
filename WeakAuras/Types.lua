@@ -16,7 +16,7 @@ local RAID_CLASS_COLORS = {
    ["DEATHKNIGHT"] = { r = 0.77, g = 0.12 , b = 0.23, colorStr = "ffc41f3b" },
 }
 
-local CLASS_SORT_ORDER = { "HUNTER", "WARLOCK", "PRIEST", "PALADIN", "MAGE", "ROGUE", "DRUID", "SHAMAN", "WARRIOR", "DEATHKNIGHT" };
+local CLASS_SORT_ORDER = { "HUNTER", "WARLOCK", "PRIEST", "PALADIN", "MAGE", "ROGUE", "DRUID", "SHAMAN", "WARRIOR" };
 
 local SPECIALIZATION = "Specialization"
 
