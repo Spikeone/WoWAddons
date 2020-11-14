@@ -79,7 +79,8 @@ local function Constructor()
   
   button:SetScript("OnEnter", function() Show_Tooltip(button, texture.name, texture.path:sub(17)) end);
 	button:SetScript("OnLeave", Hide_Tooltip);
-  
+
+
 	local widget = {
 		frame = button,
     texture = texture,

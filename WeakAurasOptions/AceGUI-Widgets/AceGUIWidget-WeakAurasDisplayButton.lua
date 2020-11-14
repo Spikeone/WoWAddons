@@ -1098,6 +1098,8 @@ local function Constructor()
     expand:SetScript("OnEnter", function() Show_Tooltip(button, expand.title, expand.desc) end);
     expand:SetScript("OnLeave", Hide_Tooltip);
 
+    button.toggle:Hide()
+
     local widget = {
         frame = button,
         title = title,

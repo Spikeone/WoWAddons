@@ -172,6 +172,8 @@ local function Constructor()
     
     button:SetScript("OnClick", function() checkbox:Click() end);
 
+    button.toggle:Hide()
+    
     local widget = {
         frame = button,
         title = title,

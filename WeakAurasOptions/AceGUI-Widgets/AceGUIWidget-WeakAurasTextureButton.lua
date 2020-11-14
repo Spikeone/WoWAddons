@@ -103,7 +103,9 @@ local function Constructor()
   texture:SetPoint("TOPRIGHT", button, -4, -4);
   
   button:SetScript("OnEnter", function() Show_Tooltip(button, texture.name, texture.path:gsub("\\", "\n")) end);
-	button:SetScript("OnLeave", Hide_Tooltip);
+  button:SetScript("OnLeave", Hide_Tooltip);
+  
+  button.toggle:Hide()
   
 	local widget = {
 		frame = button,

@@ -68,6 +68,8 @@ local function Constructor()
     
     button:SetScript("OnEnter", function() Show_Tooltip(button, button:GetText():sub(2), button.description or L["Add a new display"]) end);
     button:SetScript("OnLeave", Hide_Tooltip);
+
+    button.toggle:Hide()
     
     local widget = {
         frame = button,

@@ -171,6 +171,8 @@ local function Constructor()
       view.texture:SetTexture("Interface\\LFGFrame\\BattlenetWorking4.blp");
     end
   end);
+
+  button.toggle:Hide()
   
 	local widget = {
 		frame = button,
