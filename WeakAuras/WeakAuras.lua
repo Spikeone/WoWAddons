@@ -827,42 +827,18 @@ function WeakAuras.ScanForLoads(self, event, arg1)
       size = "ten"
       difficulty = "normal"
     elseif difficultyIndex == 4 then
-      size = "twentyfive"
+      size = "twenty"
       difficulty = "normal"
     elseif difficultyIndex == 5 then
-      size = "ten"
-      difficulty = "heroic"
+      size = "twentyfive"
+      difficulty = "normal"
     elseif difficultyIndex == 6 then
-      size = "twentyfive"
-      difficulty = "heroic"
-    elseif difficultyIndex == 7 then
-      size = "twentyfive"
-      difficulty = "lfr"
-    elseif difficultyIndex == 8 then
-      size = "party"
-      difficulty = "challenge"
-    elseif difficultyIndex == 9 then
       size = "fortyman"
       difficulty = "normal"
-    elseif difficultyIndex == 11 then
-      size = "scenario"
-      difficulty = "heroic"
-    elseif difficultyIndex == 12 then
-      size = "scenario"
-      difficulty = "normal"
-    elseif difficultyIndex == 14 then
-      size = "flexible"
-      difficulty = "normal"
-    elseif difficultyIndex == 15 then
-      size = "flexible"
-      difficulty = "heroic"
-    elseif difficultyIndex == 16 then
-      size = "twenty"
-      difficulty = "mythic"
-    elseif difficultyIndex == 17 then
-      size = "flexible"
-      difficulty = "lfr"
-    end 
+    else
+      size = "none"
+      difficulty = "none"
+    end
   else
     size = "none"
     difficulty = "none"

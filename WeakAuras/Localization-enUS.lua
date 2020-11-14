@@ -962,6 +962,25 @@ L["Elemental"] = "Elemental"
 L["Enhancement"] = "Enhancement" 
 L["Restoration"] = "Restoration"
 
+-- Instances
+L["Karazhan"] = "Karazhan"
+L["Zul'Aman"] = "Zul'Aman"
+L["Blackrock Spire"] = "Blackrock Spire"
+L["Ruins of Ahn'Qiraj"] = "Ruins of Ahn'Qiraj"
+L["Zul'Gurub"] = "Zul'Gurub"
+L["Onyxia's Lair"] = "Onyxia's Lair"
+L["Temple of Ahn'Qiraj"] = "Temple of Ahn'Qiraj"
+L["Molten Core"] = "Molten Core"
+L["Blackwing Lair"] = "Blackwing Lair"
+L["Naxxramas"] = "Naxxramas"
+L["Gruul's Lair"] = "Gruul's Lair"
+L["Magtheridon's Lair"] = "Magtheridon's Lair"
+L["Serpentshrine Cavern"] = "Serpentshrine Cavern"
+L["Tempest Keep"] = "Tempest Keep"
+L["Hyjal Past"] = "Hyjal Past"
+L["Black Temple"] = "Black Temple"
+L["The Sunwell"] = "The Sunwell"
+
 -- Make missing translations available
 setmetatable(WeakAuras.L, {__index = function(self, key)
 	self[key] = (key or "")
