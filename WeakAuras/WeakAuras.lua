@@ -303,6 +303,9 @@ function WeakAuras.ActivateAuraEnvironment(id, cloneId, state)
       aura_environments[id] = aura_environments[id] or {};
       current_aura_env = aura_environments[id];
       
+      -- update state
+      current_aura_env.state = state
+
       -- Push the new environment onto the stack
       tinsert(aura_env_stack, current_aura_env);
     else
@@ -312,6 +315,7 @@ function WeakAuras.ActivateAuraEnvironment(id, cloneId, state)
       current_aura_env = aura_environments[id];
       current_aura_env.cloneId = cloneId;
       current_aura_env.state = state;
+      current_aura_env.states = triggerState[id]
       
       -- Push the new environment onto the stack
       tinsert(aura_env_stack, current_aura_env);
@@ -3122,7 +3126,7 @@ local function startStopTimers(id, cloneId, triggernum, state)
               WeakAuras.UpdatedTriggerState(id);
             end
           end,
-          state.expirationTime - GetTime() + 0.01);
+          state.expirationTime - GetTime() + 0.03);
         record.expirationTime = state.expirationTime;
       end
     else -- no auto hide, delete timer

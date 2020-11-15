@@ -63,6 +63,11 @@ local properties = {
       display = L["Color"],
       setter = "Color",
       type = "color"
+    },
+    inverse = {
+        display = L["Inverse"],
+        setter = "SetInverse",
+        type = "bool"
     }
 };
 
@@ -209,7 +214,8 @@ local function modify(parent, region, data)
         region:EnableMouse(false);
     end
     
-    cooldown:SetReverse(not data.inverse);
+    region.inverse = data.inverse;
+    cooldown:SetReverse(not region.inverse);
     
     function region:Color(r, g, b, a)
         region.color_r = r;
@@ -299,7 +305,7 @@ local function modify(parent, region, data)
         local remaining = region.expirationTime - GetTime();
         local progress = remaining / region.duration;
         
-        if(data.inverse) then
+        if(region.inverse) then
             progress = 1 - progress;
         end
         progress = progress > 0.0001 and progress or 0.0001;
@@ -454,6 +460,11 @@ local function modify(parent, region, data)
   
     function region:SetTextColor(r, g, b, a)
         region.stacks:SetTextColor(r, g, b, a);
+    end
+
+    function region:SetInverse(i)
+        region.inverse = i
+        cooldown:SetReverse(not region.inverse);
     end
   
     function region:SetTextHeight(height)

@@ -467,6 +467,7 @@ function WeakAuras.ScanAuras(unit)
       unitCaster,
       isStealable,
       shouldConsolidate,
+      isMine,
       spellId = true
     local tooltip, debuffClass, tooltipSize
     local remaining, checkPassed
@@ -513,11 +514,18 @@ function WeakAuras.ScanAuras(unit)
                   debuffType,
                   duration,
                   expirationTime,
-                  unitCaster,
+                  isMine,
                   isStealable,
                   shouldConsolidate,
                   spellId = UnitAura(unit, index, filter)
                 --              unitCaster = unitCaster or "unknown";
+
+                if (isMine) then
+                  unitCaster = "player"
+                else
+                  unitCaster = "Unknown"
+                end
+
                 tooltip, debuffClass, tooltipSize = WeakAuras.GetAuraTooltipInfo(unit, index, filter)
                 aura_scan_cache[unit][filter][index] = aura_scan_cache[unit][filter][index] or {}
 
@@ -650,7 +658,7 @@ function WeakAuras.ScanAuras(unit)
                 debuffType,
                 duration,
                 expirationTime,
-                unitCaster,
+                isMine,
                 isStealable,
                 shouldConsolidate,
                 spellId = UnitAura(unit, checkname, nil, filter)
@@ -658,6 +666,12 @@ function WeakAuras.ScanAuras(unit)
                 name = nil
               end
               checkPassed = false
+
+              if (isMine) then
+                unitCaster = "player"
+              else
+                unitCaster = "Unknown"
+              end
 
               -- Aura conforms to trigger options?
               if
