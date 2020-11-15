@@ -398,6 +398,12 @@ while(GetClassInfo(classID)) do
   classID = classID + 1;
 end
 
+function WeakAuras.CheckChargesDirection(direction, triggerDirection)
+  return triggerDirection == "CHANGED"
+     or (triggerDirection == "GAINED" and direction > 0)
+     or (triggerDirection == "LOST" and direction < 0)
+end
+
 WeakAuras.load_prototype = {
   args = {
     {
@@ -620,40 +626,52 @@ WeakAuras.event_prototypes = {
         name = "name",
         display = L["Name"],
         type = "string",
-        init = "UnitName(unit)"
+        init = "UnitName(unit)",
+        store = true,
+        conditionType = "string"
       },
       {
         name = "class",
         display = L["Class"],
         type = "select",
         init = "select(2, UnitClass(unit))",
-        values = "class_types"
+        values = "class_types",
+        store = true,
+        conditionType = "select"
       },
       {
         name = "hostility",
         display = L["Hostility"],
         type = "select",
         init = "UnitIsEnemy('player', unit) and 'hostile' or 'friendly'",
-        values = "hostility_types"
+        values = "hostility_types",
+        store = true,
+        conditionType = "select"
       },
       {
         name = "character",
         display = L["Character Type"],
         type = "select",
         init = "UnitIsPlayer(unit) and 'player' or 'npc'",
-        values = "character_types"
+        values = "character_types",
+        store = true,
+        conditionType = "select"
       },
       {
         name = "level",
         display = L["Level"],
         type = "number",
-        init = "UnitLevel(unit)"
+        init = "UnitLevel(unit)",
+        store = true,
+        conditionType = "number"
       },
     {
         name = "attackable",
         display = L["Attackable"],
         type = "tristate",
         init = "UnitCanAttack('player', unit) and true or false",
+        store = true,
+        conditionType = "bool"
       },
       {
         hidden = true,
@@ -686,6 +704,7 @@ WeakAuras.event_prototypes = {
     
     return ret:format(trigger.unit, trigger.unit);
     end,
+    statesParameter = "one",
     args = {
       {
         name = "unit",
@@ -699,13 +718,17 @@ WeakAuras.event_prototypes = {
         name = "health",
         display = L["Health"],
         type = "number",
-        init = "UnitHealth(unit)"
+        init = "UnitHealth(unit)",
+        store = true,
+        conditionType = "number"
       },
       {
         name = "percenthealth",
         display = L["Health (%)"],
         type = "number",
-        init = "(UnitHealth(unit) / math.max(1, UnitHealthMax(unit))) * 100"
+        init = "(UnitHealth(unit) / math.max(1, UnitHealthMax(unit))) * 100",
+        store = true,
+        conditionType = "number"
       },
       {
         hidden = true,
@@ -744,6 +767,7 @@ WeakAuras.event_prototypes = {
     
     return ret:format(trigger.unit, trigger.unit);
     end,
+    statesParameter = "one",
     args = {
       {
         name = "unit",
@@ -759,23 +783,29 @@ WeakAuras.event_prototypes = {
         display = L["Power Type"],
         type = "select",
         values = "power_types",
-        init = "UnitPowerType(unit)"
+        init = "UnitPowerType(unit)",
+        store = true,
+        conditionType = "select"
       },
       {
         name = "power",
         display = L["Power"],
         type = "number",
-        init = "UnitMana(unit)"
+        init = "UnitMana(unit)",
+        store = true,
+        conditionType = "number"
       },
       {
         name = "percentpower",
         display = L["Power (%)"],
         type = "number",
-        init = "(UnitMana(unit) / math.max(1, UnitManaMax(unit))) * 100;"
+        init = "(UnitMana(unit) / math.max(1, UnitManaMax(unit))) * 100;",
+        store = true,
+        conditionType = "number"
       },
       {
         hidden = true,
-        test = "UnitExists(concernedUnit)"
+        test = "UnitExists(unit)"
       }
     },
     durationFunc = function(trigger)
@@ -815,16 +845,17 @@ WeakAuras.event_prototypes = {
         values = "actual_unit_types_with_specific",
         enable = function(trigger)
           return not (trigger.subeventPrefix == "ENVIRONMENTAL")
-        end
+        end,
+        store = true,
+        conditionType = "string"
       },
       {
         name = "source",
         display = L["Source Name"],
         type = "string",
         init = "arg",
-        enable = function(trigger)
-          return not (trigger.subeventPrefix == "ENVIRONMENTAL")
-        end
+        store = true,
+        conditionType = "string"
       },
       {}, -- sourceFlags ignored with _ argument
       {
@@ -844,7 +875,9 @@ WeakAuras.event_prototypes = {
         display = L["Destination Unit"],
         type = "unit",
         test = "(destGUID or '') == (UnitGUID('%s') or '') and destGUID",
-        values = "actual_unit_types_with_specific"
+        values = "actual_unit_types_with_specific",
+        store = true,
+        conditionType = "string"
       },
       {
         name = "dest",
@@ -853,7 +886,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return not (trigger.subeventPrefix == "SPELL" and trigger.subeventSuffix == "_CAST_SUCCESS");
-        end
+        end,
+        store = true,
+        conditionType = "string"
       },
       {
         enable = function(trigger)
@@ -879,7 +914,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventPrefix and (trigger.subeventPrefix:find("SPELL") or trigger.subeventPrefix == "RANGE" or trigger.subeventPrefix:find("DAMAGE"))
-        end
+        end,
+        store = true,
+        conditionType = "string"
       },
       {
         enable = function(trigger)
@@ -890,10 +927,13 @@ WeakAuras.event_prototypes = {
         name = "environmentalType",
         display = L["Environment Type"],
         type = "select",
+        init = "arg",
         values = "environmental_types",
         enable = function(trigger)
           return trigger.subeventPrefix == "ENVIRONMENTAL"
-        end
+        end,
+        store = true,
+        conditionType = "select"
       },
       {
         name = "missType",
@@ -903,7 +943,9 @@ WeakAuras.event_prototypes = {
         values = "miss_types",
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventPrefix and (trigger.subeventSuffix == "_MISSED" or trigger.subeventPrefix == "DAMAGE_SHIELD_MISSED")
-        end
+        end,
+        conditionType = "select",
+        store = true
       },
       {
         enable = function(trigger)
@@ -932,7 +974,9 @@ WeakAuras.event_prototypes = {
         values = "aura_types",
         enable = function(trigger)
           return trigger.subeventSuffix and (trigger.subeventSuffix:find("AURA") or trigger.subeventSuffix == "_DISPEL" or trigger.subeventSuffix == "_STOLEN")
-        end
+        end,
+        conditionType = "select",
+        store = "true"
       },
       {
         name = "amount",
@@ -941,7 +985,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventPrefix and (trigger.subeventSuffix == "_DAMAGE" or trigger.subeventSuffix == "_MISSED" or trigger.subeventSuffix == "_HEAL" or trigger.subeventSuffix == "_ENERGIZE" or trigger.subeventSuffix == "_DRAIN" or trigger.subeventSuffix == "_LEECH" or trigger.subeventPrefix:find("DAMAGE"))
-        end
+        end,
+        store = true,
+        conditionType = "number"
       },
       {
         name = "overkill",
@@ -950,7 +996,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventPrefix and (trigger.subeventSuffix == "_DAMAGE" or trigger.subeventPrefix == "DAMAGE_SHIELD" or trigger.subeventPrefix == "DAMAGE_SPLIT")
-        end
+        end,
+        store = true,
+        conditionType = "number"
       },
       {
         name = "overhealing",
@@ -959,7 +1007,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventSuffix == "_HEAL"
-        end
+        end,
+        store = true,
+        conditionType = "number"
       },
       {
         enable = function(trigger)
@@ -973,7 +1023,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventPrefix and (trigger.subeventSuffix == "_DAMAGE" or trigger.subeventPrefix == "DAMAGE_SHIELD" or trigger.subeventPrefix == "DAMAGE_SPLIT")
-        end
+        end,
+        store = true,
+        conditionType = "number"
       },
       {
         name = "blocked",
@@ -982,7 +1034,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventPrefix and (trigger.subeventSuffix == "_DAMAGE" or trigger.subeventPrefix == "DAMAGE_SHIELD" or trigger.subeventPrefix == "DAMAGE_SPLIT")
-        end
+        end,
+        store = true,
+        conditionType = "number"
       },
       {
         name = "absorbed",
@@ -991,7 +1045,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventPrefix and (trigger.subeventSuffix == "_DAMAGE" or trigger.subeventPrefix == "DAMAGE_SHIELD" or trigger.subeventPrefix == "DAMAGE_SPLIT" or trigger.subeventSuffix == "_HEAL")
-        end
+        end,
+        store = true,
+        conditionType = "number"
       },
       {
         name = "critical",
@@ -1000,7 +1056,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventPrefix and (trigger.subeventSuffix == "_DAMAGE" or trigger.subeventPrefix == "DAMAGE_SHIELD" or trigger.subeventPrefix == "DAMAGE_SPLIT" or trigger.subeventSuffix == "_HEAL")
-        end
+        end,
+        store = true,
+        conditionType = "bool"
       },
       {
         name = "glancing",
@@ -1009,7 +1067,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventPrefix and (trigger.subeventSuffix == "_DAMAGE" or trigger.subeventPrefix == "DAMAGE_SHIELD" or trigger.subeventPrefix == "DAMAGE_SPLIT")
-        end
+        end,
+        store = true,
+        conditionType = "bool"
       },
       {
         name = "crushing",
@@ -1018,7 +1078,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and trigger.subeventPrefix and (trigger.subeventSuffix == "_DAMAGE" or trigger.subeventPrefix == "DAMAGE_SHIELD" or trigger.subeventPrefix == "DAMAGE_SPLIT")
-        end
+        end,
+        store = true,
+        conditionType = "bool"
       },
       {
         name = "number",
@@ -1027,7 +1089,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and (trigger.subeventSuffix == "_EXTRA_ATTACKS" or trigger.subeventSuffix:find("DOSE"))
-        end
+        end,
+        store = true,
+        conditionType = "number"
       },
       {
         name = "powerType",
@@ -1045,7 +1109,9 @@ WeakAuras.event_prototypes = {
         init = "arg",
         enable = function(trigger)
           return trigger.subeventSuffix and (trigger.subeventSuffix == "_ENERGIZE" or trigger.subeventSuffix == "_DRAIN" or trigger.subeventSuffix == "_LEECH")
-        end
+        end,
+        store = true,
+        conditionType = "number"
       },
       {
         enable = function(trigger)
@@ -1295,13 +1361,16 @@ WeakAuras.event_prototypes = {
       "GTFO_DISPLAY"
     },
     name = L["GTFO Alert"],
+    statesParameter = "one",
     args = {
       {
         name = "alertType",
         display = "Alert Type",
         type = "select",
         init = "arg",
-        values = "gtfo_types"
+        values = "gtfo_types",
+        store = true,
+        conditionType = "select"
       },
     },
   },
@@ -1321,7 +1390,9 @@ WeakAuras.event_prototypes = {
           name = "message",
           init = "arg",
           display = L["Message"],
-          type = "longstring"
+          type = "longstring",
+          store = true,
+          conditionType = "string"
         }
       }
     },
@@ -1332,6 +1403,8 @@ WeakAuras.event_prototypes = {
       },
       force_events = "DBM_TimerUpdate",
       name = L["DBM Timer"],
+      canHaveDuration = "timed",
+      canHaveAuto = true,
       init = function(trigger)
         WeakAuras.RegisterDBMCallback("DBM_TimerStart");
         WeakAuras.RegisterDBMCallback("DBM_TimerStop");
@@ -1393,7 +1466,9 @@ WeakAuras.event_prototypes = {
           name = "message",
           display = L["Message"],
           type = "longstring",
-          test = "true"
+          test = "true",
+          store = true,
+          conditionType = "string"
         },
         {
           name = "remaining",
@@ -1596,6 +1671,8 @@ WeakAuras.event_prototypes = {
     },
     force_events = true,
     name = L["Totem"],
+    canHaveAuto = true,
+    canHaveDuration = "timed",
     init = function(trigger)
 --     trigger.totemName = WeakAuras.CorrectSpellName(trigger.totemName) or 0;
       trigger.totemType = trigger.totemType or 1;
@@ -1634,8 +1711,10 @@ WeakAuras.event_prototypes = {
       {
         name = "totemName",
         display = L["Totem Name"],
-        type = "aura",
-    test = "true"
+        type = "string",
+        test = "true",
+        conditionType = "string",
+        store = true
       },
       {
         name = "inverse",
@@ -1645,7 +1724,7 @@ WeakAuras.event_prototypes = {
       },
       {
         hidden = true,
-    test = "active"
+        test = "active"
       }
     },
     durationFunc = function(trigger)
@@ -1750,6 +1829,7 @@ WeakAuras.event_prototypes = {
     
     return ret:format(trigger.form or 0, trigger.use_inverse and "true" or "false");
     end,
+    statesParameter = "one",
     args = {
       {
         name = "form",
@@ -1757,17 +1837,16 @@ WeakAuras.event_prototypes = {
         display = L["Form"],
         type = "select",
         values = "form_types",
-        test = "true"
+        test = "inverse == (form ~= %s)",
+        store = true,
+        conditionType = "select"
       },
       {
         name = "inverse",
         display = L["Inverse"],
         type = "toggle",
-        test = "true"
-      },
-      {
-        hidden = true,
-        test = "(inverse and form ~= form_ or not inverse and form == form_)"
+        test = "true",
+        enable = function(trigger) return trigger.use_form end
       }
     },
     nameFunc = function(trigger)
@@ -1933,13 +2012,17 @@ WeakAuras.event_prototypes = {
         name = "message",
         display = L["Message"],
         init = "arg",
-        type = "longstring"
+        type = "longstring",
+        store = true,
+        conditionType = "string",
       },
       {
         name = "sourceName",
         display = L["Source Name"],
         init = "arg",
-        type = "string"
+        type = "string",
+        store = true,
+        conditionType = "string",
       }
     }
   },
@@ -2098,18 +2181,24 @@ WeakAuras.event_prototypes = {
       {
         name = "spell",
         display = L["Spell Name"],
-        type = "string"
+        type = "string",
+        store = true,
+        conditionType = "string",
       },
       {
         name = "castType",
         display = L["Cast Type"],
         type = "select",
-        values = "cast_types"
+        values = "cast_types",
+        store = true,
+        conditionType = "select"
       },
       {
         name = "interruptible",
         display = L["Interruptible"],
-        type = "tristate"
+        type = "tristate",
+        store = true,
+        conditionType = "bool"
       },
       {
         hidden = true,

@@ -49,6 +49,13 @@ local function createOptions(id, data)
                 WeakAuras.SetIconNames(data);
             end
         },
+        icon_color = {
+            type = "color",
+            name = L["Icon Color"],
+            order = 18.6,
+            hasAlpha = true,
+            disabled = function() return not data.icon end,
+        },
         displaySpace = {
             type = "execute",
             name = "",

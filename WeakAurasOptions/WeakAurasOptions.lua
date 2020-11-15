@@ -24,10 +24,11 @@ local GetItemInfo = GetItemInfo;
 local font_close,yellow_font,red_font = FONT_COLOR_CODE_CLOSE,YELLOW_FONT_COLOR_CODE,RED_FONT_COLOR_CODE
 local ValidateNumeric = function(info,val)
   if not tonumber(val) then
-    return print(fmt("|cff9900FF"..ADDON_NAME..font_close..":"..yellow_font.." %s"..red_font.." is not a number!",tostring(val)))
+    return false
   end
   return true 
 end
+WeakAuras.ValidateNumeric = ValidateNumeric;
 
 -- Handle coroutines
 local dynFrame = {};
@@ -1990,6 +1991,12 @@ function WeakAuras.AddOption(id, data)
         order = 20,
         args = {}
       },
+      conditions = {
+        type = "group",
+        name = L["Conditions"],
+        order = 25,
+        args = {}
+      },
       load = {
         type = "group",
         name = L["Load"],
@@ -3762,6 +3769,18 @@ function WeakAuras.GetSpellTooltipText(id)
   return tooltipText;
 end
 
+function WeakAuras.DeleteConditionsForTrigger(data, triggernum)
+  for _, condition in ipairs(data.conditions) do
+    if (condition.trigger == triggernum) then
+      condition.trigger = nil;
+    end
+
+    if (condition.trigger and condition.trigger > triggernum) then
+      condition.trigger = condition.trigger - 1;
+    end
+  end
+end
+
 function WeakAuras.ReloadTriggerOptions(data)
   local id = data.id;
   WeakAuras.EnsureOptions(id);
@@ -4829,6 +4848,7 @@ function WeakAuras.ReloadTriggerOptions(data)
               tremove(childData.additional_triggers, optionTriggerChoices[childId]);
         childData.numTriggers = 1 + (childData.additional_triggers and #childData.additional_triggers or 0)
               optionTriggerChoices[childId] = optionTriggerChoices[childId] - 1;
+              WeakAuras.DeleteConditionsForTrigger(childData, optionTriggerChoices[childId]);
               WeakAuras.ReloadTriggerOptions(childData);
             end
           end
@@ -4837,6 +4857,7 @@ function WeakAuras.ReloadTriggerOptions(data)
       data.numTriggers = 1 + (data.additional_triggers and #data.additional_triggers + 0)
           optionTriggerChoices[id] = optionTriggerChoices[id] - 1;
         end
+        WeakAuras.DeleteConditionsForTrigger(data, optionTriggerChoices[id]);
         WeakAuras.Add(data);
         WeakAuras.ReloadTriggerOptions(data);
       end,
@@ -5507,6 +5528,9 @@ function WeakAuras.ReloadTriggerOptions(data)
       WeakAuras.UpdateDisplayButton(data);
     end;
   end
+
+  displayOptions[id].args.conditions.args = WeakAuras.GetConditionOptions(data);
+
   if(type(id) ~= "string") then
     displayOptions[id].args.group = nil;
   end

@@ -34,6 +34,9 @@ Modernize(data)
 GetNameAndIcon(data)
   Returns the name and icon to show in the options
 
+GetTriggerConditions(data, triggernum)
+  Returns the potential conditions for a trigger
+
 #####################################################
 # Helper functions mainly for the WeakAuras Options #
 #####################################################
@@ -1734,6 +1737,35 @@ function BuffTrigger.GetNameAndIcon(data, triggernum)
     end
   end
   return name, icon;
+end
+
+function BuffTrigger.GetTriggerConditions(data, triggernum)
+  local result = {};
+  result["unitCaster"] = {
+    display = L["Caster"],
+    type = "string",
+  }
+
+  result["expirationTime"] = {
+    display = L["Remaining Duration"],
+    type = "timer",
+  }
+  result["duration"] = {
+    display = L["Total Duration"],
+    type = "number",
+  }
+
+  result["stacks"] = {
+    display = L["Stacks"],
+    type = "number"
+  }
+
+  result["name"] = {
+    display = L["Name"],
+    type = "string"
+  }
+
+  return result;
 end
 
 function BuffTrigger.CreateFallbackState(data, triggernum, state)

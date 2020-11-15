@@ -892,15 +892,29 @@ WeakAuras.operator_types = {
   [">="] = L[">="],
   ["<="] = L["<="]
 };
+
+WeakAuras.equality_operator_types = {
+  ["=="] = L["="],
+  ["~="] = L["!="],
+};
+
 WeakAuras.string_operator_types = {
   ["=="] = L["Is Exactly"],
   ["find('%s')"] = L["Contains"],
   ["match('%s')"] = L["Matches (Pattern)"]
 };
+
+WeakAuras.bool_types =
+{
+  [0] = L["False"],
+  [1] = L["True"],
+}
+
 WeakAuras.weapon_types = {
   ["main"] = L["Main Hand"],
   ["off"] = L["Off Hand"]
 };
+
 WeakAuras.swing_types = {
   ["main"] = L["Main Hand"],
   ["off"] = L["Off Hand"]

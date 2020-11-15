@@ -46,7 +46,6 @@ local function createOptions(id, data)
             order = 18,
             func = function() WeakAuras.OpenIconPick(data, "displayIcon"); end
         },
-		
         desaturate = {
             type = "toggle",
             name = L["Desaturate"],

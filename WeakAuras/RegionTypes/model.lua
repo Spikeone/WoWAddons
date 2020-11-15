@@ -1,5 +1,6 @@
 ﻿-- Import SM for statusbar-textures, font-styles and border-types
 local SharedMedia = LibStub("LibSharedMedia-3.0");
+local L = WeakAuras.L;
 
 -- Default settings
 local default = {
@@ -27,6 +28,19 @@ local default = {
 	borderSize			= 16,
 	borderBackdrop		= "Blizzard Tooltip",
 };
+
+local properties = {
+    width = {
+      display = L["Width"],
+      setter = "SetRegionWidth",
+      type = "number"
+    },
+    height = {
+      display = L["Height"],
+      setter = "SetRegionHeight",
+      type = "number"
+    },
+}
 
 -- Called when first creating a new region/display
 local function create(parent)
@@ -65,6 +79,10 @@ local function modify(parent, region, data)
     region:SetPoint(data.selfPoint, parent, data.anchorPoint, data.xOffset, data.yOffset);
     region:SetWidth(data.width);
     region:SetHeight(data.height);
+    region.width = data.width;
+    region.height = data.height;
+    region.scalex = 1;
+    region.scaley = 1;
     
 	-- Adjust model
 	if tonumber(data.model_path) then
@@ -111,20 +129,33 @@ local function modify(parent, region, data)
     
 	-- Rescale model display
     function region:Scale(scalex, scaley)
+        region.scalex = scalex;
+        region.scaley = scaley;
+
         if(scalex < 0) then
             region.mirror_h = true;
             scalex = scalex * -1;
         else
             region.mirror_h = nil;
         end
-        region:SetWidth(data.width * scalex);
+        region:SetWidth(region.width * scalex);
         if(scaley < 0) then
             scaley = scaley * -1;
             region.mirror_v = true;
         else
             region.mirror_v = nil;
         end
-        region:SetHeight(data.height * scaley);
+        region:SetHeight(region.height * scaley);
+    end
+
+    function region:SetRegionWidth(width)
+        region.width = width;
+        region:Scale(region.scalex, region.scaley);
+    end
+  
+    function region:SetRegionHeight(height)
+        region.height = height;
+        region:Scale(region.scalex, region.scaley);
     end
     
 	-- Roate model

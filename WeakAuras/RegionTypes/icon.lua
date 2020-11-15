@@ -1,5 +1,6 @@
 ﻿local SharedMedia = LibStub("LibSharedMedia-3.0");
 local LBF = nil --LibStub("LibButtonFacade",true);
+local L = WeakAuras.L;
 
 local borderOffset = 0.06
 
@@ -30,6 +31,39 @@ local default = {
     zoom = 0,
     frameStrata = 1,
     customTextUpdate = "update"
+};
+
+local properties = {
+    desaturate = {
+      display = L["Desaturate"],
+      setter = "SetDesaturated",
+      type = "bool",
+    },
+    width = {
+      display = L["Width"],
+      setter = "SetRegionWidth",
+      type = "number"
+    },
+    height = {
+      display = L["Height"],
+      setter = "SetRegionHeight",
+      type = "number"
+    },
+    textColor = {
+      display = L["Text Color"],
+      setter = "SetTextColor",
+      type = "color"
+    },
+    fontSize = {
+      display = L["Text Size"],
+      setter = "SetTextHeight",
+      type = "number"
+    },
+    color = {
+      display = L["Color"],
+      setter = "Color",
+      type = "color"
+    }
 };
 
 local function SkinChanged(skinID, gloss, backdrop, colors, button)
@@ -114,6 +148,11 @@ local function modify(parent, region, data)
     
     region:SetWidth(data.width);
     region:SetHeight(data.height);
+    region.width = data.width;
+    region.height = data.height;
+    region.scalex = 1;
+    region.scaley = 1;
+
 	if LBF then
 		button:SetAllPoints();
 	end
@@ -122,7 +161,6 @@ local function modify(parent, region, data)
     region:ClearAllPoints();
     region:SetPoint(data.selfPoint, parent, data.anchorPoint, data.xOffset, data.yOffset);
     
-    local fontPath = SharedMedia:Fetch("font", data.font);
     local sxo, syo = 0, 0;
     if(data.stacksPoint:find("LEFT")) then
         sxo = data.width / 10;
@@ -141,6 +179,7 @@ local function modify(parent, region, data)
         local selfPoint = WeakAuras.inverse_point_types[data.stacksPoint];
         stacks:SetPoint(selfPoint, icon, data.stacksPoint, -0.5 * sxo, -0.5 * syo);
     end
+    local fontPath = SharedMedia:Fetch("font", data.font);
     stacks:SetFont(fontPath, data.fontSize, data.fontFlags == "MONOCHROME" and "OUTLINE, MONOCHROME" or data.fontFlags);
     stacks:SetTextColor(data.textColor[1], data.textColor[2], data.textColor[3], data.textColor[4]);
 
@@ -157,7 +196,8 @@ local function modify(parent, region, data)
 		bo = 0.0
 	end
 	icon:SetTexCoord(texWidth + bo, 1 - bo - texWidth, texWidth + bo, 1 - bo - texWidth);
-    
+    icon:SetDesaturated(data.desaturate);
+
     local tooltipType = WeakAuras.CanHaveTooltip(data);
     if(tooltipType and data.useTooltip) then
         region:EnableMouse(true);
@@ -246,7 +286,6 @@ local function modify(parent, region, data)
             or "Interface\\Icons\\INV_Misc_QuestionMark"
         );
 		icon:SetTexture(iconPath);
-		icon:SetDesaturated(data.desaturate);
         region.values.icon = "|T"..iconPath..":12:12:0:0:64:64:4:60:4:60|t";
         UpdateText();
     end
@@ -354,17 +393,19 @@ local function modify(parent, region, data)
     end
     
     function region:Scale(scalex, scaley)
+        region.scalex = scalex;
+        region.scaley = scaley;
         local mirror_h, mirror_v;
         if(scalex < 0) then
             mirror_h = true;
 			scalex = scalex * -1;
         end
-        region:SetWidth(data.width * scalex);
+        region:SetWidth(region.width * scalex);
         if(scaley < 0) then
             mirror_v = true;
             scaley = scaley * -1;
         end
-        region:SetHeight(data.height * scaley);
+        region:SetHeight(region.height * scaley);
 		if LBF then
 			button:SetAllPoints();
 		end
@@ -396,6 +437,30 @@ local function modify(parent, region, data)
             end
         end
     end
+
+    function region:SetDesaturated(b)
+        icon:SetDesaturated(b);
+    end
+  
+    function region:SetRegionWidth(width)
+        region.width = width
+        region:Scale(region.scalex, region.scaley);
+    end
+  
+    function region:SetRegionHeight(height)
+        region.height = height
+        region:Scale(region.scalex, region.scaley);
+    end
+  
+    function region:SetTextColor(r, g, b, a)
+        region.stacks:SetTextColor(r, g, b, a);
+    end
+  
+    function region:SetTextHeight(height)
+        local fontPath = SharedMedia:Fetch("font", data.font);
+        region.stacks:SetFont(fontPath, height, data.fontFlags == "MONOCHROME" and "OUTLINE, MONOCHROME" or data.fontFlags);
+        region.stacks:SetTextHeight(height);
+    end
     
     if(data.cooldown and WeakAuras.CanHaveDuration(data) == "timed") then
         function region:SetDurationInfo(duration, expirationTime, customValue)
@@ -418,4 +483,4 @@ local function modify(parent, region, data)
     end
 end
 
-WeakAuras.RegisterRegionType("icon", create, modify, default);
+WeakAuras.RegisterRegionType("icon", create, modify, default, properties);

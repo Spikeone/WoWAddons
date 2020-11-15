@@ -32,6 +32,9 @@ Rename(oldid, newid)
 GetNameAndIcon(data)
     Returns the name and icon to show in the options
 
+GetTriggerConditions(data, triggernum)
+  Returns potential conditions that this trigger provides.
+
 #####################################################
 # Helper functions mainly for the WeakAuras Options #
 #####################################################
@@ -1456,6 +1459,10 @@ function GenericTrigger.CanHaveDuration(data, triggernum)
             else
                 return "timed"
             end
+        elseif trigger.event
+            and WeakAuras.event_prototypes[trigger.event]
+            and WeakAuras.event_prototypes[trigger.event].canHaveDuration then
+            return WeakAuras.event_prototypes[trigger.event].canHaveDuration
         else
             return "timed"
         end
@@ -1536,6 +1543,88 @@ function GenericTrigger.SetToolTip(trigger, state)
             end
         end
     end
+end
+
+function GenericTrigger.GetTriggerConditions(data, triggernum)
+    local trigger;
+    if (triggernum == 0) then
+        trigger = data.trigger;
+    else
+        trigger = data.additional_triggers[triggernum].trigger;
+    end
+
+    if (trigger.type == "event" or trigger.type == "status") then
+        if (trigger.event and WeakAuras.event_prototypes[trigger.event]) then
+        local result = {};
+
+        local canHaveDuration = GenericTrigger.CanHaveDuration(data, triggernum);
+        local timedDuration = canHaveDuration;
+        local valueDuration = canHaveDuration;
+        if (canHaveDuration == "timed") then
+            valueDuration = false;
+        elseif (type(canHaveDuration) == "table") then
+            timedDuration = false;
+        end
+
+        if (timedDuration) then
+            result["expirationTime"] = {
+            display = L["Remaining Duration"],
+            type = "timer",
+            }
+            result["duration"] = {
+            display = L["Total Duration"],
+            type = "number",
+            }
+        end
+
+        if (valueDuration) then
+            result["value"] = {
+            display = L["Progress Value"],
+            type = "number",
+            }
+            result["total"] = {
+            display = L["Progress Total"],
+            type = "number",
+            }
+        end
+
+        if (WeakAuras.event_prototypes[trigger.event].stacksFunc) then
+            result["stacks"] = {
+            display = L["Stacks"],
+            type = "number"
+            }
+        end
+
+        for _, v in pairs(WeakAuras.event_prototypes[trigger.event].args) do
+            if (v.conditionType and v.store and v.name and v.display) then
+            local enable = true;
+            if (v.enable) then
+                enable = v.enable(trigger);
+            end
+
+            if (enable) then
+                result[v.name] = {
+                display = v.display,
+                type = v.conditionType
+                }
+                if (result[v.name].type == "select") then
+                if (v.conditionValues) then
+                    result[v.name].values = WeakAuras[v.conditionValues];
+                else
+                    result[v.name].values = WeakAuras[v.values];
+                end
+                end
+                if (v.conditionTest) then
+                result[v.name].test = v.conditionTest;
+                end
+            end
+            end
+        end
+
+        return result;
+        end
+    end
+    return nil;
 end
 
 function GenericTrigger.CreateFallbackState(data, triggernum, state)

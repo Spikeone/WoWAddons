@@ -1,5 +1,6 @@
 ﻿-- Import SM for statusbar-textures, font-styles and border-types
 local SharedMedia = LibStub("LibSharedMedia-3.0");
+local L = WeakAuras.L;
 
 -- Default settings
 local default = {
@@ -11,6 +12,7 @@ local default = {
   timer         = true,
   text         = true,
   stacks         = true,
+  icon_color  =  {1.0, 1.0, 1.0, 1.0},
   textColor       = {1.0, 1.0, 1.0, 1.0},
   timerColor       = {1.0, 1.0, 1.0, 1.0},
   stacksColor     = {1.0, 1.0, 1.0, 1.0},  
@@ -49,6 +51,64 @@ local default = {
   rotateText       = "NONE",
   frameStrata     = 1,
   customTextUpdate   = "update"
+};
+
+local properties = {
+  barColor = {
+    display = L["Bar Color"],
+    setter = "Color",
+    type = "color",
+  },
+  icon_color = {
+    display = L["Icon Color"],
+    setter = "SetIconColor",
+    type = "color"
+  },
+  backgroundColor = {
+    display = L["Background Color"],
+    setter = "SetBackgroundColor",
+    type = "color"
+  },
+  borderColor = {
+    display = L["Border Color"],
+    setter = "SetBorderColor",
+    type = "color"
+  },
+  backdropColor = {
+    display = L["Backdrop Color"],
+    setter = "SetBackdropColor",
+    type = "color"
+  },
+  textColor = {
+    display = L["First Text Color"],
+    setter = "SetTextColor",
+    type = "color"
+  },
+  timerColor = {
+    display = L["Second Text Color"],
+    setter = "SetTimerColor",
+    type = "color"
+  },
+  textSize = {
+    display = L["First Text Size"],
+    setter = "SetTextSize",
+    type = "number"
+  },
+  timerSize = {
+    display = L["Second Text Size"],
+    setter = "SetTimerSize",
+    type = "number"
+  },
+  width = {
+    display = L["Width"],
+    setter = "SetRegionWidth",
+    type = "number"
+  },
+  height = {
+    display = L["Height"],
+    setter = "SetRegionHeight",
+    type = "number"
+  },
 };
 
 -- Emulate blizzard statusbar with advanced features (more grow directions)
@@ -731,6 +791,10 @@ local function modify(parent, region, data)
   -- Adjust region size
     region:SetWidth(data.width);
     region:SetHeight(data.height);
+    region.width = data.width;
+    region.height = data.height;
+    region.scalex = 1;
+    region.scaley = 1;
     
   -- Reset anchors
     region:ClearAllPoints();
@@ -824,9 +888,11 @@ local function modify(parent, region, data)
   -- Update icon visibility
     if data.icon then
     -- Update icon
-    local iconsize = math.min(data.height, data.width);
+    local iconsize = math.min(region.height, region.width);
     icon:SetWidth(iconsize);
     icon:SetHeight(iconsize);
+    icon:SetDesaturated(data.desaturate);
+    icon:SetVertexColor(data.icon_color[1], data.icon_color[2], data.icon_color[3], data.icon_color[4]);
 
     -- Icon update function
         function region:SetIcon(path)
@@ -840,7 +906,6 @@ local function modify(parent, region, data)
                 or "Interface\\Icons\\INV_Misc_QuestionMark"
             );
             self.icon:SetTexture(iconPath);
-            self.icon:SetDesaturated(data.desaturate)
             region.values.icon = "|T"..iconPath..":12:12:0:0:64:64:4:60:4:60|t";
       
       -- Update text
@@ -941,8 +1006,11 @@ local function modify(parent, region, data)
     
   -- Scale update function
     function region:Scale(scalex, scaley)
-    -- Icon size
-    local iconsize = math.min(data.height, data.width);
+      region.scalex = scalex;
+      region.scaley = scaley;
+      
+      -- Icon size
+      local iconsize = math.min(region.height, region.width);
     
     -- Re-orientate region
         if scalex < 0 then
@@ -969,7 +1037,7 @@ local function modify(parent, region, data)
         end
     
     -- Update width
-        self:SetWidth(data.width * scalex);
+        self:SetWidth(region.width * scalex);
         icon:SetWidth(iconsize * scalex);
     
     -- Re-orientate region
@@ -997,7 +1065,7 @@ local function modify(parent, region, data)
         end
     
     -- Update height
-        self:SetHeight(data.height * scaley);
+        self:SetHeight(region.height * scaley);
         icon:SetHeight(iconsize * scaley);
     end
 --  region:Scale(1.0, 1.0);
@@ -1060,9 +1128,55 @@ local function modify(parent, region, data)
     end
 --  region:SetDurationInfo(1, 0, nil, nil);
 
+  function region:SetIconColor(r, g, b, a)
+    self.icon:SetVertexColor(r, g, b, a);
+  end
+
+  function region:SetBackgroundColor(r, g, b, a)
+    self.bar:SetBackgroundColor(r, g, b, a);
+  end
+
+  function region:SetBorderColor(r, g, b, a)
+    self.border:SetBackdropBorderColor(r, g, b, a);
+  end
+
+  function region:SetBackdropColor(r, g, b, a)
+    self.border:SetBackdropColor(r, g, b, a);
+  end
+
+  function region:SetTextColor(r, g, b, a)
+    self.text:SetTextColor(r, g, b, a);
+  end
+
+  function region:SetTimerColor(r, g, b, a)
+    self.timer:SetTextColor(r, g, b, a);
+  end
+
+  function region:SetTextSize(size)
+    self.text:SetFont(SharedMedia:Fetch("font", data.textFont), size, data.textFlags and data.textFlags ~= "None" and data.textFlags);
+    self.text:SetTextHeight(size);
+    self.bar:Update();
+  end
+
+  function region:SetTimerSize(size)
+    timer:SetFont(SharedMedia:Fetch("font", data.timerFont), size, data.timerFlags and data.timerFlags ~= "None" and data.timerFlags);
+    timer:SetTextHeight(size);
+    self.bar:Update();
+  end
+
+  function region:SetRegionWidth(width)
+    self.width = width;
+    self:Scale(self.scalex, self.scaley);
+  end
+
+  function region:SetRegionHeight(height)
+    self.height = height;
+    self:Scale(self.scalex, self.scaley);
+  end 
+
   -- Update internal bar alignment
   region.bar:Update();
 end
 
 -- Register new region type with WeakAuras
-WeakAuras.RegisterRegionType("aurabar", create, modify, default);
+WeakAuras.RegisterRegionType("aurabar", create, modify, default, properties);

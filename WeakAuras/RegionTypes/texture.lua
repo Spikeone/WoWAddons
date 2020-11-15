@@ -1,4 +1,6 @@
-﻿local root2 = math.sqrt(2);
+﻿local L = WeakAuras.L;
+
+local root2 = math.sqrt(2);
 local halfroot2 = root2/2;
     
 local default = {
@@ -18,6 +20,29 @@ local default = {
     yOffset = 0,
     frameStrata = 1
 };
+
+local properties = {
+    color = {
+      display = L["Color"],
+      setter = "Color",
+      type = "color",
+    },
+    desaturate = {
+      display = L["Desaturate"],
+      setter = "SetDesaturated",
+      type = "bool"
+    },
+    width = {
+      display = L["Width"],
+      setter = "SetRegionWidth",
+      type = "number"
+    },
+    height = {
+      display = L["Height"],
+      setter = "SetRegionHeight",
+      type = "number"
+    },
+}
 
 local function create(parent)
     local frame = CreateFrame("FRAME", nil, UIParent);
@@ -41,6 +66,11 @@ local function modify(parent, region, data)
 	region.texture:SetDesaturated(data.desaturate)
     region:SetWidth(data.width);
     region:SetHeight(data.height);
+    region.width = data.width;
+    region.height = data.height;
+    region.scalex = 1;
+    region.scaley = 1;
+
     region.texture:SetBlendMode(data.blendMode);
     --region.texture:SetRotation((data.rotation / 180) * math.pi);
     region:ClearAllPoints();
@@ -92,22 +122,35 @@ local function modify(parent, region, data)
     DoTexCoord();
     
     function region:Scale(scalex, scaley)
+        region.scalex = scalex;
+        region.scaley = scaley;
+
         if(scalex < 0) then
             region.mirror_h = true;
             scalex = scalex * -1;
         else
             region.mirror_h = nil;
         end
-        region:SetWidth(data.width * scalex);
+        region:SetWidth(region.width * scalex);
         if(scaley < 0) then
             scaley = scaley * -1;
             region.mirror_v = true;
         else
             region.mirror_v = nil;
         end
-        region:SetHeight(data.height * scaley);
+        region:SetHeight(region.height * scaley);
         
         DoTexCoord();
+    end
+    
+    function region:SetRegionWidth(width)
+        region.width = width;
+        region:Scale(region.scalex, region.scaley);
+    end
+  
+    function region:SetRegionHeight(height)
+        region.height = height;
+        region:Scale(region.scalex, region.scaley);
     end
     
     function region:Color(r, g, b, a)
@@ -116,6 +159,10 @@ local function modify(parent, region, data)
         region.color_b = b;
         region.color_a = a;
         region.texture:SetVertexColor(r, g, b, a);
+    end
+
+    function region:SetDesaturated(b)
+        region.texture:SetDesaturated(b);
     end
     
     function region:GetColor()
@@ -140,4 +187,4 @@ local function modify(parent, region, data)
     end
 end
 
-WeakAuras.RegisterRegionType("texture", create, modify, default);
+WeakAuras.RegisterRegionType("texture", create, modify, default, properties);
