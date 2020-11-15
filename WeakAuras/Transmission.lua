@@ -408,7 +408,7 @@ function WeakAuras.DisplayToString(id, forChat)
         if(data.trigger.type == "aura" and WeakAurasOptionsSaved and WeakAurasOptionsSaved.iconCache) then
             transmit.a = {};
             for i,v in pairs(data.trigger.names) do
-                transmit.a[v] = WeakAurasOptionsSaved.iconCache[v];
+                transmit.a[v] = WeakAurasOptionsSaved.iconCache[v.Name];
             end
         end
         if(children) then
@@ -566,9 +566,13 @@ function WeakAuras.ShowDisplayTooltip(data, children, icon, icons, import, compr
                                     end
                                 end
                             end
+
+                            if (name.SpellId) then
+                                name.Name = GetSpellInfo(name.SpellId)
+                            end
                             
                             local i = icons or (WeakAurasOptionsSaved and WeakAurasOptionsSaved.iconCache);
-                            tinsert(tooltip, {2, left, name..(i and i[name] and (" |T"..i[name]..":12:12:0:0:64:64:4:60:4:60|t") or ""), 1, 1, 1, 1, 1, 1});
+                            tinsert(tooltip, {2, left, name.Name..(i and i[name.Name] and (" |T"..i[name.Name]..":12:12:0:0:64:64:4:60:4:60|t") or ""), 1, 1, 1, 1, 1, 1});
                         end
                     elseif(trigger.type == "event" or trigger.type == "status") then
                         if(trigger.type == "event") then

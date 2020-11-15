@@ -3851,8 +3851,37 @@ function WeakAuras.ReloadTriggerOptions(data)
       end
     end
   end
-  
-  local function getAuraMatchesLabel(name)
+
+  local function getAuraInputName(id, trigger)
+    if (not (trigger.names[id] and trigger.names[id].SpellId)) then 
+      return L["Aura Name"]
+     else 
+      return L["Aura Name"] .. " (" .. tostring(trigger.names[id].SpellId) .. ")"
+    end
+  end
+
+  local function getAuraIconFromCache(nameOrId)
+    if (type(nameOrId) == "table") then
+      return iconCache[nameOrId.Name]
+    end
+
+    if (type(nameOrId) == "string") then
+      return iconCache[nameOrId]
+    end
+
+    return nil
+  end
+
+  local function getAuraMatchesLabel(nameOrId)
+    if (not nameOrId) then
+      return ""
+    end
+
+    local name = nameOrId
+    if (type(nameOrId) == "table") then
+      name = nameOrId.Name
+    end
+
     local ids = idCache[name]
     if(ids) then
       local descText = "";
@@ -3870,7 +3899,16 @@ function WeakAuras.ReloadTriggerOptions(data)
     end
   end
   
-  local function getAuraMatchesList(name)
+  local function getAuraMatchesList(nameOrId)
+    if (not nameOrId) then
+      return ""
+    end
+
+    local name = nameOrId
+    if (type(nameOrId) == "table") then
+      name = nameOrId.Name
+    end
+
     local ids = idCache[name]
     if(ids) then
       local descText = "";
@@ -4065,28 +4103,31 @@ function WeakAuras.ReloadTriggerOptions(data)
       name = function() return getAuraMatchesLabel(trigger.names[1]) end,
       desc = function() return getAuraMatchesList(trigger.names[1]) end,
       width = "half",
-      image = function() return iconCache[trigger.names[1]] or "", 18, 18 end,
+      image = function() return getAuraIconFromCache(trigger.names[1]) or "", 18, 18 end,
       order = 11,
-      disabled = function() return not iconCache[trigger.names[1]] end,
+      disabled = function() return not getAuraIconFromCache(trigger.names[1]) end,
       hidden = function() return not (trigger.type == "aura" and not trigger.fullscan and trigger.unit ~= "multi"); end
     },
     name1 = {
       type = "input",
-      name = L["Aura Name"],
+      name = function () return getAuraInputName(1, trigger) end,
       desc = L["Enter an aura name, partial aura name, or spell id"],
       order = 12,
       hidden = function() return not (trigger.type == "aura" and not trigger.fullscan and trigger.unit ~= "multi"); end,
-      get = function(info) return trigger.names[1] end,
+      get = function(info) if (trigger.names[1] == nil) then return nil end return trigger.names[1].Name end,
       set = function(info, v)
         if(v == "") then
           if(trigger.names[1]) then
             tremove(trigger.names, 1);
           end
         else
+          trigger.names[1] = {}
           if(tonumber(v)) then
             WeakAuras.ShowSpellIDDialog(trigger, v);
+            trigger.names[1].SpellId = tonumber(v)
           end
-          trigger.names[1] = WeakAuras.CorrectAuraName(v);
+          trigger.names[1].Name = WeakAuras.CorrectAuraName(v);
+          DEFAULT_CHAT_FRAME:AddMessage("Name set to" .. trigger.names[1].Name)
         end
         WeakAuras.Add(data);
         WeakAuras.SetThumbnail(data);
@@ -4107,24 +4148,29 @@ function WeakAuras.ReloadTriggerOptions(data)
       name = function() return getAuraMatchesLabel(trigger.names[2]) end,
       desc = function() return getAuraMatchesList(trigger.names[2]) end,
       width = "half",
-      image = function() return iconCache[trigger.names[2]] or "", 18, 18 end,
+      image = function() return getAuraIconFromCache(trigger.names[2]) or "", 18, 18 end,
       order = 14,
-      disabled = function() return not iconCache[trigger.names[2]] end,
+      disabled = function() return not getAuraIconFromCache(trigger.names[2]) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[1] and not trigger.fullscan and trigger.unit ~= "multi"); end,
     },
     name2 = {
       type = "input",
       order = 15,
-      name = "",
+      name = function () return getAuraInputName(2, trigger) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[1] and not trigger.fullscan and trigger.unit ~= "multi"); end,
-      get = function(info) return trigger.names[2] end,
+      get = function(info) if (not trigger.names[2]) then return nil end return trigger.names[2].Name end,
       set = function(info, v)
         if(v == "") then
           if(trigger.names[2]) then
             tremove(trigger.names, 2);
           end
         else
-          trigger.names[2] = WeakAuras.CorrectAuraName(v);
+          trigger.names[2] = {}
+          if (tonumber(v)) then
+            trigger.names[2].SpellId = tonumber(v)
+          end
+
+          trigger.names[2].Name = WeakAuras.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
         WeakAuras.SetThumbnail(data);
@@ -4145,24 +4191,29 @@ function WeakAuras.ReloadTriggerOptions(data)
       name = function() return getAuraMatchesLabel(trigger.names[3]) end,
       desc = function() return getAuraMatchesList(trigger.names[3]) end,
       width = "half",
-      image = function() return iconCache[trigger.names[3]] or "", 18, 18 end,
+      image = function() return getAuraIconFromCache(trigger.names[3]) or "", 18, 18 end,
       order = 17,
-      disabled = function() return not iconCache[trigger.names[3]] end,
+      disabled = function() return not getAuraIconFromCache(trigger.names[3]) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[2] and not trigger.fullscan and trigger.unit ~= "multi"); end,
     },
     name3 = {
       type = "input",
       order = 18,
-      name = "",
+      name = function () return getAuraInputName(3, trigger) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[2] and not trigger.fullscan and trigger.unit ~= "multi"); end,
-      get = function(info) return trigger.names[3] end,
+      get = function(info) if (not trigger.names[3]) then return nil end return trigger.names[3].Name end,
       set = function(info, v)
         if(v == "") then
           if(trigger.names[3]) then
             tremove(trigger.names, 3);
           end
         else
-          trigger.names[3] = WeakAuras.CorrectAuraName(v);
+          trigger.names[3] = {}
+          if (tonumber(v)) then
+            trigger.names[3].SpellId = tonumber(v)
+          end
+
+          trigger.names[3].Name = WeakAuras.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
         WeakAuras.SetThumbnail(data);
@@ -4183,24 +4234,29 @@ function WeakAuras.ReloadTriggerOptions(data)
       name = function() return getAuraMatchesLabel(trigger.names[4]) end,
       desc = function() return getAuraMatchesList(trigger.names[4]) end,
       width = "half",
-      image = function() return iconCache[trigger.names[4]] or "", 18, 18 end,
+      image = function() return getAuraIconFromCache(trigger.names[4]) or "", 18, 18 end,
       order = 20,
-      disabled = function() return not iconCache[trigger.names[4]] end,
+      disabled = function() return not getAuraIconFromCache(trigger.names[4]) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[3] and not trigger.fullscan and trigger.unit ~= "multi"); end,
     },
     name4 = {
       type = "input",
       order = 21,
-      name = "",
+      name = function () return getAuraInputName(4, trigger) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[3] and not trigger.fullscan and trigger.unit ~= "multi"); end,
-      get = function(info) return trigger.names[4] end,
+      get = function(info) if (not trigger.names[4]) then return nil end return trigger.names[4].Name end,
       set = function(info, v)
         if(v == "") then
           if(trigger.names[4]) then
             tremove(trigger.names, 4);
           end
         else
-          trigger.names[4] = WeakAuras.CorrectAuraName(v);
+          trigger.names[4] = {}
+          if (tonumber(v)) then
+            trigger.names[4].SpellId = tonumber(4)
+          end
+
+          trigger.names[4].Name = WeakAuras.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
         WeakAuras.SetThumbnail(data);
@@ -4214,7 +4270,7 @@ function WeakAuras.ReloadTriggerOptions(data)
       width = "half",
       image = function() return "", 0, 0 end,
       order = 22,
-      disabled = function() return not iconCache[trigger.names[5]] end,
+      disabled = function() return not getAuraIconFromCache(trigger.names[5]) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[4] and not trigger.fullscan and trigger.unit ~= "multi"); end,
     },
     name5icon = {
@@ -4222,23 +4278,28 @@ function WeakAuras.ReloadTriggerOptions(data)
       name = function() return getAuraMatchesLabel(trigger.names[5]) end,
       desc = function() return getAuraMatchesList(trigger.names[5]) end,
       width = "half",
-      image = function() return iconCache[trigger.names[5]] or "", 18, 18 end,
+      image = function() return getAuraIconFromCache(trigger.names[5]) or "", 18, 18 end,
       order = 23,
       hidden = function() return not (trigger.type == "aura" and trigger.names[4] and not trigger.fullscan and trigger.unit ~= "multi"); end,
     },
     name5 = {
       type = "input",
       order = 24,
-      name = "",
+      name = function () return getAuraInputName(5, trigger) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[4] and not trigger.fullscan and trigger.unit ~= "multi"); end,
-      get = function(info) return trigger.names[5] end,
+      get = function(info) if (not trigger.names[5]) then return nil end return trigger.names[5].Name end,
       set = function(info, v)
         if(v == "") then
           if(trigger.names[5]) then
             tremove(trigger.names, 5);
           end
         else
-          trigger.names[5] = WeakAuras.CorrectAuraName(v);
+          trigger.name[5] = {}
+          if (tonumber(v)) then
+            trigger.names[5].SpellId = tonumber(v)
+          end
+
+          trigger.names[5].Name = WeakAuras.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
         WeakAuras.SetThumbnail(data);
@@ -4259,24 +4320,29 @@ function WeakAuras.ReloadTriggerOptions(data)
       name = function() return getAuraMatchesLabel(trigger.names[6]) end,
       desc = function() return getAuraMatchesList(trigger.names[6]) end,
       width = "half",
-      image = function() return iconCache[trigger.names[6]] or "", 18, 18 end,
+      image = function() return getAuraIconFromCache(trigger.names[6]) or "", 18, 18 end,
       order = 26,
-      disabled = function() return not iconCache[trigger.names[6]] end,
+      disabled = function() return not getAuraIconFromCache(trigger.names[6]) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[5] and not trigger.fullscan and trigger.unit ~= "multi"); end,
     },
     name6 = {
       type = "input",
       order = 27,
-      name = "",
+      name = function () return getAuraInputName(6, trigger) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[5] and not trigger.fullscan and trigger.unit ~= "multi"); end,
-      get = function(info) return trigger.names[6] end,
+      get = function(info) if (not trigger.names[6]) then return nil end return trigger.names[6].Name end,
       set = function(info, v)
         if(v == "") then
           if(trigger.names[6]) then
             tremove(trigger.names, 6);
           end
         else
-          trigger.names[6] = WeakAuras.CorrectAuraName(v);
+          trigger.names[6] = {}
+          if (tonumber(v)) then
+            trigger.names[6].SpellId = tonumber(v)
+          end
+
+          trigger.names[6].Name = WeakAuras.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
         WeakAuras.SetThumbnail(data);
@@ -4297,24 +4363,29 @@ function WeakAuras.ReloadTriggerOptions(data)
       name = function() return getAuraMatchesLabel(trigger.names[7]) end,
       desc = function() return getAuraMatchesList(trigger.names[7]) end,
       width = "half",
-      image = function() return iconCache[trigger.names[7]] or "", 18, 18 end,
+      image = function() return getAuraIconFromCache(trigger.names[7]) or "", 18, 18 end,
       order = 29,
-      disabled = function() return not iconCache[trigger.names[7]] end,
+      disabled = function() return not getAuraIconFromCache(trigger.names[7]) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[6] and not trigger.fullscan and trigger.unit ~= "multi"); end,
     },
     name7 = {
       type = "input",
       order = 30,
-      name = "",
+      name = function () return getAuraInputName(7, trigger) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[6] and not trigger.fullscan and trigger.unit ~= "multi"); end,
-      get = function(info) return trigger.names[7] end,
+      get = function(info) if (not trigger.names[7]) then return nil end return trigger.names[7].Name end,
       set = function(info, v)
         if(v == "") then
           if(trigger.names[7]) then
             tremove(trigger.names, 7);
           end
         else
-          trigger.names[7] = WeakAuras.CorrectAuraName(v);
+          trigger.names[7] = {}
+          if (tonumber(v)) then
+            trigger.names[7].SpellId = tonumber(v)
+          end
+
+          trigger.names[7].Name = WeakAuras.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
         WeakAuras.SetThumbnail(data);
@@ -4335,24 +4406,29 @@ function WeakAuras.ReloadTriggerOptions(data)
       name = function() return getAuraMatchesLabel(trigger.names[8]) end,
       desc = function() return getAuraMatchesList(trigger.names[8]) end,
       width = "half",
-      image = function() return iconCache[trigger.names[8]] or "", 18, 18 end,
+      image = function() return getAuraIconFromCache(trigger.names[8]) or "", 18, 18 end,
       order = 32,
-      disabled = function() return not iconCache[trigger.names[8]] end,
+      disabled = function() return not getAuraIconFromCache(trigger.names[8]) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[7] and not trigger.fullscan and trigger.unit ~= "multi"); end,
     },
     name8 = {
       type = "input",
       order = 33,
-      name = "",
+      name = function () return getAuraInputName(8, trigger) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[7] and not trigger.fullscan and trigger.unit ~= "multi"); end,
-      get = function(info) return trigger.names[8] end,
+      get = function(info) if (not trigger.names[8]) then return nil end return trigger.names[8].Name end,
       set = function(info, v)
         if(v == "") then
           if(trigger.names[8]) then
             tremove(trigger.names, 8);
           end
         else
-          trigger.names[8] = WeakAuras.CorrectAuraName(v);
+          trigger.names[8] = {}
+          if (tonumber(v)) then
+            trigger.names[8].SpellId = tonumber(v)
+          end
+
+          trigger.names[8].Name = WeakAuras.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
         WeakAuras.SetThumbnail(data);
@@ -4373,24 +4449,28 @@ function WeakAuras.ReloadTriggerOptions(data)
       name = function() return getAuraMatchesLabel(trigger.names[9]) end,
       desc = function() return getAuraMatchesList(trigger.names[9]) end,
       width = "half",
-      image = function() return iconCache[trigger.names[9]] or "", 18, 18 end,
+      image = function() return getAuraIconFromCache(trigger.names[9]) or "", 18, 18 end,
       order = 35,
-      disabled = function() return not iconCache[trigger.names[9]] end,
+      disabled = function() return not getAuraIconFromCache(trigger.names[9]) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[8] and not trigger.fullscan and trigger.unit ~= "multi"); end,
     },
     name9 = {
       type = "input",
       order = 36,
-      name = "",
+      name = function () return getAuraInputName(9, trigger) end,
       hidden = function() return not (trigger.type == "aura" and trigger.names[8] and not trigger.fullscan and trigger.unit ~= "multi"); end,
-      get = function(info) return trigger.names[9] end,
+      get = function(info) if (not trigger.names[9]) then return nil end return trigger.names[9].Name end,
       set = function(info, v)
         if(v == "") then
           if(trigger.names[9]) then
             tremove(trigger.names, 9);
           end
         else
-          trigger.names[9] = WeakAuras.CorrectAuraName(v);
+          trigger.names[9] = {}
+          if (tonumber(v)) then
+            trigger.names[9].SpellId = tonumber(v)
+          end
+          trigger.names[9].Name = WeakAuras.CorrectAuraName(v);
         end
         WeakAuras.Add(data);
         WeakAuras.SetThumbnail(data);

@@ -651,7 +651,7 @@ function WeakAuras.ScanAuras(unit)
             -- Check all selected auras (for one trigger)
             for index, checkname in pairs(data.names) do
               -- Fetch aura data
-              name,
+                name,
                 rank,
                 icon,
                 count,
@@ -661,7 +661,7 @@ function WeakAuras.ScanAuras(unit)
                 isMine,
                 isStealable,
                 shouldConsolidate,
-                spellId = UnitAura(unit, checkname, nil, filter)
+                spellId = UnitAura(unit, checkname.Name, nil, filter)
               if (data.spellIds[index] and data.spellIds[index] ~= spellId) then
                 name = nil
               end
@@ -1581,6 +1581,15 @@ function BuffTrigger.Modernize(data)
     if (trigger and (trigger.remaining) and not tonumber(trigger.remaining)) then
       trigger.remaining = 0
     end
+
+    if (trigger and (trigger.names) and type(trigger.names[1]) == "string") then
+      for i, _ in ipairs(trigger.names) do
+        local oldName = trigger.names[i]
+        trigger.names[i] = {
+          Name = oldName
+        }
+      end
+    end
   end
 end
 
@@ -1744,8 +1753,8 @@ function BuffTrigger.GetNameAndIcon(data, triggernum)
      and trigger.names) then
     -- Try to get an icon from the icon cache
     for index, checkname in pairs(trigger.names) do
-      if(WeakAuras.iconCache[checkname]) then
-        name, icon = checkname, WeakAuras.iconCache[checkname];
+      if(WeakAuras.iconCache[checkname.Name]) then
+        name, icon = checkname.Name, WeakAuras.iconCache[checkname.Name];
         break;
       end
     end

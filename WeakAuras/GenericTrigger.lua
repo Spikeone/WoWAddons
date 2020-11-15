@@ -1645,9 +1645,7 @@ function GenericTrigger.AllAdded()
         hideGTFO = false
     end
 
-    DEFAULT_CHAT_FRAME:AddMessage("|cffffff00GenericTrigger.AllAdded: Testing for DBM")
     if (DBM and type(DBM.RegisterCallback) == "function") then
-        DEFAULT_CHAT_FRAME:AddMessage("|cffffff00GenericTrigger.AllAdded: Not hiding DBM")
         hideDBM = false
     end
 

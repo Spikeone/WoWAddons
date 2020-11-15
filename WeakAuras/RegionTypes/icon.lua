@@ -200,9 +200,9 @@ local function modify(parent, region, data)
 	else
 		bo = 0.0
 	end
-	icon:SetTexCoord(texWidth + bo, 1 - bo - texWidth, texWidth + bo, 1 - bo - texWidth);
-    icon:SetDesaturated(data.desaturate);
-
+    icon:SetTexCoord(texWidth + bo, 1 - bo - texWidth, texWidth + bo, 1 - bo - texWidth);
+    region.desaturate = data.desaturate
+    
     local tooltipType = WeakAuras.CanHaveTooltip(data);
     if(tooltipType and data.useTooltip) then
         region:EnableMouse(true);
@@ -291,7 +291,9 @@ local function modify(parent, region, data)
             or data.displayIcon
             or "Interface\\Icons\\INV_Misc_QuestionMark"
         );
-		icon:SetTexture(iconPath);
+
+        icon:SetTexture(iconPath);
+        icon:SetDesaturated(region.desaturate);
         region.values.icon = "|T"..iconPath..":12:12:0:0:64:64:4:60:4:60|t";
         UpdateText();
     end
@@ -445,6 +447,7 @@ local function modify(parent, region, data)
     end
 
     function region:SetDesaturated(b)
+        region.desaturate = b;
         icon:SetDesaturated(b);
     end
   

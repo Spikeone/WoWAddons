@@ -551,8 +551,9 @@ local methods = {
                                         end
                                     end
                                 end
-                                local icon = WeakAurasOptionsSaved.iconCache[name] or "Interface\\Icons\\INV_Misc_QuestionMark";
-                                tinsert(namestable, {left, name, icon});
+
+                                local icon = WeakAurasOptionsSaved.iconCache[name.Name] or "Interface\\Icons\\INV_Misc_QuestionMark";
+                                tinsert(namestable, {left, name.Name, icon});
                             end
                         end
                     elseif(trigger.type == "event" or trigger.type == "status") then
