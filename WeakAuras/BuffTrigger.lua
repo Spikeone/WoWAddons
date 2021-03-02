@@ -571,6 +571,8 @@ function WeakAuras.ScanAuras(unit)
               if (data.subcount) then
                 count = tooltipSize
               end
+
+              DEFAULT_CHAT_FRAME:AddMessage(toString(data.id) .. " " .. toString(data.ownOnly))
               if
                 (name and ((not data.count) or data.count(count)) and
                   (data.ownOnly ~= false or not UnitIsUnit("player", unitCaster or "")) and
@@ -676,6 +678,7 @@ function WeakAuras.ScanAuras(unit)
               -- Aura conforms to trigger options?
               if
                 (name and ((not data.count) or data.count(count)) and
+                  (data.ownOnly ~= true or UnitIsUnit("player", unitCaster or "")) and
                   (data.ownOnly ~= false or not UnitIsUnit("player", unitCaster or "")))
                then
                 remaining = expirationTime - time

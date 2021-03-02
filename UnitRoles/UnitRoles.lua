@@ -128,8 +128,16 @@ function UnitRoles:CreateRaidRoleFrame(index)
     end)
 
     -- Prettyfiy raidframes
-    raidInfoFrame.subframes.name:SetPoint("LEFT", 24, 0)
-    raidInfoFrame.subframes.level:SetPoint("LEFT", 87, 0)
+    -- For some reason some frames aren't initialized sometimes, make sure to check
+    if (raidInfoFrame.subframes) then
+        if (raidInfoFrame.subframes.name) then
+            raidInfoFrame.subframes.name:SetPoint("LEFT", 24, 0)
+        end
+
+        if (raidInfoFrame.subframes.level) then
+            raidInfoFrame.subframes.level:SetPoint("LEFT", 87, 0)
+        end
+    end
 
     return button
 end

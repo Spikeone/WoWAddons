@@ -1,5 +1,5 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("UnitRoles", "enUS", true)
-
+if (not L) then return end
 L["HEAL"] = "Healer"
 L["TANK"] = "Tank"
 L["MELEE"] = "Melee"
