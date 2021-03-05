@@ -423,10 +423,6 @@ function GenericTrigger.Add(data, region)
 
                         trigger.unevent = trigger.unevent or "auto"
 
-                        if (data.id == "Porthals") then
-                            DEFAULT_CHAT_FRAME:AddMessage(data.id .. " " .. tostring(trigger.unevent))
-                        end
-
                         if (trigger.unevent == "custom") then
                             untriggerFuncStr = WeakAuras.ConstructFunction(event_prototypes[trigger.event], untrigger)
                         elseif (trigger.unevent == "auto") then

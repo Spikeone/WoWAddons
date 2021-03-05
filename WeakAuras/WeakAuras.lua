@@ -573,13 +573,11 @@ function WeakAuras.scheduleConditionCheck(time, id, cloneId)
   conditionChecksTimers.recheckHandle[id] = conditionChecksTimers.recheckHandle[id] or {};
 
   if (conditionChecksTimers.recheckTime[id][cloneId] and conditionChecksTimers.recheckTime[id][cloneId] > time) then
-    print("Canceling timer for", id, cloneId);
     timer:CancelTimer(conditionChecksTimers.recheckHandle);
     conditionChecksTimers.recheckHandle = nil;
   end
 
   if (conditionChecksTimers.recheckTime[id][cloneId] == nil) then
-    print("Starting timer for", id, cloneId, string.format("rechecking in roughly %.1f", time - GetTime()));
     conditionChecksTimers.recheckHandle[id][cloneId] = timer:ScheduleTimer(function()
         local region;
         if(cloneId and cloneId ~= "") then
@@ -623,7 +621,7 @@ function WeakAuras.ConstructConditionFunction(data)
     local variable = condition.check and condition.check.variable;
     local op = condition.check and condition.check.op;
     local value = condition.check and condition.check.value;
-    if (trigger and variable and value) then
+    if (trigger ~= nil and variable ~= nil and value ~= nil) then
       local conditionTemplate = allConditionsTemplate[trigger] and allConditionsTemplate[trigger][variable];
       local type = conditionTemplate and conditionTemplate.type;
       local test = conditionTemplate and conditionTemplate.test;
@@ -634,32 +632,32 @@ function WeakAuras.ConstructConditionFunction(data)
           check = "state and " .. string.format(test, value);
         end
       elseif (type == "number" and op) then
-        check = "state." .. variable .. op .. value;
+        check = "state." .. variable .. " and state." .. variable .. op .. value;
       elseif (type == "timer" and op) then
-        check = "state." .. variable .. "- now" .. op .. value;
+        check = "state." .. variable .. " and state." .. variable .. "- now" .. op .. value;
       elseif (type == "select" and op) then
         if (tonumber(value)) then
-          check = "state." .. variable .. op .. tonumber(value);
+          check = "state." .. variable .. " and state." .. variable .. op .. tonumber(value);
         else
-          check = "state." .. variable .. op .. "'" .. value .. "'";
+          check = "state." .. variable .. " and state." .. variable .. op .. "'" .. value .. "'";
         end
       elseif (type == "bool") then
         local rightSide = value == 0 and "false" or "true";
-        check = "state." .. variable .. "==" .. rightSide;
+        check = "(state." .. variable .. " or false) ==" .. rightSide;
       elseif (type == "string") then
         if(op == "==") then
-          check = "state." .. variable .. " == [[" .. value .. "]]";
+          check = "state." .. variable .. " and state." .. variable .. " == [[" .. value .. "]]";
         elseif (op  == "find('%s')") then
-          check = "state." .. variable .. ":find([[" .. value .. "]], 1, true)";
+          check = "state." .. variable .. " and state." .. variable .. ":find([[" .. value .. "]], 1, true)";
         elseif (op == "match('%s')") then
-          check = "state." ..  variable .. ":match([[" .. value .. "]], 1, true)";
+          check = "state." .. variable .. " and state." ..  variable .. ":match([[" .. value .. "]], 1, true)";
         end
       end
 
       if (check) then
-        ret = ret .. "  allStates = WeakAuras.GetTriggerStateForTrigger(id, " .. trigger .. ")\n";
-        ret = ret .. "  state = allStates[cloneId] or allStates['']\n";
-        ret = ret .. "  if (state and state." .. variable .. " and " .. check .. ") then\n";
+        ret = ret .. "  local allStates = WeakAuras.GetTriggerStateForTrigger(id, " .. trigger .. ")\n";
+        ret = ret .. "  local state = allStates[cloneId] or allStates['']\n";
+        ret = ret .. "  if (state and " .. check .. ") then\n";
         ret = ret .. "    newActiveConditions[" .. conditionNumber .. "] = true;\n";
         ret = ret .. "  end\n";
       end

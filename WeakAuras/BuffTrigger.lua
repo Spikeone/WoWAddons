@@ -572,7 +572,6 @@ function WeakAuras.ScanAuras(unit)
                 count = tooltipSize
               end
 
-              DEFAULT_CHAT_FRAME:AddMessage(toString(data.id) .. " " .. toString(data.ownOnly))
               if
                 (name and ((not data.count) or data.count(count)) and
                   (data.ownOnly ~= false or not UnitIsUnit("player", unitCaster or "")) and
