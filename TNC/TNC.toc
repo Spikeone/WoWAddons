@@ -1,0 +1,6 @@
+## Interface: 20400
+## Title : TNC
+## Notes: Trinity Necklace Check
+## Author: Spikeone @ B2B-WoW
+## SavedVariables: TNC_VARIABLES
+TNC.xml

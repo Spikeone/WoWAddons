@@ -1,0 +1,14 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\FrameXML\UI.xsd">
+<!-- <Ui xmlns="http://www.blizzard.com/wow/ui/"> !-->
+<Script file="TNC.lua"/> 
+<Frame name="TNC_Frame" parent="UIParent">
+  <Scripts>
+     <OnLoad>
+        TNC_OnLoad();
+     </OnLoad>
+     <OnEvent>
+        TNC_OnEvent(self, event, ...);
+     </OnEvent>
+  </Scripts>
+</Frame>
+</Ui>
