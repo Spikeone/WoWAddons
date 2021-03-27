@@ -2,6 +2,6 @@
 ## Title : SpikesEasyMarks
 ## Notes: You can easily mark any unit by GUID
 ## Author: Spikeone @ B2B-WoW
-## SavedVariables: SEM_MARKS_LOCAL
+## SavedVariables: SEM_MARKS_LOCAL, SEM_SETTINGS
 SpikesEasyMarks.xml
 --SpikesEasyMarks_config.xml
