@@ -1,0 +1,8 @@
+## Interface: 20400
+## Title: B2B_PreQuestStatus
+## Version: 1
+## Author: Spikeone
+## Notes: No notes
+## SavedVariables: QuestStatusCache
+
+B2B_PreQuestStatus.lua
