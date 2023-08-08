@@ -458,6 +458,36 @@ SlashCmdList["ABS"] = function(msg)
 	end
 end
 
+local function ServerEventHandler(self, event, arg1, arg2, ...)
+    if(event == 'CHAT_MSG_ADDON') then
+        if (arg1 == "B2BAPI") then
+            local data = arg2;
+
+            -- DEFAULT_CHAT_FRAME:AddMessage("ReceivedData: '" ..data.. "'")
+
+            -- dualspecsetslot;targetSlot;availableSlots;currentSlot;result
+            local apifunc, targetSlot, availableSlots, currentSlot, result = strsplit(";", data, 5);
+
+            if(apifunc == "dualspecsetslot") then
+                -- DEFAULT_CHAT_FRAME:AddMessage("State: '" ..result.. "'")
+                if(result == "0") then
+                    local targetProfile = "dualspec" .. targetSlot
+                    -- DEFAULT_CHAT_FRAME:AddMessage("targetProfile: '" ..targetProfile.. "'")
+
+                    for i=#(restoreErrors), 1, -1 do table.remove(restoreErrors, i) end
+
+                    if( not ABS.db.sets[playerClass][targetProfile] ) then
+                        ABS:Print(string.format(L["Cannot restore profile \"%s\", you can only restore profiles saved to your class."], targetProfile))
+                        return
+                    end
+
+                    ABS:RestoreProfile(targetProfile, playerClass)
+                end
+            end
+        end
+    end
+end
+
 -- Check if we need to load
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
@@ -465,5 +495,7 @@ frame:SetScript("OnEvent", function(self, event, addon)
 	if( addon == "ActionBarSaver" ) then
 		ABS:OnInitialize()
 		self:UnregisterEvent("ADDON_LOADED")
+        self:SetScript("OnEvent", ServerEventHandler)
+        self:RegisterEvent("CHAT_MSG_ADDON")
 	end
 end)
