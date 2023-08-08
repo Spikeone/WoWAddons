@@ -1,0 +1,18 @@
+## Interface: 20400
+## Title: RaidCooldowns_Display
+## Notes: Display data from RaidCooldowns.
+## Author: tsigo
+## Dependencies: RaidCooldowns
+## OptionalDeps: Ace3, LibSharedMedia-3.0, LibBars-1.0
+## SavedVariables: RCDD_DB
+## X-Embeds: Ace3, LibSharedMedia-3.0, LibBars-1.0
+
+embeds.xml
+
+locale\enUS.lua
+locale\koKR.lua
+locale\zhTW.lua
+locale\zhCN.lua
+
+RaidCooldowns_Display.lua
+Config.lua

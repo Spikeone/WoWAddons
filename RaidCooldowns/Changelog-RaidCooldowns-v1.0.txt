@@ -1,0 +1,43 @@
+------------------------------------------------------------------------
+r6 | tsigo | 2008-10-08 05:07:38 +0000 (Wed, 08 Oct 2008) | 1 line
+Changed paths:
+   A /tags/v1.0 (from /trunk:5)
+
+RaidCooldowns: Tag v1.0, such as it is.
+------------------------------------------------------------------------
+r5 | tsigo | 2008-10-08 05:05:42 +0000 (Wed, 08 Oct 2008) | 1 line
+Changed paths:
+   M /trunk
+   M /trunk/.pkgmeta
+
+RaidCooldowns: Update .pkgmeta.
+------------------------------------------------------------------------
+r2 | tsigo | 2008-07-23 00:38:11 +0000 (Wed, 23 Jul 2008) | 1 line
+Changed paths:
+   A /trunk/.pkgmeta
+   A /trunk/Cooldowns.lua
+   A /trunk/ModuleBase.lua
+   A /trunk/RaidCooldowns.lua
+   A /trunk/RaidCooldowns.toc
+   A /trunk/classes
+   A /trunk/classes/Druid.lua
+   A /trunk/classes/Hunter.lua
+   A /trunk/classes/Mage.lua
+   A /trunk/classes/Paladin.lua
+   A /trunk/classes/Priest.lua
+   A /trunk/classes/Rogue.lua
+   A /trunk/classes/Shaman.lua
+   A /trunk/classes/Warlock.lua
+   A /trunk/classes/Warrior.lua
+   A /trunk/embeds.xml
+
+Initial import question mark? Holy shit .pkgmeta is whiny.
+------------------------------------------------------------------------
+r1 | root | 2008-07-23 00:15:50 +0000 (Wed, 23 Jul 2008) | 1 line
+Changed paths:
+   A /branches
+   A /tags
+   A /trunk
+
+"raidcooldowns/mainline: Initial Import"
+------------------------------------------------------------------------

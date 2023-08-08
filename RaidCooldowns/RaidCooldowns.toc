@@ -1,0 +1,25 @@
+## Interface: 20400
+## Title: RaidCooldowns
+## Notes: Broadcast important raid-related cooldowns to other users.
+## Author: tsigo
+## X-Category: Raid
+
+## Dependencies:
+## OptionalDeps: Ace3
+## X-Embeds: Ace3
+
+embeds.xml
+
+RaidCooldowns.lua
+Cooldowns.lua
+ModuleBase.lua
+
+classes\Druid.lua
+classes\Mage.lua
+classes\Hunter.lua
+classes\Paladin.lua
+classes\Priest.lua
+classes\Rogue.lua
+classes\Shaman.lua
+classes\Warlock.lua
+classes\Warrior.lua

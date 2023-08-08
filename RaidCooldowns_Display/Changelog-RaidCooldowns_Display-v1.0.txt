@@ -1,0 +1,280 @@
+------------------------------------------------------------------------
+r57 | tsigo | 2008-10-08 05:08:05 +0000 (Wed, 08 Oct 2008) | 1 line
+Changed paths:
+   A /tags/v1.0 (from /trunk:56)
+
+RaidCooldowns_Display: Tag v1.0.
+------------------------------------------------------------------------
+r56 | tsigo | 2008-10-08 05:05:55 +0000 (Wed, 08 Oct 2008) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   D /trunk/libs
+
+RaidCooldowns_Display: Update .pkgmeta.
+------------------------------------------------------------------------
+r55 | root | 2008-09-30 16:08:29 +0000 (Tue, 30 Sep 2008) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Hopefully fix .pkgmeta
+------------------------------------------------------------------------
+r54 | root | 2008-09-29 21:46:40 +0000 (Mon, 29 Sep 2008) | 1 line
+Changed paths:
+   A /trunk/.pkgmeta
+   M /trunk/libs
+
+Facilitate WowAce-on-CurseForge transition
+------------------------------------------------------------------------
+r52 | root | 2008-09-29 20:58:33 +0000 (Mon, 29 Sep 2008) | 1 line
+Changed paths:
+   D /tmp/trunk/RaidCooldowns_Display
+   A /trunk (from /tmp/trunk/RaidCooldowns_Display:51)
+
+Importing old repo data under /trunk
+------------------------------------------------------------------------
+r49 | yleaf | 2008-07-28 03:17:12 +0000 (Mon, 28 Jul 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.toc
+   A /tmp/trunk/RaidCooldowns_Display/locale/zhCN.lua
+
+RaidCooldowns_Display: zhCN update
+------------------------------------------------------------------------
+r48 | tsigo | 2008-07-11 00:55:24 +0000 (Fri, 11 Jul 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display: Add a Bar Height option. Note that it won't update until a new bar is started.
+------------------------------------------------------------------------
+r47 | whyv | 2008-07-08 09:52:20 +0000 (Tue, 08 Jul 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/locale/zhTW.lua
+
+RaidCooldowns_Display: 
+- update zhTW
+------------------------------------------------------------------------
+r46 | 7destiny | 2008-07-08 06:11:34 +0000 (Tue, 08 Jul 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/koKR.lua
+
+RaidCooldowns_Display: koKR Update
+------------------------------------------------------------------------
+r45 | tsigo | 2008-07-08 03:43:32 +0000 (Tue, 08 Jul 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/enUS.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/koKR.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/zhTW.lua
+
+RaidCooldowns_Display: Add a Width option. Needs a locale update, please.
+------------------------------------------------------------------------
+r44 | tsigo | 2008-07-08 03:33:19 +0000 (Tue, 08 Jul 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/enUS.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/koKR.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/zhTW.lua
+
+RaidCooldowns_Display: Add an Alpha option for the whole frame. Needs a locale update, please.
+------------------------------------------------------------------------
+r43 | tsigo | 2008-07-02 03:30:24 +0000 (Wed, 02 Jul 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display: When receiving oRA cooldowns, just use our internal cooldown number once we figure out what spell it is. This should fix a weird issue where people running an old version of RCD were broadcasting oRA cooldowns in seconds instead of minutes, and then Display would multiply them by 60, resulting in absurdly long cooldowns.
+------------------------------------------------------------------------
+r42 | 7destiny | 2008-07-01 18:19:55 +0000 (Tue, 01 Jul 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/locale/koKR.lua
+
+RaidCooldowns_Display: koKR Update
+------------------------------------------------------------------------
+r41 | tsigo | 2008-07-01 17:34:09 +0000 (Tue, 01 Jul 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/enUS.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/koKR.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/zhTW.lua
+
+RaidCooldowns_Display: Add a drycoded reset function to stop all running bars. Compiles, but will test when the servers are up.
+------------------------------------------------------------------------
+r40 | tsigo | 2008-06-24 17:26:41 +0000 (Tue, 24 Jun 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display: Drycoded fix for receiving oRA syncs
+------------------------------------------------------------------------
+r39 | tsigo | 2008-06-24 00:36:18 +0000 (Tue, 24 Jun 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display: Attempt to fix nil srcName error
+------------------------------------------------------------------------
+r38 | nevcairiel | 2008-06-15 11:46:46 +0000 (Sun, 15 Jun 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/libs
+
+RaidCooldowns_Display: update externals for LibBars-1.0 move
+------------------------------------------------------------------------
+r37 | whyv | 2008-06-02 10:54:52 +0000 (Mon, 02 Jun 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.toc
+   A /tmp/trunk/RaidCooldowns_Display/locale/zhTW.lua
+
+RaidCooldowns_Display: Add zhTW locale
+------------------------------------------------------------------------
+r36 | tsigo | 2008-06-02 06:35:44 +0000 (Mon, 02 Jun 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   D /tmp/trunk/RaidCooldowns_Display/Cooldowns.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.toc
+
+RaidCooldowns_Display: Use cooldown data from RaidCooldowns instead of our own, since it's a dependency anyway.
+------------------------------------------------------------------------
+r35 | 7destiny | 2008-06-02 06:05:03 +0000 (Mon, 02 Jun 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/locale/koKR.lua
+
+RaidCooldowns_Display: koKR Update
+------------------------------------------------------------------------
+r34 | 7destiny | 2008-06-02 05:32:05 +0000 (Mon, 02 Jun 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.toc
+   A /tmp/trunk/RaidCooldowns_Display/locale/koKR.lua
+
+RaidCooldowns_Display: 
+- Added koKR localization
+------------------------------------------------------------------------
+r33 | tsigo | 2008-05-19 15:02:49 +0000 (Mon, 19 May 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display: fix a nil table index
+------------------------------------------------------------------------
+r32 | tsigo | 2008-05-18 06:00:06 +0000 (Sun, 18 May 2008) | 3 lines
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display:
+- SetOrientation on the barGroup rather than the individual bar.
+- Re-enable bar coloring by class; thanks kergoth.
+------------------------------------------------------------------------
+r31 | tsigo | 2008-05-16 01:37:34 +0000 (Fri, 16 May 2008) | 3 lines
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/Cooldowns.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display:
+- Cooldowns which don't need to be synced can now be displayed via the combat log.
+- Now recognizes oRA cooldown events.
+------------------------------------------------------------------------
+r30 | tsigo | 2008-05-12 21:54:35 +0000 (Mon, 12 May 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/enUS.lua
+
+RaidCooldowns_Display: Add an option to change the direction in which the bars deplete.
+------------------------------------------------------------------------
+r29 | tsigo | 2008-05-12 05:12:01 +0000 (Mon, 12 May 2008) | 4 lines
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+   M /tmp/trunk/RaidCooldowns_Display/locale/enUS.lua
+
+RaidCooldowns_Display:
+- Allow toggling of screen clamping.
+- Allow exact positioning through text inputs.
+- General cleanup of options display.
+------------------------------------------------------------------------
+r28 | tsigo | 2008-05-10 00:27:34 +0000 (Sat, 10 May 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display: Comment out class coloring for now. It's a little...inconsistent.
+------------------------------------------------------------------------
+r27 | tsigo | 2008-05-09 23:57:33 +0000 (Fri, 09 May 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.toc
+
+RaidCooldowns_Display: Color cooldown bars using class colors.
+------------------------------------------------------------------------
+r25 | tsigo | 2008-04-24 18:29:35 +0000 (Thu, 24 Apr 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.toc
+   A /tmp/trunk/RaidCooldowns_Display/locale
+   A /tmp/trunk/RaidCooldowns_Display/locale/enUS.lua
+
+RaidCooldowns_Display: Add enUS locale
+------------------------------------------------------------------------
+r24 | tsigo | 2008-04-24 18:05:17 +0000 (Thu, 24 Apr 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display: Force the display to update after a bar is removed from toggling a spell, so that the gap from the removed bar is hidden without waiting for a cooldown to expire.
+------------------------------------------------------------------------
+r23 | tsigo | 2008-04-24 17:31:40 +0000 (Thu, 24 Apr 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display: Add an option to hide your own cooldowns; off by default.
+------------------------------------------------------------------------
+r22 | tsigo | 2008-04-23 17:56:19 +0000 (Wed, 23 Apr 2008) | 4 lines
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display:
+- Hide a running bar when its corresponding spell is toggled off
+- Sort bars by time remaining rather than the entire cooldown
+- Improve the way we get a bar's associated spell ID
+------------------------------------------------------------------------
+r21 | tsigo | 2008-04-23 17:11:31 +0000 (Wed, 23 Apr 2008) | 3 lines
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+
+RaidCooldowns_Display:
+- Add an option to display a chat message when a cooldown is finished; off by default
+- Shorten the duration of the test bars a bit
+------------------------------------------------------------------------
+r20 | tsigo | 2008-04-23 16:44:40 +0000 (Wed, 23 Apr 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display/Config.lua
+   M /tmp/trunk/RaidCooldowns_Display/Cooldowns.lua
+
+RaidCooldowns_Display: Display Bloodlust or Heroism, depending on faction.
+------------------------------------------------------------------------
+r19 | tsigo | 2008-04-23 06:25:46 +0000 (Wed, 23 Apr 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/RaidCooldowns_Display
+   M /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.toc
+   M /tmp/trunk/RaidCooldowns_Display/embeds.xml
+   M /tmp/trunk/RaidCooldowns_Display/libs
+
+RaidCooldowns_Display: externals, logtemplate; add embeds; fix Dependencies and X-Embeds
+------------------------------------------------------------------------
+r18 | tsigo | 2008-04-23 06:16:51 +0000 (Wed, 23 Apr 2008) | 1 line
+Changed paths:
+   A /tmp/trunk/RaidCooldowns_Display
+   A /tmp/trunk/RaidCooldowns_Display/Config.lua
+   A /tmp/trunk/RaidCooldowns_Display/Cooldowns.lua
+   A /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.lua
+   A /tmp/trunk/RaidCooldowns_Display/RaidCooldowns_Display.toc
+   A /tmp/trunk/RaidCooldowns_Display/embeds.xml
+   A /tmp/trunk/RaidCooldowns_Display/libs
+
+RaidCooldowns_Display: initial import; viewable RaidCooldown data with a LibBars-1.0 display.
+------------------------------------------------------------------------
