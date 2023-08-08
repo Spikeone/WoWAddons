@@ -125,7 +125,25 @@ local function CreateBaseButtons(parent)
 		end)
 	e:SetPoint("LEFT", parent.btemplate, "RIGHT", 14, 0)
 	e.tooltip = L["You can edit the name of the template here. You must press the Enter key to save your changes."]
+
+    -- dualspec stuff
+    b = MakeButton(parent)
+	parent.bdualspec = b
 	
+	b:SetText("Dual Spec")
+	width = max(110, b:GetTextWidth() + 22)
+	b:SetWidth(width)
+	b:SetHeight(22)
+	b:SetScript("OnClick", function (this)
+			dewdrop:Register(this, 
+				"children", Talented.options.args.dualspec,
+				"dontHook", true,
+				"point", point)
+			this:SetScript("OnClick", onclick)
+			dewdrop:Open(this)
+		end)
+	b:SetPoint("RIGHT", parent.points, "LEFT", 14, 0)
+
 	local fs = parent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 	fs:SetJustifyH("LEFT")
 	fs:SetWidth(width)

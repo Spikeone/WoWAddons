@@ -305,6 +305,49 @@ Talented.options = {
 			desc = L["Mode of operation."],
 			type = "group",
 		},
+        dualspec = {
+			name = "Dual Spec",
+			desc = "Dual Spec",
+			type = "group",
+			args = {
+                info = {
+					name = "Info",
+					desc = "Info",
+					type = "execute",
+                    order = 100,
+                    func = function () SendChatMessage(".dualspec info") end,
+				},
+                h0 = {
+                    type = "header",
+                    order = 200,
+                    },
+				spec_1 = {
+					name = "Activate Spec 1",
+					desc = "Activate Spec 1",
+					type = "execute",
+                    order = 300,
+                    func = function () SendChatMessage(".dualspec setspec 1") end,
+				},
+                spec_2 = {
+					name = "Activate Spec 2",
+					desc = "Activate Spec 2",
+					type = "execute",
+                    order = 400,
+                    func = function () SendChatMessage(".dualspec setspec 2") end,
+				},
+                spec_3 = {
+					name = "Activate Spec 3",
+					desc = "Activate Spec 3",
+					type = "execute",
+                    order = 500,
+                    func = function () SendChatMessage(".dualspec setspec 3") end,
+				},
+                h1 = {
+                    type = "header",
+                    order = 600,
+                },
+            }
+		},
 		template = {
 			name = L["Template"],
 			desc = L["Template"],
@@ -714,7 +757,20 @@ function Talented:OnEnable()
 	self:SecureHook("UpdateTalentButton")
 	self:RegisterComm("Talented", "WHISPER")
 	self:RegisterEvent("PLAYER_LOGOUT")
+    self:RegisterEvent("CHAT_MSG_ADDON")
 	self:CheckHookInspectUI()
+end
+
+function Talented:CHAT_MSG_ADDON(arg1, arg2, ...)
+    if (arg1 == "B2BAPI") then
+        local apifunc, targetSlot, availableSlots, currentSlot, result = strsplit(";", arg2, 5);
+
+        if(apifunc == "dualspecsetslot") then
+            if(result == "0") then
+                Talented:CHARACTER_POINTS_CHANGED()
+            end
+        end
+    end
 end
 
 function Talented:PLAYER_LOGOUT()
