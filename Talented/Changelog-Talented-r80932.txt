@@ -1,0 +1,36 @@
+------------------------------------------------------------------------
+r80932 | jerry | 2008-08-25 06:29:57 -0400 (Mon, 25 Aug 2008) | 3 lines
+Changed paths:
+   M /trunk/Talented/tips.lua
+
+Talented:
+_ When Talented_Data is not available and viewing the current template, fall back to :SetTalent() to fill tooltip information.
+
+------------------------------------------------------------------------
+r79979 | jerry | 2008-08-08 18:47:50 -0400 (Fri, 08 Aug 2008) | 1 line
+Changed paths:
+   M /trunk/Talented/Locales/frFR.lua
+
+Talented: correction in frFR
+------------------------------------------------------------------------
+r79517 | kunda | 2008-07-30 14:00:15 -0400 (Wed, 30 Jul 2008) | 1 line
+Changed paths:
+   A /trunk/Talented/Locales/deDE.lua
+   M /trunk/Talented/locales.xml
+
+Talented: added deDE localization
+------------------------------------------------------------------------
+r79374 | jerry | 2008-07-29 02:19:06 -0400 (Tue, 29 Jul 2008) | 2 lines
+Changed paths:
+   A /trunk/Talented/Locales/ruRU.lua
+   M /trunk/Talented/locales.xml
+
+Talented: Add ruRU locale, thanks Alekc
+
+------------------------------------------------------------------------
+r79184 | sylvanaar | 2008-07-26 06:47:25 -0400 (Sat, 26 Jul 2008) | 1 line
+Changed paths:
+   M /trunk/Talented/chat.lua
+
+Talented: Removed category from the Prat plugin 
+------------------------------------------------------------------------

@@ -1,0 +1,1088 @@
+------------------------------------------------------------------------
+r144 | jerry | 2008-10-07 18:29:06 +0000 (Tue, 07 Oct 2008) | 1 line
+Changed paths:
+   A /tags/2.4.3-release (from /trunk:143)
+
+Tagging as 2.4.3-release.
+------------------------------------------------------------------------
+r143 | root | 2008-09-29 21:46:04 +0000 (Mon, 29 Sep 2008) | 1 line
+Changed paths:
+   A /trunk/.pkgmeta
+
+Facilitate WowAce-on-CurseForge transition
+------------------------------------------------------------------------
+r141 | root | 2008-09-29 20:58:47 +0000 (Mon, 29 Sep 2008) | 1 line
+Changed paths:
+   D /tmp/trunk/Talented_Data
+   A /trunk (from /tmp/trunk/Talented_Data:140)
+
+Importing old repo data under /trunk
+------------------------------------------------------------------------
+r140 | jerry | 2008-08-19 07:06:49 +0000 (Tue, 19 Aug 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r137 | jerry | 2008-07-29 07:25:10 +0000 (Tue, 29 Jul 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_ruRU.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhTW.lua
+
+Talented_Data: add ruRU locale
+
+------------------------------------------------------------------------
+r136 | jerry | 2008-07-16 09:46:56 +0000 (Wed, 16 Jul 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data: update to 2.4.3
+------------------------------------------------------------------------
+r135 | jerry | 2008-07-08 07:31:47 +0000 (Tue, 08 Jul 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r134 | jerry | 2008-06-25 14:32:43 +0000 (Wed, 25 Jun 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r133 | jerry | 2008-06-06 13:45:52 +0000 (Fri, 06 Jun 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r132 | jerry | 2008-05-28 14:35:18 +0000 (Wed, 28 May 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r131 | jerry | 2008-05-14 15:34:27 +0000 (Wed, 14 May 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data: update for 2.4.2
+
+------------------------------------------------------------------------
+r130 | jerry | 2008-05-13 09:20:17 +0000 (Tue, 13 May 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhTW.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r128 | jerry | 2008-04-24 15:17:44 +0000 (Thu, 24 Apr 2008) | 4 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data:
+_ updates.
+_ switch back to www.worldofwarcraft.com for enUS locale as eu.wowarmory.com is lacking some recent talent modifications.
+
+------------------------------------------------------------------------
+r127 | jerry | 2008-04-17 09:32:24 +0000 (Thu, 17 Apr 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r126 | jerry | 2008-04-04 15:23:20 +0000 (Fri, 04 Apr 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data: update for 2.4.1
+------------------------------------------------------------------------
+r125 | jerry | 2008-04-01 17:48:20 +0000 (Tue, 01 Apr 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data: update TOC to 2.4
+------------------------------------------------------------------------
+r124 | jerry | 2008-03-27 15:18:44 +0000 (Thu, 27 Mar 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: finally, regenerate zhCN
+
+------------------------------------------------------------------------
+r123 | jerry | 2008-03-27 14:39:08 +0000 (Thu, 27 Mar 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: regenerate koKR
+
+------------------------------------------------------------------------
+r122 | jerry | 2008-03-27 09:25:21 +0000 (Thu, 27 Mar 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+
+Talented_Data: regenerate deDE too.
+
+------------------------------------------------------------------------
+r121 | jerry | 2008-03-27 09:13:04 +0000 (Thu, 27 Mar 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhTW.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r120 | jerry | 2008-03-26 18:26:16 +0000 (Wed, 26 Mar 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_SHAMAN.lua
+
+Talented_Data: update to 2.4
+
+------------------------------------------------------------------------
+r118 | jerry | 2008-02-18 09:24:41 +0000 (Mon, 18 Feb 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r117 | jerry | 2008-02-04 09:22:01 +0000 (Mon, 04 Feb 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r116 | jerry | 2008-01-28 08:30:11 +0000 (Mon, 28 Jan 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r115 | jerry | 2008-01-24 16:26:33 +0000 (Thu, 24 Jan 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r114 | jerry | 2008-01-23 18:44:46 +0000 (Wed, 23 Jan 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data: update to 2.3.3
+------------------------------------------------------------------------
+r113 | jerry | 2008-01-21 09:12:03 +0000 (Mon, 21 Jan 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r112 | jerry | 2008-01-15 08:34:59 +0000 (Tue, 15 Jan 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhTW.lua
+
+Talented_Data: updates to zhTW and zhCN
+
+------------------------------------------------------------------------
+r111 | jerry | 2008-01-11 17:14:30 +0000 (Fri, 11 Jan 2008) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_MAGE.lua
+
+Talented_Data: update to 2.3.2
+------------------------------------------------------------------------
+r110 | jerry | 2008-01-11 10:41:53 +0000 (Fri, 11 Jan 2008) | 4 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data:
+_ interim update, talent descriptions have been updated for all european languages.
+_ I'll update the TOC and the version later today.
+
+------------------------------------------------------------------------
+r109 | jerry | 2008-01-02 07:55:37 +0000 (Wed, 02 Jan 2008) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r108 | jerry | 2007-12-20 08:32:53 +0000 (Thu, 20 Dec 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r107 | jerry | 2007-12-14 08:57:42 +0000 (Fri, 14 Dec 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r106 | jerry | 2007-12-11 13:19:34 +0000 (Tue, 11 Dec 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_zhTW.lua
+
+Talented_Data: fix zhTW, wowtaiwan website has data in UTF-8 and Big5, depending on the class, so check first before performing conversion.
+
+------------------------------------------------------------------------
+r105 | jerry | 2007-12-11 07:41:51 +0000 (Tue, 11 Dec 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhTW.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r104 | jerry | 2007-11-29 10:14:17 +0000 (Thu, 29 Nov 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r103 | jerry | 2007-11-27 08:32:56 +0000 (Tue, 27 Nov 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r102 | jerry | 2007-11-22 07:54:08 +0000 (Thu, 22 Nov 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r101 | jerry | 2007-11-21 09:49:21 +0000 (Wed, 21 Nov 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: updates to zhCN.
+
+------------------------------------------------------------------------
+r100 | next96 | 2007-11-21 07:36:14 +0000 (Wed, 21 Nov 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data :
+- toc koKR Update
+------------------------------------------------------------------------
+r99 | jerry | 2007-11-20 09:36:10 +0000 (Tue, 20 Nov 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: updates to enUS, frFR, esES, deDE and (re-activated) zhCN.
+
+------------------------------------------------------------------------
+r98 | next96 | 2007-11-20 05:05:57 +0000 (Tue, 20 Nov 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data :
+- Update locale koKR (by dagurim, zainph)
+------------------------------------------------------------------------
+r97 | jerry | 2007-11-19 08:11:17 +0000 (Mon, 19 Nov 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+
+Talented_Data: update
+
+------------------------------------------------------------------------
+r96 | jerry | 2007-11-15 14:38:16 +0000 (Thu, 15 Nov 2007) | 5 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   D /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   D /tmp/trunk/Talented_Data/scripts
+
+Talented_Data: (part 2)
+_ 2.3.0 compatible update for enUS, frFR, esES, deDE and zhTW.
+_ removed the generating scripts from Talented_Data.
+_ koKR and zhCN have been disabled, they do not have updated data yet.
+
+------------------------------------------------------------------------
+r95 | jerry | 2007-11-15 14:31:22 +0000 (Thu, 15 Nov 2007) | 5 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_PALADIN.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_PRIEST.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_SHAMAN.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_WARRIOR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+
+Talented_Data: (part 1)
+_ 2.3.0 compatible update for enUS, frFR, esES, deDE and zhTW.
+_ removed the generating scripts from Talented_Data.
+_ koKR and zhCN have been disabled, they do not have updated data yet.
+
+------------------------------------------------------------------------
+r94 | jerry | 2007-10-25 12:09:11 +0000 (Thu, 25 Oct 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   A /tmp/trunk/Talented_Data/Talented_Data_zhTW.lua
+   M /tmp/trunk/Talented_Data/scripts/config.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+
+Talented_Data: Added zhTW locale, from the armory data.
+
+------------------------------------------------------------------------
+r93 | jerry | 2007-10-25 10:48:30 +0000 (Thu, 25 Oct 2007) | 4 lines
+Changed paths:
+   A /tmp/trunk/Talented_Data/scripts/config.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+   M /tmp/trunk/Talented_Data/scripts/diff.lua
+   M /tmp/trunk/Talented_Data/scripts/get-all-js.lua
+
+Talented_Data:
+_ create a global config file for all generation scripts.
+_ reuse table cache indexes from previous generation, as this will reduce the size of the corresponding patch.
+
+------------------------------------------------------------------------
+r92 | jerry | 2007-10-25 09:47:18 +0000 (Thu, 25 Oct 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r91 | jerry | 2007-10-22 07:54:00 +0000 (Mon, 22 Oct 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   D /tmp/trunk/Talented_Data/Talented_Data_zhTW.lua
+
+Talented_Data: revert the hand made zhTW translation. Added a warning not to add hand made translations.
+
+------------------------------------------------------------------------
+r90 | chuanhsing | 2007-10-20 11:52:47 +0000 (Sat, 20 Oct 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   A /tmp/trunk/Talented_Data/Talented_Data_zhTW.lua
+
+Talented_Data: zhTW update
+------------------------------------------------------------------------
+r89 | jerry | 2007-10-17 13:22:13 +0000 (Wed, 17 Oct 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r88 | jerry | 2007-10-12 12:30:36 +0000 (Fri, 12 Oct 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+
+Talented_Data: bugfix in talent tooltip generation, exposed by Call of Thunder.
+
+------------------------------------------------------------------------
+r87 | jerry | 2007-10-10 15:46:38 +0000 (Wed, 10 Oct 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data: regenerate
+------------------------------------------------------------------------
+r86 | jerry | 2007-10-03 15:37:12 +0000 (Wed, 03 Oct 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data: regenerate for 2.2.2
+
+------------------------------------------------------------------------
+r85 | jerry | 2007-10-01 12:46:12 +0000 (Mon, 01 Oct 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r84 | jerry | 2007-09-26 16:22:48 +0000 (Wed, 26 Sep 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+   M /tmp/trunk/Talented_Data/scripts/get-all-js.lua
+
+Talented_Data: update to wow 2.2.0
+------------------------------------------------------------------------
+r83 | jerry | 2007-09-18 13:25:54 +0000 (Tue, 18 Sep 2007) | 4 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+   M /tmp/trunk/Talented_Data/scripts/diff.lua
+
+Talented_Data:
+_ Revert the naming of cached tables.
+_ Regenerate using the new format. That's on average 10% less memory taken by the data set, depending on locale.
+
+------------------------------------------------------------------------
+r82 | jerry | 2007-09-14 14:42:18 +0000 (Fri, 14 Sep 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+
+Talented_Data: (tools) optimisations to the generated data files. Do not regenerate until 2.2 hit live realms.
+
+------------------------------------------------------------------------
+r81 | jerry | 2007-09-13 09:55:49 +0000 (Thu, 13 Sep 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/scripts/get-all-js.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r80 | jerry | 2007-09-10 10:14:29 +0000 (Mon, 10 Sep 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r79 | jerry | 2007-09-03 07:52:43 +0000 (Mon, 03 Sep 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r78 | jerry | 2007-08-07 08:46:44 +0000 (Tue, 07 Aug 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r77 | jerry | 2007-07-30 14:27:01 +0000 (Mon, 30 Jul 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/scripts/get-all-js.lua
+
+Talented_Data: when updating talents, show which data file changed since previous update.
+
+------------------------------------------------------------------------
+r76 | jerry | 2007-07-24 07:23:12 +0000 (Tue, 24 Jul 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_init.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+
+Talented_Data: Allow outdated data to be loaded.
+
+------------------------------------------------------------------------
+r75 | jerry | 2007-07-17 14:25:17 +0000 (Tue, 17 Jul 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r74 | jerry | 2007-07-11 16:17:42 +0000 (Wed, 11 Jul 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_init.lua
+
+Talented_Data: regenerate
+------------------------------------------------------------------------
+r73 | jerry | 2007-07-09 13:00:42 +0000 (Mon, 09 Jul 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+
+Talented_Data: Add zhCN locale to the TOC.
+
+------------------------------------------------------------------------
+r72 | jerry | 2007-07-09 12:43:01 +0000 (Mon, 09 Jul 2007) | 4 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_zhCN.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+   M /tmp/trunk/Talented_Data/scripts/diff.lua
+   M /tmp/trunk/Talented_Data/scripts/get-all-js.lua
+
+Talented_Data:
+_ Add support for zhCN locale
+_ Changed the pattern generator to be UTF-8 aware.
+
+------------------------------------------------------------------------
+r71 | jerry | 2007-07-06 07:18:35 +0000 (Fri, 06 Jul 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r70 | jerry | 2007-07-02 09:14:34 +0000 (Mon, 02 Jul 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r69 | jerry | 2007-06-29 07:20:26 +0000 (Fri, 29 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data : regenerate
+
+------------------------------------------------------------------------
+r68 | jerry | 2007-06-25 16:04:08 +0000 (Mon, 25 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r67 | jerry | 2007-06-20 17:48:35 +0000 (Wed, 20 Jun 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_init.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: regenerate
+------------------------------------------------------------------------
+r66 | jerry | 2007-06-18 08:46:20 +0000 (Mon, 18 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/scripts/diff.lua
+
+Talented_Data: credits and simple description for the lcs algorithm.
+
+------------------------------------------------------------------------
+r65 | jerry | 2007-06-15 14:36:19 +0000 (Fri, 15 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r64 | jerry | 2007-06-15 14:29:06 +0000 (Fri, 15 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+
+Talented_Data: re-use tables that have the same values
+
+------------------------------------------------------------------------
+r63 | jerry | 2007-06-15 11:48:19 +0000 (Fri, 15 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r62 | jerry | 2007-06-15 11:34:15 +0000 (Fri, 15 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+
+Talented_Data: detects and use multiplier for tooltip strings.
+
+------------------------------------------------------------------------
+r61 | jerry | 2007-06-14 18:06:22 +0000 (Thu, 14 Jun 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: regenerate
+------------------------------------------------------------------------
+r60 | jerry | 2007-06-14 14:39:51 +0000 (Thu, 14 Jun 2007) | 4 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+   A /tmp/trunk/Talented_Data/scripts/diff.lua
+   M /tmp/trunk/Talented_Data/scripts/get-all-js.lua
+
+Talented_Data:
+_ Add an automatic format() pattern generator for tooltip strings. This significantly reduces the size of static data, and it's quite cool.
+_ Get koKR locale information from an up-to-date place.
+
+------------------------------------------------------------------------
+r59 | jerry | 2007-06-11 14:15:20 +0000 (Mon, 11 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: revert automatic changes to koKR. Please blizzard fix your talent calculator.
+
+------------------------------------------------------------------------
+r58 | jerry | 2007-06-11 14:10:11 +0000 (Mon, 11 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   A /tmp/trunk/Talented_Data/scripts/compress.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+
+Talented_Data: added a crude dictionnary based compressor for the talent strings. Sadly, the size of the database grows with it enabled.
+
+------------------------------------------------------------------------
+r57 | jerry | 2007-06-08 14:43:50 +0000 (Fri, 08 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r56 | jerry | 2007-06-07 08:31:53 +0000 (Thu, 07 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_init.lua
+
+Talented_Data: update to latest build number
+
+------------------------------------------------------------------------
+r55 | jerry | 2007-06-05 15:28:06 +0000 (Tue, 05 Jun 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: Regenerate
+
+------------------------------------------------------------------------
+r54 | jerry | 2007-06-04 17:27:24 +0000 (Mon, 04 Jun 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_init.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+
+Talented_Data: Add expected build number information to TOC. TOC is now generated by convert-sv.lua.
+------------------------------------------------------------------------
+r53 | jerry | 2007-05-30 16:54:34 +0000 (Wed, 30 May 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_init.lua
+   M /tmp/trunk/Talented_Data/scripts/Talented_GatherData/core.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+
+Talented_Data: regenerate for patch.
+------------------------------------------------------------------------
+r52 | jerry | 2007-05-29 07:44:24 +0000 (Tue, 29 May 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+
+Talented_Data: Fix tooltips ending with an empty line and regenerated.
+
+------------------------------------------------------------------------
+r51 | jerry | 2007-05-25 15:41:55 +0000 (Fri, 25 May 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: talent updates for european languages
+
+------------------------------------------------------------------------
+r50 | jerry | 2007-05-24 07:09:46 +0000 (Thu, 24 May 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+
+Talented_Data: Updated enUS talents
+
+------------------------------------------------------------------------
+r49 | jerry | 2007-05-23 17:51:07 +0000 (Wed, 23 May 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_DRUID.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_HUNTER.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_MAGE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_PALADIN.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_PRIEST.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_ROGUE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_SHAMAN.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_WARLOCK.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_WARRIOR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_init.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/scripts/Talented_GatherData/core.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+   M /tmp/trunk/Talented_Data/scripts/get-all-js.lua
+
+Talented_Data: updates to version 2.1.0
+------------------------------------------------------------------------
+r48 | jerry | 2007-05-22 08:55:01 +0000 (Tue, 22 May 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/scripts/Talented_GatherData/Talented_GatherData.toc
+
+Talented_Data: toc -> 20100
+
+------------------------------------------------------------------------
+r47 | jerry | 2007-05-21 10:50:13 +0000 (Mon, 21 May 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+
+Talented_Data: updates
+
+------------------------------------------------------------------------
+r46 | jerry | 2007-05-14 09:58:04 +0000 (Mon, 14 May 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+
+Talented_Data: update
+
+------------------------------------------------------------------------
+r45 | jerry | 2007-05-09 07:01:50 +0000 (Wed, 09 May 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+
+Talented_Data: update
+
+------------------------------------------------------------------------
+r44 | jerry | 2007-04-24 08:13:30 +0000 (Tue, 24 Apr 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+
+Talented_Data: update
+
+------------------------------------------------------------------------
+r43 | jerry | 2007-04-21 10:15:42 +0000 (Sat, 21 Apr 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_DRUID.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_HUNTER.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_MAGE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_PALADIN.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_PRIEST.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_ROGUE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_SHAMAN.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_WARLOCK.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_WARRIOR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/scripts/Talented_GatherData/core.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+   M /tmp/trunk/Talented_Data/scripts/get-all-js.lua
+
+Talented_Data: updates.
+------------------------------------------------------------------------
+r42 | jerry | 2007-04-21 09:27:55 +0000 (Sat, 21 Apr 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/scripts/Talented_GatherData/core.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+
+Talented_Data: updated gather script.
+------------------------------------------------------------------------
+r41 | jerry | 2007-04-16 13:08:48 +0000 (Mon, 16 Apr 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+
+Talented_Data: update enUS
+
+------------------------------------------------------------------------
+r40 | jerry | 2007-04-11 08:53:03 +0000 (Wed, 11 Apr 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: update
+
+------------------------------------------------------------------------
+r39 | jerry | 2007-04-02 08:03:42 +0000 (Mon, 02 Apr 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+
+Talented_Data: update
+
+------------------------------------------------------------------------
+r38 | next96 | 2007-03-31 05:54:16 +0000 (Sat, 31 Mar 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data :
+- Update locale koKR
+------------------------------------------------------------------------
+r37 | jerry | 2007-03-26 08:32:59 +0000 (Mon, 26 Mar 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: regenerate
+
+------------------------------------------------------------------------
+r36 | jerry | 2007-03-15 22:30:46 +0000 (Thu, 15 Mar 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+
+Talented_Data: fix gather script
+------------------------------------------------------------------------
+r35 | jerry | 2007-03-15 19:25:21 +0000 (Thu, 15 Mar 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/scripts/Talented_GatherData/Talented_GatherData.toc
+   M /tmp/trunk/Talented_Data/scripts/Talented_GatherData/core.lua
+
+Talented_Data: fix gather addon
+------------------------------------------------------------------------
+r34 | jerry | 2007-03-15 14:33:19 +0000 (Thu, 15 Mar 2007) | 2 lines
+Changed paths:
+   A /tmp/trunk/Talented_Data/scripts/Talented_GatherData
+   A /tmp/trunk/Talented_Data/scripts/Talented_GatherData/Talented_GatherData.toc
+   A /tmp/trunk/Talented_Data/scripts/Talented_GatherData/core.lua
+   A /tmp/trunk/Talented_Data/scripts/convert-sv.lua
+
+Talented_Data: added the script used to generate talent tree information
+
+------------------------------------------------------------------------
+r33 | jerry | 2007-03-15 11:42:59 +0000 (Thu, 15 Mar 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_WARRIOR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+
+Talented_Data: remove spaces at the start of line. set the correct icon for the updated warrior talent.
+
+------------------------------------------------------------------------
+r32 | jerry | 2007-03-14 13:42:52 +0000 (Wed, 14 Mar 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_enGB.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   M /tmp/trunk/Talented_Data/scripts
+   M /tmp/trunk/Talented_Data/scripts/convert-js.lua
+   M /tmp/trunk/Talented_Data/scripts/get-all-js.lua
+
+Talented_Data: Separation of enUS and enGB. Updates to talent descriptions.
+
+------------------------------------------------------------------------
+r31 | jerry | 2007-03-02 18:25:52 +0000 (Fri, 02 Mar 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   M /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_esES.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+   A /tmp/trunk/Talented_Data/scripts
+   A /tmp/trunk/Talented_Data/scripts/convert-js.lua
+   A /tmp/trunk/Talented_Data/scripts/get-all-js.lua
+
+Talented_Data: Add new Data and scripts used to generate it
+------------------------------------------------------------------------
+r30 | next96 | 2007-02-28 04:12:08 +0000 (Wed, 28 Feb 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data :
+- Update locale koKR
+------------------------------------------------------------------------
+r29 | next96 | 2007-02-27 11:08:12 +0000 (Tue, 27 Feb 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data :
+- Update locale koKR
+------------------------------------------------------------------------
+r28 | next96 | 2007-02-27 01:34:41 +0000 (Tue, 27 Feb 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data :
+- Update locale koKR (Hunter)
+------------------------------------------------------------------------
+r27 | nymbia | 2007-02-26 22:17:19 +0000 (Mon, 26 Feb 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: koKR hijacking every language.  Thanks Maischter.
+------------------------------------------------------------------------
+r26 | solor | 2007-02-25 22:55:36 +0000 (Sun, 25 Feb 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data: fix koKR
+------------------------------------------------------------------------
+r25 | next96 | 2007-02-25 10:46:17 +0000 (Sun, 25 Feb 2007) | 2 lines
+Changed paths:
+   A /tmp/trunk/Talented_Data/Talented_Data_koKR.lua
+
+Talented_Data :
+- Add locale koKR
+------------------------------------------------------------------------
+r24 | next96 | 2007-02-25 08:37:38 +0000 (Sun, 25 Feb 2007) | 2 lines
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data :
+- Add locale koKR
+------------------------------------------------------------------------
+r23 | jerry | 2007-02-22 20:36:59 +0000 (Thu, 22 Feb 2007) | 1 line
+Changed paths:
+   D /tmp/trunk/Talented_Data/Core.lua
+   D /tmp/trunk/Talented_Data/Libs
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+   A /tmp/trunk/Talented_Data/Talented_Data_DRUID.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_HUNTER.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_MAGE.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_PALADIN.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_PRIEST.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_ROGUE.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_SHAMAN.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_WARLOCK.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_WARRIOR.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_deDE.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_enUS.lua
+   A /tmp/trunk/Talented_Data/Talented_Data_frFR.lua
+
+Talented_Data: Static data about talent trees and locales
+------------------------------------------------------------------------
+r22 | kergoth | 2007-01-30 00:14:59 +0000 (Tue, 30 Jan 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+.Line ending fixups in .toc files (they werent in my .subversion/config autoprops)
+------------------------------------------------------------------------
+r21 | kergoth | 2007-01-23 23:43:23 +0000 (Tue, 23 Jan 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Core.lua
+
+.Line ending fixups part 2: trunk/ (script ended prematurely).
+------------------------------------------------------------------------
+r20 | jerry | 2007-01-14 11:49:34 +0000 (Sun, 14 Jan 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data: fixed embedded libs, InBed should have done this...
+------------------------------------------------------------------------
+r19 | jerry | 2007-01-14 00:08:08 +0000 (Sun, 14 Jan 2007) | 1 line
+Changed paths:
+   A /tmp/trunk/Talented_Data/Libs
+
+Talented_Data - Setting libraries and externals (Automated commit by InBed)
+------------------------------------------------------------------------
+r18 | jerry | 2007-01-14 00:05:19 +0000 (Sun, 14 Jan 2007) | 1 line
+Changed paths:
+   M /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data: making room for InBed
+------------------------------------------------------------------------
+r17 | jerry | 2007-01-13 23:53:09 +0000 (Sat, 13 Jan 2007) | 1 line
+Changed paths:
+   A /tmp/trunk/Talented_Data
+   A /tmp/trunk/Talented_Data/Core.lua
+   A /tmp/trunk/Talented_Data/Talented_Data.toc
+
+Talented_Data: initial import
+------------------------------------------------------------------------

@@ -1,0 +1,34 @@
+# Generated Data, do not modify
+## Interface: 20400
+## Title: Talented_Data
+## Name: Talented_Data
+## Notes: Class Data for The Talent Template Editor
+## Notes-zhCN: Talented 天赋模板编辑器所需的职业信息
+## Author: Jerry
+## Version: 1.0
+## X-AceForum: 3955
+## X-Category: Interface Enhancements
+## X-ExpectedBuild: "2.4.3 - 8606 - Jul 10 2008 - 20400"
+## LoadOnDemand: 1
+
+Talented_Data_init.lua
+Talented_Data_HUNTER.lua
+Talented_Data_WARRIOR.lua
+Talented_Data_PALADIN.lua
+Talented_Data_MAGE.lua
+Talented_Data_PRIEST.lua
+Talented_Data_WARLOCK.lua
+Talented_Data_DRUID.lua
+Talented_Data_SHAMAN.lua
+Talented_Data_ROGUE.lua
+Talented_Data_esES.lua
+Talented_Data_ruRU.lua
+Talented_Data_frFR.lua
+Talented_Data_zhTW.lua
+Talented_Data_enUS.lua
+Talented_Data_zhCN.lua
+Talented_Data_deDE.lua
+Talented_Data_koKR.lua
+# DO NOT ADD HAND MADE TRANSLATIONS.
+# Contact jerry here : http://www.wowace.com/forums/index.php?topic=3955.0
+# if you want to add translation
