@@ -1,0 +1,7 @@
+## Interface: 20400
+## Title: Robin
+## Notes: Fetches roles of players, and track raid cooldowns.
+## SavedVariables: Robin_SavedVars
+
+Robin.lua
+Robin.xml

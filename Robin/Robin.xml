@@ -1,0 +1,75 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ 
+..\..\FrameXML\UI.xsd">
+	<Script File="Robin.lua"/>
+
+	<GameTooltip name="RobinItemInfoTooltip" inherits="GameTooltipTemplate" parent="UIParent" hidden="true">
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentTextLeft1" inherits="GameTooltipHeaderText" hidden="true"/>
+				<FontString name="$parentTextRight1" inherits="GameTooltipHeaderText" hidden="true"/>
+			</Layer>
+		</Layers>
+	</GameTooltip>
+	<Slider name="RobinTrackCooldowns_SliderTemplate" virtual="true" enableMouse="true" orientation="HORIZONTAL">
+		<Size>
+			<AbsDimension x="50" y="20"/>
+		</Size>
+		<Backdrop bgFile="Interface\Buttons\UI-SliderBar-Background" edgeFile="Interface\Buttons\UI-SliderBar-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="3" right="3" top="6" bottom="6" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="8" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="8" />
+			</EdgeSize>
+		</Backdrop>
+		<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-SliderBar-Button-Horizontal">
+			<Size>
+				<AbsDimension x="32" y="32" />
+			</Size>
+		</ThumbTexture>
+		<Layers>
+			<Layer>
+				<FontString name="$parentValue" inherits="GameFontNormalSmall" text="Title Text">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="5" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<FontHeight>
+						<AbsValue val="10" />
+					</FontHeight>
+				</FontString>
+				<FontString name="$parentTitle" inherits="GameFontNormalSmall" text="Value Text">
+							<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="30" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<FontHeight>
+						<AbsValue val="10" />
+					</FontHeight>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Slider>
+	
+	<Frame name="RobinFrame"          parent="UIParent" frameStrata="LOW" toplevel="true" inherits="SecureFrameTemplate">>
+		<Scripts>
+			<OnLoad>
+				RobinRoles_OnLoad(this);
+				RobinTrackCooldowns_OnLoad(this);
+			</OnLoad>
+			<OnUpdate>
+				RobinRoles_OnUpdate(this,arg1);
+				RobinTrackCooldowns_OnUpdate(this,arg1);
+			</OnUpdate>
+		</Scripts>
+	</Frame>
+</Ui>
