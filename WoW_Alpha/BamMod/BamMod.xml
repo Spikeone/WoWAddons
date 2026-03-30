@@ -1,0 +1,296 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="BamMod.lua"/>
+    
+    <CheckButton name="BamModOptionsCheckButtonTemplate" inherits="OptionsCheckButtonTemplate" virtual="true">
+        <Scripts>
+            <OnClick>
+                BamModOptionsCheckButton_OnClick();
+            </OnClick>
+        </Scripts>
+    </CheckButton>
+    
+    <Frame name="BamModOptionsFrame" toplevel="true" frameStrata="DIALOG" movable="true" enableMouse="true" hidden="true" parent="UIParent">
+		<Size>
+			<AbsDimension x="350" y="205"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11"/>
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32"/>
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32"/>
+			</EdgeSize>
+		</Backdrop>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="BamModOptionsFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="256" y="64"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="12"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString inherits="GameFontNormal" text="BamMod Options">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="BamModOptionsFrameHeader">
+							<Offset>
+								<AbsDimension x="0" y="-14"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+                <FontString name="BamModAddonManagerInfo" inherits="GameFontNormal" text="Put my Text here">
+					<Anchors>
+						<Anchor point="CENTER">
+							<Offset>
+								<AbsDimension x="0" y="-48"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<CheckButton name="BamModOptionsCheckButton1" inherits="BamModOptionsCheckButtonTemplate" id="1">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="14" y="-24"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="BamModOptionsCheckButton2" inherits="BamModOptionsCheckButtonTemplate" id="2">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="BamModOptionsCheckButton1" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="6"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="BamModOptionsCheckButton3" inherits="BamModOptionsCheckButtonTemplate" id="3">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="BamModOptionsCheckButton2" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="6"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="BamModOptionsCheckButton4" inherits="BamModOptionsCheckButtonTemplate" id="4">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="120" y="-24"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+			<CheckButton name="BamModOptionsCheckButton5" inherits="BamModOptionsCheckButtonTemplate" id="5">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="BamModOptionsCheckButton4" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="6"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+            <CheckButton name="BamModOptionsCheckButton6" inherits="BamModOptionsCheckButtonTemplate" id="6">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="BamModOptionsCheckButton5" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="6"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+            <CheckButton name="BamModOptionsCheckButton7" inherits="BamModOptionsCheckButtonTemplate" id="7">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="BamModOptionsCheckButton6" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="6"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+            <CheckButton name="BamModOptionsCheckButton8" inherits="BamModOptionsCheckButtonTemplate" id="8">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="240" y="-24"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+            <CheckButton name="BamModOptionsCheckButton9" inherits="BamModOptionsCheckButtonTemplate" id="9">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="BamModOptionsCheckButton8" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="6"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</CheckButton>
+			<Button name="BamModOptionsFrameOkay" inherits="GameMenuButtonTemplate">
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="30"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						this:SetText(OKAY);
+					</OnLoad>
+					<OnClick>
+						PlaySound("gsTitleOptionOK");
+						HideUIPanel(BamModOptionsFrame);
+					</OnClick>
+				</Scripts>
+			</Button>
+            <Button name="BamModOptionsFrameHelp" inherits="GameMenuButtonTemplate">
+                <Size>
+                    <AbsDimension x="80" y="21"/>
+                </Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="BamModOptionsFrameOkay">
+						<Offset>
+							<AbsDimension x="0" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						this:SetText("Help");
+					</OnLoad>
+					<OnClick>
+						PlaySound("gsTitleOptionOK");
+						StaticPopup_Show("BAMMOD_COPYSETUPLINK");
+					</OnClick>
+				</Scripts>
+			</Button>
+            <Button name="BamModOptionsFrameTestSound">
+                <Size>
+                    <AbsDimension x="32" y="32"/>
+                </Size>
+                <Frames>
+                    <Frame name="$parentButtonText" setAllPoints="true">
+                        <Layers>
+                            <Layer level="BORDER">
+                                <FontString name="$parentName" inherits="GameFontNormal" text="Test Sound">
+                                    <Anchors>
+                                        <Anchor point="LEFT" relativePoint="RIGHT">
+                                            <Offset>
+                                                <AbsDimension x="-2" y="0"/>
+                                            </Offset>
+                                        </Anchor>
+                                    </Anchors>
+                                </FontString>
+                            </Layer>
+                        </Layers>
+                    </Frame>
+                </Frames>
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="BamModOptionsCheckButton9" relativePoint="BOTTOM">
+                        <Offset>
+                        <AbsDimension x="0" y="6"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
+                <PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
+                <HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
+                <Scripts>
+                    <OnClick>
+                        BamMod_TestSound();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                BamMod_OnLoad();
+            </OnLoad>
+            <OnEvent>
+                BamMod_OnEvent(event);
+            </OnEvent>
+            <OnShow>
+                BamMod_InitOptions();
+            </OnShow>
+            <OnUpdate>
+                BamMod_OnUpdate();
+            </OnUpdate>
+        </Scripts>
+    </Frame>
+    <EditBox name="BamModStaticPopupWideEditBox" frameStrata="DIALOG" historyLines="1" hidden="true">
+        <Size>
+            <AbsDimension x="260" y="64"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentLeft" file="Interface\ChatFrame\UI-ChatInputBorder-Left">
+                    <Size>
+                        <AbsDimension x="256" y="32"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT">
+                            <Offset>
+                                <AbsDimension x="-10" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                    <TexCoords left="0" right="1.0" top="0" bottom="1.0"/>
+                </Texture>
+                <Texture name="$parentRight" file="Interface\ChatFrame\UI-ChatInputBorder-Right">
+                    <Size>
+                        <AbsDimension x="75" y="32"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="RIGHT">
+                            <Offset>
+                                <AbsDimension x="10" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                    <TexCoords left="0.70703125" right="1.0" top="0" bottom="1.0"/>
+                </Texture>
+                <Texture file="Interface\ChatFrame\UI-ChatInputBorder-Left">
+                    <Size>
+                        <AbsDimension x="5" y="32"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="LEFT" relativeTo="$parentLeft" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                        <Anchor point="RIGHT" relativeTo="$parentRight" relativePoint="LEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="0"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                    <TexCoords left="0.29296875" right="1.0" top="0" bottom="1.0"/>
+                </Texture>
+            </Layer>
+        </Layers>
+        <FontString inherits="ChatFontNormal"/>
+    </EditBox>
+</Ui>

@@ -1,0 +1,191 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
+    <Script file="_AddonManager.lua"/>
+    <CheckButton name="AddonManagerCheckButtonTemplate" inherits="OptionsCheckButtonTemplate" virtual="true">
+        <Scripts>
+            <OnClick>
+                AddonManagerCheckButton_OnClick();
+            </OnClick>
+        </Scripts>
+    </CheckButton>
+    <CheckButton name="AddonManagerCheckButtonTemplate2" virtual="true">
+		<Size>
+			<AbsDimension x="32" y="32"/>
+		</Size>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentAddonName" inherits="GameFontNormalSmall">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="-2" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+                <FontString name="$parentAddonVersion" inherits="GameFontNormalSmall">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="100" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+                <FontString name="$parentAddonAuthor" inherits="GameFontNormalSmall">
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="140" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnClick>
+				if ( this:GetChecked() ) then
+					PlaySound("igMainMenuOptionCheckBoxOff");
+				else
+					PlaySound("igMainMenuOptionCheckBoxOn");
+				end
+                AddonManagerCheckButton_OnClick();
+			</OnClick>
+		</Scripts>
+		<NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+		<PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+		<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+		<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+		<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+	</CheckButton>
+    <Frame name="AddonManager" toplevel="false" parent="UIParent" movable="true" enableMouse="true" frameStrata="HIGH" hidden="true">
+        <Frames>
+            <Button name="GameMenuButtonAdvancedOptions" inherits="GameMenuButtonTemplate" parent="GameMenuFrame">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="GameMenuButtonQuit" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="0" y="-60"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:SetText("Addons Manager");
+                    </OnLoad>
+                    <OnClick>
+                        PlaySound("igMainMenuOption");
+                        ShowUIPanel(AddonManagerFrame);
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                AddonManager_OnLoad();
+            </OnLoad>
+        </Scripts>
+    </Frame>
+    <Frame name="AddonManagerFrame" toplevel="true" frameStrata="DIALOG" movable="true" enableMouse="true" hidden="true" parent="UIParent">
+        <Size>
+            <AbsDimension x="350" y="240"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+            <BackgroundInsets>
+                <AbsInset left="11" right="12" top="12" bottom="11"/>
+            </BackgroundInsets>
+            <TileSize>
+                <AbsValue val="32"/>
+            </TileSize>
+            <EdgeSize>
+                <AbsValue val="32"/>
+            </EdgeSize>
+        </Backdrop>
+        <Layers>
+            <Layer level="ARTWORK">
+                <Texture name="AddonManagerFrameHeader" file="Interface\DialogFrame\UI-DialogBox-Header">
+                    <Size>
+                        <AbsDimension x="256" y="64"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="12"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <FontString inherits="GameFontNormal" text="Addon Manager">
+                    <Anchors>
+                        <Anchor point="TOP" relativeTo="SoundOptionsFrameHeader">
+                            <Offset>
+                                <AbsDimension x="0" y="-14"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <CheckButton name="AddonManagerFrameCheckButton1" inherits="AddonManagerCheckButtonTemplate2" id="1">
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="14" y="-44"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </CheckButton>
+            <CheckButton name="AddonManagerFrameCheckButton2" inherits="AddonManagerCheckButtonTemplate2" id="2">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="AddonManagerFrameCheckButton1" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="0" y="2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </CheckButton>
+            <CheckButton name="AddonManagerFrameCheckButton3" inherits="AddonManagerCheckButtonTemplate2" id="3">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="AddonManagerFrameCheckButton2" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="0" y="2"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </CheckButton>
+            <Button name="AddonManagerFrameOkay" inherits="GameMenuButtonTemplate">
+                <Anchors>
+                    <Anchor point="BOTTOM" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension x="0" y="16"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:SetText(OKAY);
+                    </OnLoad>
+                    <OnClick>
+                        PlaySound("gsTitleOptionOK");
+                        HideUIPanel(AddonManagerFrame);
+                        -- ShowUIPanel(GameMenuFrame);
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Scripts>
+            <OnLoad>
+                --SoundOptionsFrame_Init();
+            </OnLoad>
+            <OnEvent>
+                -- SoundOptionsFrame_OnEvent();
+            </OnEvent>
+            <OnShow>
+                AddonManagerFrame_OnShow();
+            </OnShow>
+        </Scripts>
+    </Frame>
+</Ui>

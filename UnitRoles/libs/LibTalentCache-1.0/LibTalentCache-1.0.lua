@@ -154,6 +154,7 @@ function LibTalentCache:TalentQuery_Ready(e, name)
         end
     end
 
+    UnitTalentInfo(name, 2, 1)
     events:SendMessage("TalentCache_NewTalentData", name, UnitRole(name))
 end
 
@@ -224,6 +225,7 @@ end
 
 function LibTalentCache:NotifyTalentsChanged(name, role, broadcast)
         -- local event layer
+        UnitTalentInfo(name, 2, 1)
         events:SendMessage("TalentCache_NewTalentData", name, role)
 
         if (broadcast == false or name ~= UnitName("player")) then 
@@ -483,6 +485,7 @@ function UnitTalentTabInfo(name, tab)
 end
 
 function UnitTalentInfo(name, tab, talent)
+    DEFAULT_CHAT_FRAME:AddMessage("Name: " ..name)
     if type(name) ~= "string" then
         error(("Bad argument #1 to 'UnitTalentTabInfo'. Expected %q, received %q (%s)"):format("string", type(name), tostring(name)), 2)
     elseif type(tab) ~= "number" then
